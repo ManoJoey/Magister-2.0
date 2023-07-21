@@ -27,4 +27,4 @@ https://docs.google.com/document/d/1StRQkpCVE2JF8fb1E859lr-uRTvD3ocEmX0-aZcGT6I/
 
 
 Belangrijke dingen voor nu:
-    Eerst Kily leren te gebruiken, dan kijken hoe we Magister API kunnen integreren
+    PHP/scrapen
