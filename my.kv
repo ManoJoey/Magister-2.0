@@ -1,0 +1,36 @@
+<MyGridLayout>
+
+    GridLayout:
+        size: root.width, root.height
+        cols: 1
+
+        Label:
+            text: "Name"
+        Button:
+            text: "Huiswerk"
+            background_normal : ""
+            background_color: (1,0,0,1)
+        Button: 
+            background_normal : ""
+            background_color: (0,0,1,1)
+            text: "Proefwerk"
+
+        GridLayout:
+            cols: 2
+            Button:
+                text: "Nieuw Huiswerk"
+                background_normal : ""
+                background_color: (0,1,0,1)
+            Button: 
+                text: "Nieuw proefwerk"
+                
+        GridLayout:
+            cols: 3
+            background_normal : ""
+            Button:
+                text: "Cijfer 1"
+            Button:
+                text: "Cijfer 2"
+            Button:
+                text: "Cijfer 3"
+                on_press: root.yes()

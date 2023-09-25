@@ -4,24 +4,25 @@ from kivy.uix.label import Label
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.textinput import TextInput
 from kivy.uix.button import Button
+from kivy.uix.widget import Widget
+from kivy.properties import ObjectProperty
+from kivy.config import Config
+from kivy.core.window import Window
+from kivy.lang import Builder
 
-#Homepage
-#(Nieuw cijfer invullen / Nieuw vak toevoegen)
-#Statistieken per vak
-#Compleet cijferlijstoverzicht
-#Algemene statistieken
-#Huiswerkoverzicht/Kalender met notificaties
-#Toetsplanner (met Google Agenda als er tijd is)
+Builder.load_file('my.kv')
 
-class MyGridLayout(GridLayout):
-    def __init__(self, **kwargs):
-        super(MyGridLayout, self).__init__(**kwargs)
+class MyGridLayout(Widget):
+    def yes(self):
+        print("yes")
+    
 
         
-class MyApp(App):
+class test1(App):
     def build(self):
         return MyGridLayout()
 
+Window.size = (450, 750)
 
 if __name__ == "__main__":
-    MyApp().run()
+    test1().run()

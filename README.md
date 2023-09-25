@@ -24,7 +24,11 @@ Functies:
 Document:
 https://docs.google.com/document/d/1StRQkpCVE2JF8fb1E859lr-uRTvD3ocEmX0-aZcGT6I/edit?usp=sharing
 
-
-
-Belangrijke dingen voor nu:
-    PHP/scrapen
+Plan van aanpak voor nu:
+#Homepage
+#(Nieuw cijfer invullen / Nieuw vak toevoegen)
+#Statistieken per vak
+#Compleet cijferlijstoverzicht
+#Algemene statistieken
+#Huiswerkoverzicht/Kalender met notificaties
+#Toetsplanner (met Google Agenda als er tijd is)
