@@ -9,20 +9,29 @@ from kivy.properties import ObjectProperty
 from kivy.config import Config
 from kivy.core.window import Window
 from kivy.lang import Builder
+from kivy.uix.screenmanager import ScreenManager, Screen
 
-Builder.load_file('my.kv')
+#Verschillende schermen benoemen
+class Dashboard(Screen):
+    pass
+class Huiswerk(Screen):
+    pass
+class Toetsen(Screen):
+    pass
+class Vakken(Screen):
+    pass
+class Cijfers(Screen):
+    pass
 
-class MyGridLayout(Widget):
-    def yes(self):
-        print("yes")
-    
-
+class WindowManager(ScreenManager):
+    pass
         
-class test1(App):
+class Scorro(App):
     def build(self):
-        return MyGridLayout()
-
-Window.size = (450, 750)
+        kv = Builder.load_file('my.kv')
+        return kv
+    
+Window.size = (350, 600)
 
 if __name__ == "__main__":
-    test1().run()
+    Scorro().run()

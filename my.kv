@@ -1,11 +1,30 @@
-<MyGridLayout>
+WindowManager:
+    Dashboard:
+    Cijfers:
+    Vakken:
+    Toetsen:
+    Huiswerk:
 
+<Dashboard>:
+    name: "dashboard"
     GridLayout:
         size: root.width, root.height
         cols: 1
+        canvas.before:
+            Color:
+                rgba: 1, 1, 1, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
 
         Label:
             text: "Name"
+            canvas.before:
+                Color:
+                    rgba: 1, 1, 0, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
         Button:
             text: "Huiswerk"
             background_normal : ""
@@ -14,23 +33,164 @@
             background_normal : ""
             background_color: (0,0,1,1)
             text: "Proefwerk"
-
         GridLayout:
             cols: 2
             Button:
                 text: "Nieuw Huiswerk"
-                background_normal : ""
+                background_normal: ""
                 background_color: (0,1,0,1)
             Button: 
                 text: "Nieuw proefwerk"
-                
         GridLayout:
             cols: 3
-            background_normal : ""
+            background_normal: ""
             Button:
                 text: "Cijfer 1"
             Button:
                 text: "Cijfer 2"
             Button:
                 text: "Cijfer 3"
-                on_press: root.yes()
+        GridLayout:
+            size_hint: (1, 0.45)
+            cols : 5
+            Button:
+                text: "Dashboard"
+                on_release: app.root.current = "dashboard"
+                background_normal: ""
+                background_color: (1,1,1,1)
+                Image:
+                    source: "Images/dashboard.png"
+                    center_x: self.parent.center_x
+                    center_y: self.parent.center_y / 0.8
+                    allow_stretch: True
+                    keep_ratio: True
+                    size: (25, 25)
+                Label: 
+                    text: "Dashboard"
+                    color: (0,0,0,1)
+                    font_size: 12
+                    center_x: self.parent.center_x
+                    center_y: self.parent.center_y / 2.1
+
+            Button:
+                text: "Huiswerk"
+                on_release: app.root.current = "huiswerk"
+                background_normal: ""
+                background_color: (1,1,1,1)
+                Image:
+                    source: "Images/homework.png"
+                    center_x: self.parent.center_x
+                    center_y: self.parent.center_y / 0.8
+                    allow_stretch: True
+                    keep_ratio: True
+                    size: (25, 25)
+                Label: 
+                    text: "Huiswerk"
+                    color: (0,0,0,1)
+                    font_size: 12
+                    center_x: self.parent.center_x
+                    center_y: self.parent.center_y / 2.1
+
+            Button:
+                text: "Toetsen"
+                on_release: app.root.current = "toetsen"
+                background_normal: ""
+                background_color: (1,1,1,1)
+                Image:
+                    source: "Images/test.png"
+                    center_x: self.parent.center_x
+                    center_y: self.parent.center_y / 0.8
+                    allow_stretch: True
+                    keep_ratio: True
+                    size: (25, 25)
+                Label: 
+                    text: "Toetsen"
+                    color: (0,0,0,1)
+                    font_size: 12
+                    center_x: self.parent.center_x
+                    center_y: self.parent.center_y / 2.1
+
+            Button:
+                text: "Cijfers"
+                on_release: app.root.current = "cijfers"
+                background_normal: ""
+                background_color: (1,1,1,1)
+                Image:
+                    source: "Images/grade.png"
+                    center_x: self.parent.center_x
+                    center_y: self.parent.center_y / 0.8
+                    allow_stretch: True
+                    keep_ratio: True
+                    size: (25, 25)
+                Label: 
+                    text: "Cijfers"
+                    color: (0,0,0,1)
+                    font_size: 12
+                    center_x: self.parent.center_x
+                    center_y: self.parent.center_y / 2.1
+
+            Button:
+                on_release: app.root.current = "vakken"
+                background_normal: ""
+                background_color: (1,1,1,1)
+                Image:
+                    source: "Images/subject.png"
+                    center_x: self.parent.center_x
+                    center_y: self.parent.center_y / 0.8
+                    allow_stretch: True
+                    keep_ratio: True
+                    size: (25, 25)
+                Label: 
+                    text: "Vakken"
+                    color: (0,0,0,1)
+                    font_size: 12
+                    center_x: self.parent.center_x
+                    center_y: self.parent.center_y / 2.1
+
+
+<Toetsen>:
+    name: "toetsen"
+    Label:
+        text: "Toetsen"
+        canvas.before:
+            Color:
+                rgba: 1, 1, 0, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+
+<Huiswerk>:
+    name: "huiswerk"
+    Label:
+        text: "Huiswerk"
+        canvas.before:
+            Color:
+                rgba: 1, 1, 0, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+
+<Cijfers>:
+    name: "cijfers"
+    Label:
+        text: "Cijfers"
+        canvas.before:
+            Color:
+                rgba: 1, 1, 0, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+
+<Vakken>:
+    name: "vakken"
+    Label:
+        text: "Vakken"
+        canvas.before:
+            Color:
+                rgba: 1, 1, 0, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
