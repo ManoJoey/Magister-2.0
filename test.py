@@ -10,19 +10,30 @@ from kivy.config import Config
 from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
-from kivymd.app import MDApp
 
 #Verschillende schermen benoemen
+class Navbar(Screen):
+    pass
 class Dashboard(Screen):
     pass
+class Huiswerk(Screen):
+    pass
+class Toetsen(Screen):
+    pass
+class Vakken(Screen):
+    pass
+class Cijfers(Screen):
+    pass
 
-kv = Builder.load_file('app.kv')
-        
+class WindowManager(ScreenManager):
+    pass
+
 class Scorro(App):
     def build(self):
+        kv = Builder.load_file('testdl.kv')
         return kv
-
-Window.size = (400, 750)
+    
+Window.size = (350, 600)
 
 if __name__ == "__main__":
     Scorro().run()

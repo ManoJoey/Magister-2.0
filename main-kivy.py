@@ -12,6 +12,8 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 
 #Verschillende schermen benoemen
+class Navbar(Screen):
+    pass
 class Dashboard(Screen):
     pass
 class Huiswerk(Screen):
