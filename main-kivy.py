@@ -10,21 +10,33 @@ from kivy.config import Config
 from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.dropdown import DropDown
+from kivy.uix.textinput import TextInput
 
 #Verschillende schermen benoemen
 class Navbar(Screen):
     pass
 class Dashboard(Screen):
     pass
-class Huiswerk(Screen):
+class Planning(Screen):
     pass
-class Toetsen(Screen):
+class Schoolwerk(Screen):
     pass
 class Vakken(Screen):
     pass
 class Cijfers(Screen):
     pass
-
+class NieuwHuiswerk(Screen):
+    def spinner_clicked(self, vak):
+        print(vak)
+class NieuwProefwerk(Screen):
+    pass
+class NieuwCijfer(Screen):
+    pass
+class NieuwVak(Screen):
+    pass
+class CijferBerekenen(Screen):
+    pass
 class WindowManager(ScreenManager):
     pass
         
