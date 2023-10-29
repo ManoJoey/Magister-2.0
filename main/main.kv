@@ -1,4 +1,6 @@
 #:kivy 2.2.1
+#: import NoTransition kivy.uix.screenmanager.NoTransition
+
 WindowManager:
     Dashboard:
     Navbar:
@@ -12,13 +14,15 @@ WindowManager:
     NieuwVak:
     CijferBerekenen:
 
+<ScreenManager>:
+    transition: NoTransition()
+
 <Navbar>:
     name: "Navbar"
     GridLayout:
         size_hint: 1, .1
         cols : 5
         Button:
-            text: "Dashboard"
             on_release: app.root.current = "dashboard"
             background_normal: ""
             background_color: (1,1,1,1)
@@ -37,7 +41,6 @@ WindowManager:
                 center_y: self.parent.center_y / 2.1
 
         Button:
-            text: "Planning"
             on_release: app.root.current = "planning"
             background_normal: ""
             background_color: (1,1,1,1)
@@ -56,7 +59,6 @@ WindowManager:
                 center_y: self.parent.center_y / 2.1
 
         Button:
-            text: "Schoolwerk"
             on_release: app.root.current = "schoolwerk"
             background_normal: ""
             background_color: (1,1,1,1)
@@ -75,7 +77,6 @@ WindowManager:
                 center_y: self.parent.center_y / 2.1
 
         Button:
-            text: "Cijfers"
             on_release: app.root.current = "cijfers"
             background_normal: ""
             background_color: (1,1,1,1)
@@ -129,14 +130,13 @@ WindowManager:
                     pos: self.pos
                     size: self.size
 
-            Label:
-                text: "Name"
-                canvas.before:
-                    Color:
-                        rgba: 1, 1, 0, 1
-                    Rectangle:
-                        pos: self.pos
-                        size: self.size
+            Image:
+                source: "Images/LogoTekstZijkant.png"
+                center_x: self.parent.center_x
+                center_y: self.parent.center_y / 0.8
+                allow_stretch: True
+                keep_ratio: True
+                size_hint: 1, 1
             Button:
                 text: "Planning"
                 background_normal : ""
@@ -385,12 +385,35 @@ WindowManager:
         pos_hint: {"top": 1}
         Label:
             text: "Nieuw Cijfer"
+            size_hint: 1, .16
             canvas.before:
                 Color:
-                    rgba: 1, 0, 0, 1
+                    rgba: 0, 0, 1, 1
                 Rectangle:
                     pos: self.pos
                     size: self.size
+        TextInput:
+            #cijfer
+            multiline: False
+            size_hint: 1, .2
+        TextInput:
+            #weging
+            multiline: True
+            size_hint: 1, .2
+        TextInput:
+            #omschrijving - optioneel
+            multiline: False
+            size_hint: 1, .2
+        
+        Spinner:
+            size_hint: 1, .2
+            text: "Selecteer een vak"
+            values: ["Nederlands", "Wiskunde", "LO"]
+
+            on_text: root.spinner_clicked(kiesvak.text)
+        Button:
+            text: "Opslaan"
+            on_release: app.root.current = "cijfers"
     Navbar:
 
 

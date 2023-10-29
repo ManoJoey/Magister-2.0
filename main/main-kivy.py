@@ -42,7 +42,7 @@ class WindowManager(ScreenManager):
         
 class Scorro(App):
     def build(self):
-        kv = Builder.load_file('my.kv')
+        kv = Builder.load_file('main.kv')
         return kv
     
 Window.size = (350, 600)
