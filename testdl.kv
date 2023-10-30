@@ -1,11 +1,21 @@
-#:kivy 2.1.0
+#:kivy 2.2.1
+#: import NoTransition kivy.uix.screenmanager.NoTransition
+
 WindowManager:
     Dashboard:
     Navbar:
     Cijfers:
     Vakken:
-    Toetsen:
-    Huiswerk:
+    Schoolwerk:
+    Planning:
+    NieuwCijfer:
+    NieuwHuiswerk:
+    NieuwProefwerk:
+    NieuwVak:
+    CijferBerekenen:
+
+<ScreenManager>:
+    transition: NoTransition()
 
 <Navbar>:
     name: "Navbar"
@@ -13,7 +23,6 @@ WindowManager:
         size_hint: 1, .1
         cols : 5
         Button:
-            text: "Dashboard"
             on_release: app.root.current = "dashboard"
             background_normal: ""
             background_color: (1,1,1,1)
@@ -32,27 +41,25 @@ WindowManager:
                 center_y: self.parent.center_y / 2.1
 
         Button:
-            text: "Huiswerk"
-            on_release: app.root.current = "huiswerk"
+            on_release: app.root.current = "planning"
             background_normal: ""
             background_color: (1,1,1,1)
             Image:
-                source: "Images/homework.png"
+                source: "Images/planning.png"
                 center_x: self.parent.center_x
                 center_y: self.parent.center_y / 0.8
                 allow_stretch: True
                 keep_ratio: True
                 size: (25, 25)
             Label: 
-                text: "Huiswerk"
+                text: "Planning"
                 color: (0,0,0,1)
                 font_size: 12
                 center_x: self.parent.center_x
                 center_y: self.parent.center_y / 2.1
 
         Button:
-            text: "Toetsen"
-            on_release: app.root.current = "toetsen"
+            on_release: app.root.current = "schoolwerk"
             background_normal: ""
             background_color: (1,1,1,1)
             Image:
@@ -63,14 +70,13 @@ WindowManager:
                 keep_ratio: True
                 size: (25, 25)
             Label: 
-                text: "Toetsen"
+                text: "Schoolwerk"
                 color: (0,0,0,1)
                 font_size: 12
                 center_x: self.parent.center_x
                 center_y: self.parent.center_y / 2.1
 
         Button:
-            text: "Cijfers"
             on_release: app.root.current = "cijfers"
             background_normal: ""
             background_color: (1,1,1,1)
@@ -112,86 +118,161 @@ WindowManager:
     name: "dashboard"
     BoxLayout:
         size_hint: 1, .9
-        pos_hint: {"top": 1}
+        #pos_hint: {"top": 1}
         orientation: "vertical"
-        GridLayout:
-            size: root.width, root.height
-            cols: 1
+            
+        Button:
+            size_hint: .5, .5
+            Image:
+                source: "Images/planning.png"
+                center_x: self.parent.x
+                center_y: self.parent.y
+                
+       
+    Navbar:
+
+# hier komt alles te staan dat vandaag af moet, zoals huiswerk voor morgen of proefwerken van binnen een week
+<Planning>:
+    name: "planning"
+    BoxLayout:
+        orientation: "vertical"
+        size_hint: 1, .9
+        pos_hint: {"top": 1}
+        Label:
+            text: "Planning"
+            size_hint: 1, .1
             canvas.before:
                 Color:
-                    rgba: 1, 1, 1, 1
+                    rgba: 1, 0, 0, 1
                 Rectangle:
                     pos: self.pos
                     size: self.size
+        BoxLayout:
+            orientation: "horizontal"
+            #Dagoverzicht
 
-            Label:
-                text: "Name"
-                canvas.before:
-                    Color:
-                        rgba: 1, 1, 0, 1
-                    Rectangle:
-                        pos: self.pos
-                        size: self.size
-            Button:
-                text: "Huiswerk"
-                background_normal : ""
-                background_color: (1,0,0,1)
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint: 1, .1
             Button: 
-                background_normal : ""
-                background_color: (0,0,1,1)
-                text: "Proefwerk"
-            GridLayout:
-                cols: 2
-                Button:
-                    text: "Nieuw Huiswerk"
-                    background_normal: ""
-                    background_color: (0,1,0,1)
-                Button: 
-                    text: "Nieuw proefwerk"
-            GridLayout:
-                cols: 3
-                background_normal: ""
-                Button:
-                    text: "Cijfer 1"
-                Button:
-                    text: "Cijfer 2"
-                Button:
-                    text: "Cijfer 3"
+                text: "Huiswerk toevoegen"
+                on_release: app.root.current = "nieuw huiswerk"
+            Button:
+                text: "Proefwerk toevoegen"
+                on_release: app.root.current = "nieuw proefwerk"
     Navbar:
 
-
-<Toetsen>:
-    name: "toetsen"
+# hier komt een grote lijst met alle taken
+<Schoolwerk>:
+    name: "schoolwerk"
     BoxLayout:
         orientation: "vertical"
         size_hint: 1, .9
         pos_hint: {"top": 1}
         Label:
-            text: "Toetsen"
+            text: "Schoolwerk"
+            size_hint: 1, .1
             canvas.before:
                 Color:
-                    rgba: 1, 1, 0, 1
+                    rgba: 0, 0, 1, 1
                 Rectangle:
                     pos: self.pos
                     size: self.size
+        BoxLayout:
+            orientation: "horizontal"
+            #Lijst met Huiswerk en Toetsen
+
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint: 1, .1
+            Button: 
+                text: "Huiswerk toevoegen"
+                on_release: app.root.current = "nieuw huiswerk"
+            Button:
+                text: "Proefwerk toevoegen"
+                on_release: app.root.current = "nieuw proefwerk"
     Navbar:
 
 
-<Huiswerk>:
-    name: "huiswerk"
+<NieuwHuiswerk>:
+    name: "nieuw huiswerk"
     BoxLayout:
         orientation: "vertical"
         size_hint: 1, .9
         pos_hint: {"top": 1}
         Label:
-            text: "Huiswerk"
+            text: "Nieuw Huiswerk"
+            size_hint: 1, .16
             canvas.before:
                 Color:
-                    rgba: 1, 1, 0, 1
+                    rgba: 0, 0, 1, 1
                 Rectangle:
                     pos: self.pos
                     size: self.size
+        TextInput:
+            #wat is het
+            multiline: False
+            size_hint: 1, .2
+        TextInput:
+            #extra info
+            multiline: True
+            size_hint: 1, .2
+        TextInput:
+            #datum
+            multiline: False
+            size_hint: 1, .2
+        
+        Spinner:
+            size_hint: 1, .2
+            text: "Selecteer een vak"
+            values: ["Nederlands", "Wiskunde", "LO"]
+
+            on_text: root.spinner_clicked(kiesvak.text)
+        Button:
+            text: "Opslaan"
+            on_release: app.root.current = "dashboard"
     Navbar:
+
+
+<NieuwProefwerk>:
+    name: "nieuw proefwerk"
+    BoxLayout:
+        orientation: "vertical"
+        size_hint: 1, .9
+        pos_hint: {"top": 1}
+        Label:
+            text: "Nieuw Proefwerk"
+            size_hint: 1, .16
+            canvas.before:
+                Color:
+                    rgba: 0, 0, 1, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+        TextInput:
+            #wat is het
+            multiline: False
+            size_hint: 1, .2
+        TextInput:
+            #extra info
+            multiline: True
+            size_hint: 1, .2
+        TextInput:
+            #datum
+            multiline: False
+            size_hint: 1, .2
+        
+        Spinner:
+            size_hint: 1, .2
+            text: "Selecteer een vak"
+            values: ["Nederlands", "Wiskunde", "LO"]
+
+            on_text: root.spinner_clicked(kiesvak.text)
+        Button:
+            text: "Opslaan"
+            on_release: app.root.current = "dashboard"
+    Navbar:
+
 
 <Cijfers>:
     name: "cijfers"
@@ -200,13 +281,160 @@ WindowManager:
         pos_hint: {"top": 1}
         size_hint: 1, .9
         Label:
+            size_hint: 1, .027
             text: "Cijfers"
             canvas.before:
                 Color:
-                    rgba: 1, 1, 0, 1
+                    rgba: 1, 0, 1, 1
                 Rectangle:
                     pos: self.pos
                     size: self.size
+
+        BoxLayout:
+            orientation: "horizontal"
+            pos_hint: {"top": 1}
+            size_hint: 1, .05
+            Label:
+                text: "Cirkeldiagram"
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 1, 1
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+            Label:
+                text: "In cijfers uitgedrukt"
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 1, 1
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+        
+        BoxLayout:
+            orientation: "vertical"
+            size_hint: 1, .2
+            Label:
+                text: "Staafdiagram met gem. per vak"
+                canvas.before:
+                    Color:
+                        rgba: 0, 1, 1, 1
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+            Label:
+                size_hint: 1, .1
+                text: "Totale gemiddelde"
+
+        BoxLayout:
+            size_hint: 1, .05
+            orientation: "horizontal"
+            Button:
+                text: "Nieuw Cijfer"
+                on_release: app.root.current = "nieuw cijfer"
+            Button:
+                text: "Cijfer Berekenen"
+                on_release: app.root.current = "cijfer berekenen"
+    Navbar:
+
+<NieuwCijfer>:
+    name: "nieuw cijfer"
+    BoxLayout:
+        orientation: "vertical"
+        size_hint: 1, .9
+        pos_hint: {"top": 1}
+        Label:
+            text: "Nieuw Cijfer"
+            size_hint: 1, .16
+            canvas.before:
+                Color:
+                    rgba: 0, 0, 1, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+        TextInput:
+            #cijfer
+            multiline: False
+            size_hint: 1, .2
+        TextInput:
+            #weging
+            multiline: True
+            size_hint: 1, .2
+        TextInput:
+            #omschrijving - optioneel
+            multiline: False
+            size_hint: 1, .2
+        
+        Spinner:
+            size_hint: 1, .2
+            text: "Selecteer een vak"
+            values: ["Nederlands", "Wiskunde", "LO"]
+
+            on_text: root.spinner_clicked(kiesvak.text)
+        Button:
+            text: "Opslaan"
+            on_release: app.root.current = "cijfers"
+    Navbar:
+
+
+<CijferBerekenen>:
+    name: "cijfer berekenen"
+    BoxLayout:
+        orientation: "vertical"
+        size_hint: 1, .9
+        pos_hint: {"top": 1}
+        Label:
+            text: "Cijfer Berekenen"
+            canvas.before:
+                Color:
+                    rgba: 1, 0, 0, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+    Navbar:
+
+
+<NieuwVak>:
+    name: "nieuw vak"
+    BoxLayout:
+        orientation: "vertical"
+        size_hint: 1, .9
+        pos_hint: {"top": 1}
+        Label:
+            text: "Nieuw Vak"
+            size_hint: 1, 0.2
+            canvas.before:
+                Color:
+                    rgba: 1, 0, 0, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+        
+        TextInput:
+            #naam vak
+            multiline: True
+            size_hint: 1, .2
+        BoxLayout:
+            orientation: "horizontal"
+            Button:
+                text: "Maandag"
+            Button:
+                text: "Dinsdag"
+            Button:
+                text: "Woensdag"
+            Button:
+                text: "Donderdag"
+        BoxLayout:
+            orientation: "horizontal"
+            Button:
+                text: "Vrijdag"
+            Button:
+                text: "Zaterdag"
+            Button:
+                text: "Zondag"
+        Button:
+            text: "Opslaan"
+            on_release: app.root.current = "vakken"
     Navbar:
 
 <Vakken>:
@@ -223,4 +451,14 @@ WindowManager:
                 Rectangle:
                     pos: self.pos
                     size: self.size
+        BoxLayout:
+            orientation: "horizontal"
+            #Lijst met Vakken
+
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint: 1, .1
+            Button: 
+                text: "Vak toevoegen"
+                on_release: app.root.current = "nieuw vak"
     Navbar:

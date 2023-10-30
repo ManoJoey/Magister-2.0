@@ -42,6 +42,7 @@ class WindowManager(ScreenManager):
         
 class Scorro(App):
     def build(self):
+        self.icon = "Images/Logo.png"
         kv = Builder.load_file('main.kv')
         return kv
     

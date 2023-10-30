@@ -45,7 +45,7 @@ WindowManager:
             background_normal: ""
             background_color: (1,1,1,1)
             Image:
-                source: "Images/homework.png"
+                source: "Images/planning.png"
                 center_x: self.parent.center_x
                 center_y: self.parent.center_y / 0.8
                 allow_stretch: True
@@ -63,7 +63,7 @@ WindowManager:
             background_normal: ""
             background_color: (1,1,1,1)
             Image:
-                source: "Images/test.png"
+                source: "Images/schoolwerk.png"
                 center_x: self.parent.center_x
                 center_y: self.parent.center_y / 0.8
                 allow_stretch: True
@@ -137,16 +137,35 @@ WindowManager:
                 allow_stretch: True
                 keep_ratio: True
                 size_hint: 1, 1
+            
             Button:
                 text: "Planning"
                 background_normal : ""
                 background_color: (1,0,0,1)
                 on_release: app.root.current = "planning"
+                color: 0,0,0,1
+                Image:
+                    source: "Images/planning.png"
+                    center_x: self.parent.center_x - (self.parent.center_x / 1.2)
+                    center_y: self.parent.center_y
+                    allow_stretch: True
+                    keep_ratio: True
+                    size: (self.parent.center_x / 3, self.parent.center_y / 3)
+                
             Button: 
                 background_normal : ""
                 background_color: (0,0,1,1)
                 text: "Schoolwerk"
                 on_release: app.root.current = "schoolwerk"
+                color: 0,0,0,1
+                Image:
+                    source: "Images/schoolwerk.png"
+                    center_x: self.parent.center_x - (self.parent.center_x / 1.2)
+                    center_y: self.parent.center_y
+                    allow_stretch: True
+                    keep_ratio: True
+                    size: (self.parent.center_x / 3, self.parent.center_y / 3)
+
             GridLayout:
                 cols: 2
                 Button:
@@ -502,4 +521,3 @@ WindowManager:
                 text: "Vak toevoegen"
                 on_release: app.root.current = "nieuw vak"
     Navbar:
-
