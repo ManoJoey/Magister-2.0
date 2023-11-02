@@ -282,6 +282,7 @@ WindowManager:
             size_hint: 1, .2
         
         Spinner:
+            id: kiesvak
             size_hint: 1, .2
             text: "Selecteer een vak"
             values: ["Nederlands", "Wiskunde", "LO"]
@@ -322,11 +323,12 @@ WindowManager:
             size_hint: 1, .2
         
         Spinner:
+            id: kiesvak3
             size_hint: 1, .2
             text: "Selecteer een vak"
             values: ["Nederlands", "Wiskunde", "LO"]
 
-            on_text: root.spinner_clicked(kiesvak.text)
+            on_text: root.spinner_clicked(kiesvak3.text)
         Button:
             text: "Opslaan"
             on_release: app.root.current = "dashboard"
@@ -425,11 +427,12 @@ WindowManager:
             size_hint: 1, .2
         
         Spinner:
+            id: kiesvak2
             size_hint: 1, .2
             text: "Selecteer een vak"
             values: ["Nederlands", "Wiskunde", "LO"]
 
-            on_text: root.spinner_clicked(kiesvak.text)
+            on_text: root.spinner_clicked(kiesvak2.text)
         Button:
             text: "Opslaan"
             on_release: app.root.current = "cijfers"

@@ -30,9 +30,11 @@ class NieuwHuiswerk(Screen):
     def spinner_clicked(self, vak):
         print(vak)
 class NieuwProefwerk(Screen):
-    pass
+    def spinner_clicked(self, vak):
+        print(vak)
 class NieuwCijfer(Screen):
-    pass
+    def spinner_clicked(self, vak):
+        print(vak)
 class NieuwVak(Screen):
     pass
 class CijferBerekenen(Screen):

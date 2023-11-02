@@ -1,0 +1,5 @@
+Wat moet Vince doen:
+- Icoontjes (navbar) (in .png)
+- Dashboard indeling (dus screenshot in whatsapp)
+- Kleurenschema opstellen (Maak een lijstje van 4 tot 5 kleuren in rgba (Kun je opzoeken))
+- Taalgebruik
