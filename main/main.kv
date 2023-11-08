@@ -474,6 +474,7 @@ WindowManager:
         
         TextInput:
             #naam vak
+            id: naam_vak
             multiline: True
             size_hint: 1, .2
         BoxLayout:
@@ -494,9 +495,10 @@ WindowManager:
                 text: "Zaterdag"
             Button:
                 text: "Zondag"
+                on_release: app.show_klassen()
         Button:
             text: "Opslaan"
-            on_release: app.root.current = "vakken"
+            on_release: app.submit_klas()
     Navbar:
 
 <Vakken>:

@@ -3,3 +3,8 @@ Wat moet Vince doen:
 - Dashboard indeling (dus screenshot in whatsapp)
 - Kleurenschema opstellen (Maak een lijstje van 4 tot 5 kleuren in rgba (Kun je opzoeken))
 - Taalgebruik
+
+
+Planning:
+prioritiseren op basis van lang, middel of korte tijdsduur
+dan kijken hoeveel tijd te besteden en zo planning opstellen

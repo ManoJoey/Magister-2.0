@@ -12,6 +12,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.dropdown import DropDown
 from kivy.uix.textinput import TextInput
+import sqlite3
 
 #Verschillende schermen benoemen
 class Navbar(Screen):
@@ -43,8 +44,48 @@ class WindowManager(ScreenManager):
 class Scorro(App):
     def build(self):
         self.icon = "Images/Logo.png"
+        
+        conn = sqlite3.connect('ScorroDB.db')
+        c = conn.cursor()
+
+        c.execute("""CREATE TABLE if not exists vakken(
+            naam text,
+            dag text)
+        """)
+
+        conn.commit()
+        conn.close()
+
         kv = Builder.load_file('testdl.kv')
         return kv
+    
+    def submit_klas(self):
+        conn = sqlite3.connect('ScorroDB.db')
+        c = conn.cursor()
+
+        c.execute("INSERT INTO vakken VALUES (:naam, :dag)",
+        {
+            'naam': self.root.get_screen('nieuw vak').ids.naam_vak.text,
+            'dag': self.root.get_screen('nieuw vak').ids.naam_vak.text,
+        })
+
+
+        self.root.get_screen('nieuw vak').ids.naam_vak.text = ''
+
+        conn.commit()
+        conn.close()
+    
+    
+
+    def show_klassen(self):
+        conn = sqlite3.connect('ScorroDB.db')
+        c = conn.cursor()
+
+        c.execute("SELECT * FROM vakken")
+        records = c.fetchall()
+
+        conn.commit()
+        conn.close()
     
 Window.size = (350, 600)
 

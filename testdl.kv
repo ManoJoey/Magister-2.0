@@ -2,6 +2,7 @@
 #: import NoTransition kivy.uix.screenmanager.NoTransition
 
 WindowManager:
+    id: screen_manager
     Dashboard:
     Navbar:
     Cijfers:
@@ -63,7 +64,7 @@ WindowManager:
             background_normal: ""
             background_color: (1,1,1,1)
             Image:
-                source: "Images/test.png"
+                source: "Images/schoolwerk.png"
                 center_x: self.parent.center_x
                 center_y: self.parent.center_y / 0.8
                 allow_stretch: True
@@ -118,17 +119,76 @@ WindowManager:
     name: "dashboard"
     BoxLayout:
         size_hint: 1, .9
-        #pos_hint: {"top": 1}
+        pos_hint: {"top": 1}
         orientation: "vertical"
-            
-        Button:
-            size_hint: .5, .5
+        GridLayout:
+            size: root.width, root.height
+            cols: 1
+            canvas.before:
+                Color:
+                    rgba: 1, 1, 1, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
             Image:
-                source: "Images/planning.png"
-                center_x: self.parent.x
-                center_y: self.parent.y
+                source: "Images/LogoTekstZijkant.png"
+                center_x: self.parent.center_x
+                center_y: self.parent.center_y / 0.8
+                allow_stretch: True
+                keep_ratio: True
+                size_hint: 1, 1
+            
+            Button:
+                text: "Planning"
+                background_normal : ""
+                background_color: (1,0,0,1)
+                on_release: app.root.current = "planning"
+                color: 0,0,0,1
+                Image:
+                    source: "Images/planning.png"
+                    center_x: self.parent.center_x - (self.parent.center_x / 1.2)
+                    center_y: self.parent.center_y
+                    allow_stretch: True
+                    keep_ratio: True
+                    size: (self.parent.center_x / 3, self.parent.center_y / 3)
                 
-       
+            Button: 
+                background_normal : ""
+                background_color: (0,0,1,1)
+                text: "Schoolwerk"
+                on_release: app.root.current = "schoolwerk"
+                color: 0,0,0,1
+                Image:
+                    source: "Images/schoolwerk.png"
+                    center_x: self.parent.center_x - (self.parent.center_x / 1.2)
+                    center_y: self.parent.center_y
+                    allow_stretch: True
+                    keep_ratio: True
+                    size: (self.parent.center_x / 3, self.parent.center_y / 3)
+
+            GridLayout:
+                cols: 2
+                Button:
+                    text: "Nieuw Huiswerk"
+                    background_normal: ""
+                    background_color: (0,1,0,1)
+                    on_release: app.root.current = "nieuw huiswerk"
+                Button: 
+                    text: "Cijferoverzicht"
+                    on_release: app.root.current = "cijfers"
+            GridLayout:
+                cols: 3
+                background_normal: ""
+                Button:
+                    text: "Cijfer 1"
+                    on_release: app.root.current = "cijfers"
+                Button:
+                    text: "Cijfer 2"
+                    on_release: app.root.current = "cijfers"
+                Button:
+                    text: "Cijfer 3"
+                    on_release: app.root.current = "cijfers"
     Navbar:
 
 # hier komt alles te staan dat vandaag af moet, zoals huiswerk voor morgen of proefwerken van binnen een week
@@ -223,6 +283,7 @@ WindowManager:
             size_hint: 1, .2
         
         Spinner:
+            id: kiesvak
             size_hint: 1, .2
             text: "Selecteer een vak"
             values: ["Nederlands", "Wiskunde", "LO"]
@@ -263,11 +324,12 @@ WindowManager:
             size_hint: 1, .2
         
         Spinner:
+            id: kiesvak3
             size_hint: 1, .2
             text: "Selecteer een vak"
             values: ["Nederlands", "Wiskunde", "LO"]
 
-            on_text: root.spinner_clicked(kiesvak.text)
+            on_text: root.spinner_clicked(kiesvak3.text)
         Button:
             text: "Opslaan"
             on_release: app.root.current = "dashboard"
@@ -366,11 +428,12 @@ WindowManager:
             size_hint: 1, .2
         
         Spinner:
+            id: kiesvak2
             size_hint: 1, .2
             text: "Selecteer een vak"
             values: ["Nederlands", "Wiskunde", "LO"]
 
-            on_text: root.spinner_clicked(kiesvak.text)
+            on_text: root.spinner_clicked(kiesvak2.text)
         Button:
             text: "Opslaan"
             on_release: app.root.current = "cijfers"
@@ -412,7 +475,8 @@ WindowManager:
         
         TextInput:
             #naam vak
-            multiline: True
+            id: naam_vak
+            multiline: False
             size_hint: 1, .2
         BoxLayout:
             orientation: "horizontal"
@@ -432,9 +496,10 @@ WindowManager:
                 text: "Zaterdag"
             Button:
                 text: "Zondag"
+                on_release: app.show_klassen()
         Button:
             text: "Opslaan"
-            on_release: app.root.current = "vakken"
+            on_release: app.submit_klas()
     Navbar:
 
 <Vakken>:
