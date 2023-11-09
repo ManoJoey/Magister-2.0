@@ -237,10 +237,30 @@ WindowManager:
                 Rectangle:
                     pos: self.pos
                     size: self.size
-        BoxLayout:
-            orientation: "horizontal"
-            #Lijst met Huiswerk en Toetsen
+        GridLayout:
+            pos_hint: {"top": 1}
+            cols: 4
+            size_hint: 1, .2
+            valign: "middle"
+            canvas.before:
+                Color:
+                    rgba: 0, 1, 1, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            Label:
+                text: "Huiswerk"
+            Label:
+                text: "Datum"
+            Label:
+                text: "Beschrijving"
+            Label:
+                text: "Vak"
 
+        #Lijst met Huiswerk en Toetsen
+        Label:
+            id: hw_labelSW
+            text: ""
         BoxLayout:
             orientation: "horizontal"
             size_hint: 1, .1
@@ -270,26 +290,28 @@ WindowManager:
                     size: self.size
         TextInput:
             #wat is het
+            id: welkHW
             multiline: False
             size_hint: 1, .2
         TextInput:
             #extra info
+            id: infoHW
             multiline: True
             size_hint: 1, .2
         TextInput:
             #datum
+            id: datumHW
             multiline: False
             size_hint: 1, .2
         
         Spinner:
-            id: kiesvak
+            id: kiesvakHW
             size_hint: 1, .2
             text: "Selecteer een vak"
-            values: ["Nederlands", "Wiskunde", "LO"]
-
-            on_text: root.spinner_clicked(kiesvak.text)
+            on_press: root.spinnerHW_clicked()
         Button:
             text: "Opslaan"
+            on_release: app.submit_huiswerk()
             on_release: app.root.current = "dashboard"
     Navbar:
 
@@ -323,12 +345,10 @@ WindowManager:
             size_hint: 1, .2
         
         Spinner:
-            id: kiesvak3
+            id: kiesvakPW
             size_hint: 1, .2
             text: "Selecteer een vak"
-            values: ["Nederlands", "Wiskunde", "LO"]
-
-            on_text: root.spinner_clicked(kiesvak3.text)
+            on_press: root.spinnerPW_clicked()
         Button:
             text: "Opslaan"
             on_release: app.root.current = "dashboard"
@@ -419,7 +439,7 @@ WindowManager:
             size_hint: 1, .2
         TextInput:
             #weging
-            multiline: True
+            multiline: False
             size_hint: 1, .2
         TextInput:
             #omschrijving - optioneel
@@ -427,12 +447,10 @@ WindowManager:
             size_hint: 1, .2
         
         Spinner:
-            id: kiesvak2
+            id: kiesvakCF
             size_hint: 1, .2
             text: "Selecteer een vak"
-            values: ["Nederlands", "Wiskunde", "LO"]
-
-            on_text: root.spinner_clicked(kiesvak2.text)
+            on_press: root.spinnerCF_clicked()
         Button:
             text: "Opslaan"
             on_release: app.root.current = "cijfers"
@@ -475,7 +493,7 @@ WindowManager:
         TextInput:
             #naam vak
             id: naam_vak
-            multiline: True
+            multiline: False
             size_hint: 1, .2
         BoxLayout:
             orientation: "horizontal"

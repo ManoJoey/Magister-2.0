@@ -22,20 +22,34 @@ class Dashboard(Screen):
 class Planning(Screen):
     pass
 class Schoolwerk(Screen):
-    pass
+    def on_enter(self):
+        hw_lijst = Scorro.show_huiswerk(self)
+        word = ""
+        for item in hw_lijst:
+            replace = str(item).replace("(", "")
+            replace = replace.replace(")", "")
+            replace = replace.replace("'", "")
+            word = f"{word}\n{replace}"
+            self.ids.hw_labelSW.text = f"{word}"
 class Vakken(Screen):
     pass
 class Cijfers(Screen):
     pass
 class NieuwHuiswerk(Screen):
-    def spinner_clicked(self, vak):
-        print(vak)
+    def spinnerHW_clicked(self):
+        data = Scorro.show_klassen(self)
+        spinner = self.ids.kiesvakHW
+        spinner.values = [str(item[0]) for item in data]
 class NieuwProefwerk(Screen):
-    def spinner_clicked(self, vak):
-        print(vak)
+    def spinnerPW_clicked(self):
+        data = Scorro.show_klassen(self)
+        spinner = self.ids.kiesvakPW
+        spinner.values = [str(item[0]) for item in data]
 class NieuwCijfer(Screen):
-    def spinner_clicked(self, vak):
-        print(vak)
+    def spinnerCF_clicked(self):
+        data = Scorro.show_klassen(self)
+        spinner = self.ids.kiesvakCF
+        spinner.values = [str(item[0]) for item in data]
 class NieuwVak(Screen):
     pass
 class CijferBerekenen(Screen):
@@ -71,13 +85,14 @@ class Scorro(App):
         c.execute("""CREATE TABLE if not exists huiswerk(
             naam text,
             datum text,
-            beschrijving text)
+            beschrijving text,
+            vak text)
         """)
 
         conn.commit()
         conn.close()
 
-        kv = Builder.load_file('testdl.kv')
+        kv = Builder.load_file('main.kv')
         return kv
     
 
@@ -104,10 +119,10 @@ class Scorro(App):
 
         c.execute("SELECT * FROM vakken")
         records = c.fetchall()
-        print(records)
 
         conn.commit()
         conn.close()
+        return records
     
 
     #functies voor cijfers
@@ -174,15 +189,19 @@ class Scorro(App):
         conn = sqlite3.connect('ScorroDB.db')
         c = conn.cursor()
 
-        c.execute("INSERT INTO huiswerk VALUES (:naam, :datum, :beschrijving)",
+        c.execute("INSERT INTO huiswerk VALUES (:naam, :datum, :beschrijving, :vak)",
         {
-            'naam': self.root.get_screen('nieuw vak').ids.naam_vak.text,
-            'datum': self.root.get_screen('nieuw vak').ids.naam_vak.text,
-            'beschrijving': self.root.get_screen('nieuw vak').ids.naam_vak.text,
+            'naam': self.root.get_screen('nieuw huiswerk').ids.welkHW.text,
+            'datum': self.root.get_screen('nieuw huiswerk').ids.datumHW.text,
+            'beschrijving': self.root.get_screen('nieuw huiswerk').ids.infoHW.text,
+            'vak': self.root.get_screen('nieuw huiswerk').ids.kiesvakHW.text,
         })
 
 
-        self.root.get_screen('nieuw vak').ids.naam_vak.text = ''
+        self.root.get_screen('nieuw huiswerk').ids.welkHW.text = ''
+        self.root.get_screen('nieuw huiswerk').ids.datumHW.text = ''
+        self.root.get_screen('nieuw huiswerk').ids.infoHW.text = ''
+        self.root.get_screen('nieuw huiswerk').ids.kiesvakHW.text = 'Selecteer een vak'
 
         conn.commit()
         conn.close()
@@ -196,6 +215,7 @@ class Scorro(App):
 
         conn.commit()
         conn.close()
+        return records
 
         
 Window.size = (350, 600)
