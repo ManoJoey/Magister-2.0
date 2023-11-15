@@ -1,5 +1,6 @@
 #:kivy 2.2.1
 #: import NoTransition kivy.uix.screenmanager.NoTransition
+#: import Factory kivy.factory.Factory
 
 WindowManager:
     Dashboard:
@@ -16,6 +17,13 @@ WindowManager:
 
 <ScreenManager>:
     transition: NoTransition()
+
+
+
+<VakkenPopup@Popup>:
+    auto_dismiss: True
+    size_hint: 0.6, 0.2
+    pos_hint: {"x":0.2, "top": 0.9}
 
 <Navbar>:
     name: "Navbar"
@@ -249,18 +257,17 @@ WindowManager:
                     pos: self.pos
                     size: self.size
             Label:
-                text: "Huiswerk"
+                text: "Werk"
             Label:
                 text: "Datum"
             Label:
                 text: "Beschrijving"
             Label:
                 text: "Vak"
-
         #Lijst met Huiswerk en Toetsen
-        Label:
-            id: hw_labelSW
-            text: ""
+        BoxLayout:
+            id: BoxHwPw
+            orientation:"vertical"
         BoxLayout:
             orientation: "horizontal"
             size_hint: 1, .1
@@ -312,7 +319,6 @@ WindowManager:
         Button:
             text: "Opslaan"
             on_release: app.submit_huiswerk()
-            on_release: app.root.current = "dashboard"
     Navbar:
 
 
@@ -333,14 +339,17 @@ WindowManager:
                     size: self.size
         TextInput:
             #wat is het
+            id: welkPW
             multiline: False
             size_hint: 1, .2
         TextInput:
             #extra info
+            id: infoPW
             multiline: True
             size_hint: 1, .2
         TextInput:
             #datum
+            id: datumPW
             multiline: False
             size_hint: 1, .2
         
@@ -351,7 +360,7 @@ WindowManager:
             on_press: root.spinnerPW_clicked()
         Button:
             text: "Opslaan"
-            on_release: app.root.current = "dashboard"
+            on_release: app.submit_proefwerk()
     Navbar:
 
 
@@ -435,14 +444,17 @@ WindowManager:
                     size: self.size
         TextInput:
             #cijfer
+            id: welkCF
             multiline: False
             size_hint: 1, .2
         TextInput:
             #weging
+            id: wegingCF
             multiline: False
             size_hint: 1, .2
         TextInput:
             #omschrijving - optioneel
+            id: infoCF
             multiline: False
             size_hint: 1, .2
         
@@ -453,7 +465,7 @@ WindowManager:
             on_press: root.spinnerCF_clicked()
         Button:
             text: "Opslaan"
-            on_release: app.root.current = "cijfers"
+            on_release: app.submit_cijfer()
     Navbar:
 
 
@@ -538,7 +550,6 @@ WindowManager:
         Button:
             text: "Opslaan"
             on_release: app.submit_klas()
-            on_release: root.saveklas()
         #Label:
             #id: nieuwvakNO
             #text: "Vak toegevoegd!"
