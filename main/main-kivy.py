@@ -13,7 +13,6 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.dropdown import DropDown
 from kivy.uix.textinput import TextInput
 from kivy.clock import Clock
-from kivy.factory import Factory
 import sqlite3
 
 lijst_dagen = []
@@ -47,16 +46,11 @@ class Schoolwerk(Screen):
             self.ids.BoxHwPw.add_widget(button)
 
 class Vakken(Screen):
-    def popVak(self, vak):
-        show = Scorro.get_screen("VakkenPopup")
-        popupvak = Factory.Popup(title=str(vak[0]), content=show)
-        popupvak.open()
-
     def on_enter(self):
         vakken_lijst = Scorro.show_klassen(self)
         self.ids.BoxVakken.clear_widgets()
         for vak in vakken_lijst:
-            button = Button(text=str(vak[0]) + "\n" + str(vak[1]), on_release=lambda x: self.popVak(vak))
+            button = Button(text=str(vak[0]) + "\n" + str(vak[1]))
             self.ids.BoxVakken.add_widget(button)
 
 class Cijfers(Screen):
@@ -93,10 +87,13 @@ class NieuwVak(Screen):
         self.ids.zaterdag.background_color = (1,0,0,1)
         self.ids.zondag.background_color = (1,0,0,1)
         
+    def hide_message(self):
+        self.ids.BoxMessage.remove_widget(self.ids.BoxMessage.children[0])
 
-    def hide_label(self):
-        #self.ids.nieuwvakNO.size_hint_y = 0
-        pass
+    def SavedVak(self):
+        message = Label(text="Vak opgeslagen!")
+        self.ids.BoxMessage.add_widget(message)
+        Clock.schedule_once(lambda x: self.hide_message(), 1)
     
     def Savedag(self, dag):
         colour_selec = (0,1,0,1)
@@ -212,6 +209,7 @@ class Scorro(App):
 
                 self.root.get_screen('nieuw vak').ids.naam_vak.text = ''
                 print("vak opgeslagen")
+
             else:
                 print("Geen tekst")
         else:

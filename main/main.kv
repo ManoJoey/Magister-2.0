@@ -1,6 +1,5 @@
 #:kivy 2.2.1
 #: import NoTransition kivy.uix.screenmanager.NoTransition
-#: import Factory kivy.factory.Factory
 
 WindowManager:
     Dashboard:
@@ -18,12 +17,6 @@ WindowManager:
 <ScreenManager>:
     transition: NoTransition()
 
-
-
-<VakkenPopup@Popup>:
-    auto_dismiss: True
-    size_hint: 0.6, 0.2
-    pos_hint: {"x":0.2, "top": 0.9}
 
 <Navbar>:
     name: "Navbar"
@@ -229,7 +222,6 @@ WindowManager:
                 on_release: app.root.current = "nieuw proefwerk"
     Navbar:
 
-# hier komt een grote lijst met alle taken
 <Schoolwerk>:
     name: "schoolwerk"
     BoxLayout:
@@ -494,7 +486,7 @@ WindowManager:
         pos_hint: {"top": 1}
         Label:
             text: "Nieuw Vak"
-            size_hint: 1, 0.2
+            size_hint: 1, .2
             canvas.before:
                 Color:
                     rgba: 1, 0, 0, 1
@@ -510,6 +502,7 @@ WindowManager:
         BoxLayout:
             id: BoxDagen
             orientation: "horizontal"
+            size_hint: 1, .4
             Button:
                 id: maandag
                 text: "Maandag"
@@ -532,6 +525,7 @@ WindowManager:
                 on_release: root.Savedag("donderdag")
         BoxLayout:
             orientation: "horizontal"
+            size_hint: 1, .4
             Button:
                 id: vrijdag
                 text: "Vrijdag"
@@ -547,12 +541,14 @@ WindowManager:
                 text: "Zondag"
                 background_color: (1,0,0,1)
                 on_release: root.Savedag("zondag")
-        Button:
-            text: "Opslaan"
-            on_release: app.submit_klas()
-        #Label:
-            #id: nieuwvakNO
-            #text: "Vak toegevoegd!"
+        BoxLayout:
+            id: BoxMessage
+            orientation: "vertical"
+            size_hint: 1, .2
+            Button:
+                text: "Opslaan"
+                on_release: app.submit_klas()
+                on_release: root.SavedVak()
     Navbar:
 
 <Vakken>:
