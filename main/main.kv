@@ -17,6 +17,74 @@ WindowManager:
 <ScreenManager>:
     transition: NoTransition()
 
+<PopupVak>:
+    name: "popup vak"
+    size_hint: (None, None)
+    size_hint: (0.9, 0.9)
+    BoxLayout:
+        orientation: "vertical"
+        size_hint: 1, .9
+        pos_hint: {"top": 1}
+        
+        TextInput:
+            #naam vak
+            id: naam_vakAP
+            multiline: False
+            size_hint: 1, .2
+        BoxLayout:
+            id: BoxDagenAP
+            orientation: "horizontal"
+            size_hint: 1, .4
+            Button:
+                id: maandag
+                text: "Maandag"
+                background_color: (1,0,0,1)
+                on_release: root.Savedag("maandag")
+            Button:
+                id: dinsdag
+                text: "Dinsdag"
+                background_color: (1,0,0,1)
+                on_release: root.Savedag("dinsdag")
+            Button:
+                id: woensdag
+                text: "Woensdag"
+                background_color: (1,0,0,1)
+                on_release: root.Savedag("woensdag")
+            Button:
+                id: donderdag
+                text: "Donderdag"
+                background_color: (1,0,0,1)
+                on_release: root.Savedag("donderdag")
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint: 1, .4
+            Button:
+                id: vrijdag
+                text: "Vrijdag"
+                background_color: (1,0,0,1)
+                on_release: root.Savedag("vrijdag")
+            Button:
+                id: zaterdag
+                text: "Zaterdag"
+                background_color: (1,0,0,1)
+                on_release: root.Savedag("zaterdag")
+            Button:
+                id: zondag
+                text: "Zondag"
+                background_color: (1,0,0,1)
+                on_release: root.Savedag("zondag")
+        BoxLayout:
+            id: BoxMessageAP
+            orientation: "vertical"
+            size_hint: 1, .2
+            Button:
+                text: "Opslaan"
+                on_release: app.submit_klas()
+            Button:
+                text: "Verwijderen"
+                on_release: root.verwijderKlas()
+                on_release: root.dismiss()
+
 
 <Navbar>:
     name: "Navbar"

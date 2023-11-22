@@ -13,13 +13,12 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.dropdown import DropDown
 from kivy.uix.textinput import TextInput
 from kivy.clock import Clock
+from kivy.uix.popup import Popup
 import sqlite3
 
 lijst_dagen = []
 
 #Verschillende schermen benoemen
-class VakkenPopup(Screen):
-    pass
 class Navbar(Screen):
     pass
 class Dashboard(Screen):
@@ -45,12 +44,45 @@ class Schoolwerk(Screen):
             button = Button(text=str(replace))
             self.ids.BoxHwPw.add_widget(button)
 
+class PopupVak(Popup):
+    def verwijderKlas(self):
+        naam = self.title.split(" - ")[0]
+
+        conn = sqlite3.connect('ScorroDB.db')
+        c = conn.cursor()
+
+        c.execute(f"DELETE FROM vakken WHERE naam = '{naam}'")
+
+        conn.commit()
+        conn.close()
+
+        #vakken refreshen
+
+        
+
 class Vakken(Screen):
+    def popupVak(self, naam):
+        naam = naam.split("\n")[0]
+
+        popup = PopupVak(title=f"{naam} - vak aanpassen")
+        popup.ids.naam_vakAP.text = naam
+        popup.open()
+
+        conn = sqlite3.connect('ScorroDB.db')
+        c = conn.cursor()
+
+        c.execute(f"SELECT * FROM vakken WHERE naam = '{naam}'")
+        records = c.fetchall()
+
+        conn.commit()
+        conn.close()
+
     def on_enter(self):
         vakken_lijst = Scorro.show_klassen(self)
         self.ids.BoxVakken.clear_widgets()
         for vak in vakken_lijst:
             button = Button(text=str(vak[0]) + "\n" + str(vak[1]))
+            button.bind(on_press=lambda button: self.popupVak(button.text))
             self.ids.BoxVakken.add_widget(button)
 
 class Cijfers(Screen):
@@ -91,10 +123,13 @@ class NieuwVak(Screen):
         self.ids.BoxMessage.remove_widget(self.ids.BoxMessage.children[0])
 
     def SavedVak(self):
-        message = Label(text="Vak opgeslagen!")
-        self.ids.BoxMessage.add_widget(message)
-        Clock.schedule_once(lambda x: self.hide_message(), 1)
-    
+        text = self.ids.naam_vak.text
+        if lijst_dagen != []:
+            if text != "":
+                message = Label(text="Vak opgeslagen!")
+                self.ids.BoxMessage.add_widget(message)
+                Clock.schedule_once(lambda x: self.hide_message(), 1.5)
+
     def Savedag(self, dag):
         colour_selec = (0,1,0,1)
         colour_deselec = (1,0,0,1)
@@ -225,7 +260,6 @@ class Scorro(App):
         conn.commit()
         conn.close()
         return records
-    
 
     #functies voor cijfers
     def submit_cijfer(self):
