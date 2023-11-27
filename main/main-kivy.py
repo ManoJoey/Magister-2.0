@@ -45,6 +45,11 @@ class Schoolwerk(Screen):
             self.ids.BoxHwPw.add_widget(button)
 
 class PopupVak(Popup):
+    def on_enter(self):
+        pass
+
+
+
     def verwijderKlas(self):
         naam = self.title.split(" - ")[0]
 
@@ -56,13 +61,16 @@ class PopupVak(Popup):
         conn.commit()
         conn.close()
 
-        #vakken refreshen
-
+        vakken_screen = App.get_running_app().root.get_screen("vakken").ids.BoxVakken
         
-
+        for vak in vakken_screen.children:
+            if vak.text == naam:
+                vakken_screen.remove_widget(vak)
+        
 class Vakken(Screen):
-    def popupVak(self, naam):
-        naam = naam.split("\n")[0]
+    def popupVak(self, naam, dagen):
+        
+        #nu moeten dagen geselecteerd worden in de popup
 
         popup = PopupVak(title=f"{naam} - vak aanpassen")
         popup.ids.naam_vakAP.text = naam
@@ -81,9 +89,10 @@ class Vakken(Screen):
         vakken_lijst = Scorro.show_klassen(self)
         self.ids.BoxVakken.clear_widgets()
         for vak in vakken_lijst:
-            button = Button(text=str(vak[0]) + "\n" + str(vak[1]))
-            button.bind(on_press=lambda button: self.popupVak(button.text))
+            button = Button(text=str(vak[0]))
+            button.bind(on_press=lambda button: self.popupVak(button.text, vak[1]))
             self.ids.BoxVakken.add_widget(button)
+
 
 class Cijfers(Screen):
     def on_enter(self):
@@ -259,6 +268,7 @@ class Scorro(App):
 
         conn.commit()
         conn.close()
+
         return records
 
     #functies voor cijfers
