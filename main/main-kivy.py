@@ -17,6 +17,7 @@ from kivy.uix.popup import Popup
 import sqlite3
 
 lijst_dagen = []
+dagen_popup = []
 
 #Verschillende schermen benoemen
 class Navbar(Screen):
@@ -45,10 +46,111 @@ class Schoolwerk(Screen):
             self.ids.BoxHwPw.add_widget(button)
 
 class PopupVak(Popup):
-    def on_enter(self):
-        pass
+    def on_open(self):
+        naam = self.title.split(" - ")[0]
+
+        conn = sqlite3.connect('ScorroDB.db')
+        c = conn.cursor()
+
+        c.execute(f"SELECT * FROM vakken WHERE naam = '{naam}'")
+        records = c.fetchall()
+
+        conn.commit()
+        conn.close()
+
+        colour_selec = (0,1,0,1)
+        colour_deselec = (1,0,0,1)
+
+        dagen = records[0][1].replace("[", "").replace("]", "").replace(" ", "").replace("'", "").split(",")
+        for dag in dagen:
+            dagen_popup.append(dag)
+        
+        for dag in dagen_popup:
+            if dag == 'maandag':
+                self.ids.maandag.background_color = colour_selec
+            if dag == 'dinsdag':
+                self.ids.dinsdag.background_color = colour_selec
+            if dag == 'woensdag':
+                self.ids.woensdag.background_color = colour_selec
+            if dag == 'donderdag':
+                self.ids.donderdag.background_color = colour_selec
+            if dag == 'vrijdag':
+                self.ids.vrijdag.background_color = colour_selec
+            if dag == 'zaterdag':
+                self.ids.zaterdag.background_color = colour_selec
+            if dag == 'zondag':
+                self.ids.zondag.background_color = colour_selec
+
+    def Savedag(self, dag):
+        colour_selec = (0,1,0,1)
+        colour_deselec = (1,0,0,1)
+        if dag in dagen_popup:
+            dagen_popup.remove(dag)
+            if dag == 'maandag':
+                self.ids.maandag.background_color = colour_deselec
+            if dag == 'dinsdag':
+                self.ids.dinsdag.background_color = colour_deselec
+            if dag == 'woensdag':
+                self.ids.woensdag.background_color = colour_deselec
+            if dag == 'donderdag':
+                self.ids.donderdag.background_color = colour_deselec
+            if dag == 'vrijdag':
+                self.ids.vrijdag.background_color = colour_deselec
+            if dag == 'zaterdag':
+                self.ids.zaterdag.background_color = colour_deselec
+            if dag == 'zondag':
+                self.ids.zondag.background_color = colour_deselec
+        else:
+            dagen_popup.append(dag)
+            if dag == 'maandag':
+                self.ids.maandag.background_color = colour_selec
+            if dag == 'dinsdag':
+                self.ids.dinsdag.background_color = colour_selec
+            if dag == 'woensdag':
+                self.ids.woensdag.background_color = colour_selec
+            if dag == 'donderdag':
+                self.ids.donderdag.background_color = colour_selec
+            if dag == 'vrijdag':
+                self.ids.vrijdag.background_color = colour_selec
+            if dag == 'zaterdag':
+                self.ids.zaterdag.background_color = colour_selec
+            if dag == 'zondag':
+                self.ids.zondag.background_color = colour_selec
 
 
+    def OW_klas(self):
+        #lijst dagen klopt niet
+        text = self.ids.naam_vakAP.text
+        print(dagen_popup)
+        if dagen_popup != []:
+            if text != "":
+                #connect to database
+                conn = sqlite3.connect('ScorroDB.db')
+                c = conn.cursor()
+            
+                c.execute("INSERT INTO vakken VALUES (:naam, :dag)",
+                {
+                    'naam': text,
+                    'dag': str(dagen_popup),
+                })
+                dagen = str(dagen_popup)
+                c.execute("""UPDATE vakken SET
+                    naam = :naam,
+                    dag = :dag
+                    WHERE naam = :naam""",
+                    {
+                    'naam': text,
+                    'dag': str(dagen_popup),
+                })
+
+                conn.commit()
+                conn.close()
+                print("vak opgeslagen")
+
+            else:
+                print("Geen tekst")
+        else:
+            print("Geen dagen")
 
     def verwijderKlas(self):
         naam = self.title.split(" - ")[0]
@@ -68,29 +170,17 @@ class PopupVak(Popup):
                 vakken_screen.remove_widget(vak)
         
 class Vakken(Screen):
-    def popupVak(self, naam, dagen):
-        
-        #nu moeten dagen geselecteerd worden in de popup
-
+    def popupVak(self, naam):
         popup = PopupVak(title=f"{naam} - vak aanpassen")
         popup.ids.naam_vakAP.text = naam
         popup.open()
-
-        conn = sqlite3.connect('ScorroDB.db')
-        c = conn.cursor()
-
-        c.execute(f"SELECT * FROM vakken WHERE naam = '{naam}'")
-        records = c.fetchall()
-
-        conn.commit()
-        conn.close()
 
     def on_enter(self):
         vakken_lijst = Scorro.show_klassen(self)
         self.ids.BoxVakken.clear_widgets()
         for vak in vakken_lijst:
             button = Button(text=str(vak[0]))
-            button.bind(on_press=lambda button: self.popupVak(button.text, vak[1]))
+            button.bind(on_press=lambda button: self.popupVak(button.text))
             self.ids.BoxVakken.add_widget(button)
 
 
