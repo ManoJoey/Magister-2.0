@@ -14,6 +14,8 @@ from kivy.uix.dropdown import DropDown
 from kivy.uix.textinput import TextInput
 from kivy.clock import Clock
 from kivy.uix.popup import Popup
+from kivy.uix.scrollview import ScrollView
+from kivymd.uix.picker import MDDatePicker
 import sqlite3
 
 lijst_dagen = []
@@ -112,6 +114,11 @@ class PopupVak(Popup):
                 for vak in vakken_screen.children:
                     if vak.text == old_name:
                         vak.text = text
+                
+                sorted_buttons = sorted(vakken_screen.children, key=lambda x: x.text)
+                vakken_screen.clear_widgets()
+                for button in sorted_buttons:
+                    vakken_screen.add_widget(button)
             else:
                 print("Geen tekst")
         else:
@@ -141,10 +148,12 @@ class Vakken(Screen):
         popup.open()
 
     def on_enter(self):
+        window_size = int(Window.size[1]) / 10
         vakken_lijst = Scorro.show_klassen(self)
         self.ids.BoxVakken.clear_widgets()
+
         for vak in vakken_lijst:
-            button = Button(text=str(vak[0]))
+            button = Button(text=str(vak[0]), size_hint_y=None, height=window_size)
             button.bind(on_press=lambda button: self.popupVak(button.text))
             self.ids.BoxVakken.add_widget(button)
         
@@ -442,6 +451,10 @@ class Scorro(App):
         conn.commit()
         conn.close()
         return records
+    
+    def kies_datum(self):
+        date_dialog = MDDatePicker()
+        date_dialog.open()
 
         
 Window.size = (350, 600)

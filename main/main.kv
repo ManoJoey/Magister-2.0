@@ -361,16 +361,27 @@ WindowManager:
             id: welkHW
             multiline: False
             size_hint: 1, .2
+            hint_text: "Huiswerk"
         TextInput:
             #extra info
             id: infoHW
             multiline: True
             size_hint: 1, .2
-        TextInput:
-            #datum
-            id: datumHW
-            multiline: False
+            hint_text: "Extra informatie"
+        Label:
+            id: date_label
             size_hint: 1, .2
+        Button:
+            id: date_picker
+            text: "Kies Datum"
+            size_hint: 1, .2
+            on_release: app.kies_datum()
+        #TextInput:
+            #datum
+            #id: datumHW
+            #multiline: False
+            #size_hint: 1, .2
+            #hint_text: "Datum"
         
         Spinner:
             id: kiesvakHW
@@ -635,13 +646,18 @@ WindowManager:
                 Rectangle:
                     pos: self.pos
                     size: self.size
-        BoxLayout:
-            id: BoxVakken
-            orientation: "vertical"
-            #Lijst met Vakken
+        ScrollView:
+            do_scroll_x: False
+            do_scroll_y: True
+            GridLayout:
+                id: BoxVakken
+                cols: 1
+                size_hint_y: None
+                height: self.minimum_height
+                #Lijst met Vakken
         BoxLayout:
             orientation: "horizontal"
-            size_hint: 1, .3
+            size_hint: 1, .2
             Button: 
                 text: "Vak toevoegen"
                 on_release: app.root.current = "nieuw vak"

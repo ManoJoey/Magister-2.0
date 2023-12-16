@@ -2,7 +2,6 @@
 #: import NoTransition kivy.uix.screenmanager.NoTransition
 
 WindowManager:
-    id: screen_manager
     Dashboard:
     Navbar:
     Cijfers:
@@ -17,6 +16,76 @@ WindowManager:
 
 <ScreenManager>:
     transition: NoTransition()
+
+<PopupVak>:
+    name: "popup vak"
+    size_hint: (None, None)
+    size_hint: (0.9, 0.9)
+    BoxLayout:
+        orientation: "vertical"
+        size_hint: 1, .9
+        pos_hint: {"top": 1}
+        
+        TextInput:
+            #naam vak
+            id: naam_vakAP
+            multiline: False
+            size_hint: 1, .2
+        BoxLayout:
+            id: BoxDagenAP
+            orientation: "horizontal"
+            size_hint: 1, .4
+            Button:
+                id: maandag
+                text: "Maandag"
+                background_color: (1,0,0,1)
+                on_release: root.Savedag("maandag")
+            Button:
+                id: dinsdag
+                text: "Dinsdag"
+                background_color: (1,0,0,1)
+                on_release: root.Savedag("dinsdag")
+            Button:
+                id: woensdag
+                text: "Woensdag"
+                background_color: (1,0,0,1)
+                on_release: root.Savedag("woensdag")
+            Button:
+                id: donderdag
+                text: "Donderdag"
+                background_color: (1,0,0,1)
+                on_release: root.Savedag("donderdag")
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint: 1, .4
+            Button:
+                id: vrijdag
+                text: "Vrijdag"
+                background_color: (1,0,0,1)
+                on_release: root.Savedag("vrijdag")
+            Button:
+                id: zaterdag
+                text: "Zaterdag"
+                background_color: (1,0,0,1)
+                on_release: root.Savedag("zaterdag")
+            Button:
+                id: zondag
+                text: "Zondag"
+                background_color: (1,0,0,1)
+                on_release: root.Savedag("zondag")
+        BoxLayout:
+            id: BoxMessageAP
+            orientation: "vertical"
+            size_hint: 1, .2
+            Button:
+                text: "Opslaan"
+                on_release: root.OW_klas()
+                on_release: root.dismiss()
+            Button:
+                text: "Verwijderen"
+                on_release: root.verwijderKlas()
+                on_release: root.dismiss()
+
 
 <Navbar>:
     name: "Navbar"
@@ -222,7 +291,6 @@ WindowManager:
                 on_release: app.root.current = "nieuw proefwerk"
     Navbar:
 
-# hier komt een grote lijst met alle taken
 <Schoolwerk>:
     name: "schoolwerk"
     BoxLayout:
@@ -238,10 +306,29 @@ WindowManager:
                 Rectangle:
                     pos: self.pos
                     size: self.size
+        GridLayout:
+            pos_hint: {"top": 1}
+            cols: 4
+            size_hint: 1, .2
+            valign: "middle"
+            canvas.before:
+                Color:
+                    rgba: 0, 1, 1, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            Label:
+                text: "Werk"
+            Label:
+                text: "Datum"
+            Label:
+                text: "Beschrijving"
+            Label:
+                text: "Vak"
+        #Lijst met Huiswerk en Toetsen
         BoxLayout:
-            orientation: "horizontal"
-            #Lijst met Huiswerk en Toetsen
-
+            id: BoxHwPw
+            orientation:"vertical"
         BoxLayout:
             orientation: "horizontal"
             size_hint: 1, .1
@@ -271,27 +358,28 @@ WindowManager:
                     size: self.size
         TextInput:
             #wat is het
+            id: welkHW
             multiline: False
             size_hint: 1, .2
         TextInput:
             #extra info
+            id: infoHW
             multiline: True
             size_hint: 1, .2
         TextInput:
             #datum
+            id: datumHW
             multiline: False
             size_hint: 1, .2
         
         Spinner:
-            id: kiesvak
+            id: kiesvakHW
             size_hint: 1, .2
             text: "Selecteer een vak"
-            values: ["Nederlands", "Wiskunde", "LO"]
-
-            on_text: root.spinner_clicked(kiesvak.text)
+            on_press: root.spinnerHW_clicked()
         Button:
             text: "Opslaan"
-            on_release: app.root.current = "dashboard"
+            on_release: app.submit_huiswerk()
     Navbar:
 
 
@@ -312,27 +400,28 @@ WindowManager:
                     size: self.size
         TextInput:
             #wat is het
+            id: welkPW
             multiline: False
             size_hint: 1, .2
         TextInput:
             #extra info
+            id: infoPW
             multiline: True
             size_hint: 1, .2
         TextInput:
             #datum
+            id: datumPW
             multiline: False
             size_hint: 1, .2
         
         Spinner:
-            id: kiesvak3
+            id: kiesvakPW
             size_hint: 1, .2
             text: "Selecteer een vak"
-            values: ["Nederlands", "Wiskunde", "LO"]
-
-            on_text: root.spinner_clicked(kiesvak3.text)
+            on_press: root.spinnerPW_clicked()
         Button:
             text: "Opslaan"
-            on_release: app.root.current = "dashboard"
+            on_release: app.submit_proefwerk()
     Navbar:
 
 
@@ -416,27 +505,28 @@ WindowManager:
                     size: self.size
         TextInput:
             #cijfer
+            id: welkCF
             multiline: False
             size_hint: 1, .2
         TextInput:
             #weging
-            multiline: True
+            id: wegingCF
+            multiline: False
             size_hint: 1, .2
         TextInput:
             #omschrijving - optioneel
+            id: infoCF
             multiline: False
             size_hint: 1, .2
         
         Spinner:
-            id: kiesvak2
+            id: kiesvakCF
             size_hint: 1, .2
             text: "Selecteer een vak"
-            values: ["Nederlands", "Wiskunde", "LO"]
-
-            on_text: root.spinner_clicked(kiesvak2.text)
+            on_press: root.spinnerCF_clicked()
         Button:
             text: "Opslaan"
-            on_release: app.root.current = "cijfers"
+            on_release: app.submit_cijfer()
     Navbar:
 
 
@@ -465,7 +555,7 @@ WindowManager:
         pos_hint: {"top": 1}
         Label:
             text: "Nieuw Vak"
-            size_hint: 1, 0.2
+            size_hint: 1, .2
             canvas.before:
                 Color:
                     rgba: 1, 0, 0, 1
@@ -479,27 +569,55 @@ WindowManager:
             multiline: False
             size_hint: 1, .2
         BoxLayout:
+            id: BoxDagen
             orientation: "horizontal"
+            size_hint: 1, .4
             Button:
+                id: maandag
                 text: "Maandag"
+                background_color: (1,0,0,1)
+                on_release: root.Savedag("maandag")
             Button:
+                id: dinsdag
                 text: "Dinsdag"
+                background_color: (1,0,0,1)
+                on_release: root.Savedag("dinsdag")
             Button:
+                id: woensdag
                 text: "Woensdag"
+                background_color: (1,0,0,1)
+                on_release: root.Savedag("woensdag")
             Button:
+                id: donderdag
                 text: "Donderdag"
+                background_color: (1,0,0,1)
+                on_release: root.Savedag("donderdag")
         BoxLayout:
             orientation: "horizontal"
+            size_hint: 1, .4
             Button:
+                id: vrijdag
                 text: "Vrijdag"
+                background_color: (1,0,0,1)
+                on_release: root.Savedag("vrijdag")
             Button:
+                id: zaterdag
                 text: "Zaterdag"
+                background_color: (1,0,0,1)
+                on_release: root.Savedag("zaterdag")
             Button:
+                id: zondag
                 text: "Zondag"
-                on_release: app.show_klassen()
-        Button:
-            text: "Opslaan"
-            on_release: app.submit_klas()
+                background_color: (1,0,0,1)
+                on_release: root.Savedag("zondag")
+        BoxLayout:
+            id: BoxMessage
+            orientation: "vertical"
+            size_hint: 1, .2
+            Button:
+                text: "Opslaan"
+                on_release: app.submit_klas()
+                on_release: root.SavedVak()
     Navbar:
 
 <Vakken>:
@@ -510,19 +628,25 @@ WindowManager:
         size_hint: 1, .9
         Label:
             text: "Vakken"
+            size_hint: 1, .2
             canvas.before:
                 Color:
                     rgba: 1, 1, 0, 1
                 Rectangle:
                     pos: self.pos
                     size: self.size
+        ScrollView:
+            do_scroll_x: False
+            do_scroll_y: True
+            GridLayout:
+                id: BoxVakken
+                cols: 1
+                size_hint_y: None
+                height: self.minimum_height
+                #Lijst met Vakken
         BoxLayout:
             orientation: "horizontal"
-            #Lijst met Vakken
-
-        BoxLayout:
-            orientation: "horizontal"
-            size_hint: 1, .1
+            size_hint: 1, .2
             Button: 
                 text: "Vak toevoegen"
                 on_release: app.root.current = "nieuw vak"
