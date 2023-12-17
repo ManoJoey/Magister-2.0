@@ -1,22 +1,17 @@
 import kivy
-from kivy.app import App
+from kivymd.app import MDApp
+
 from kivy.uix.label import Label
-from kivy.uix.gridlayout import GridLayout
-from kivy.uix.textinput import TextInput
 from kivy.uix.button import Button
-from kivy.uix.widget import Widget
-from kivy.properties import ObjectProperty
-from kivy.config import Config
+from kivy.uix.scrollview import ScrollView
+from kivymd.uix.pickers import MDDatePicker
+
 from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.uix.dropdown import DropDown
-from kivy.uix.textinput import TextInput
 from kivy.clock import Clock
 from kivy.uix.popup import Popup
-from kivy.uix.scrollview import ScrollView
-from kivymd.app import MDApp
-from kivymd.uix.picker import MDDatePicker
+
 import sqlite3
 
 lijst_dagen = []
@@ -34,18 +29,14 @@ class Schoolwerk(Screen):
         pw_lijst = Scorro.show_proefwerken(self)
         self.ids.BoxHwPw.clear_widgets()
         for item in pw_lijst:
-            replace = str(item).replace("(", "")
-            replace = replace.replace(")", "")
-            replace = replace.replace("'", "")
+            replace = str(item).replace("(", "").replace(")", "").replace("'", "")
             button = Button(text=str(replace))
             self.ids.BoxHwPw.add_widget(button)
             
         hw_lijst = Scorro.show_huiswerk(self)
         for item in hw_lijst:
-            replace = str(item).replace("(", "")
-            replace = replace.replace(")", "")
-            replace = replace.replace("'", "")
-            button = Button(text=str(replace))
+            replace = str(item).replace("(", "").replace(")", "").replace("'", "").replace(" ", "").split(",")
+            button = Button(text=str(replace[0] + "\n" + replace[3] + " - " + replace[1]), halign="left")
             self.ids.BoxHwPw.add_widget(button)
 
 class PopupVak(Popup):
@@ -111,7 +102,7 @@ class PopupVak(Popup):
 
                 dagen_popup.clear()
                 
-                vakken_screen = App.get_running_app().root.get_screen("vakken").ids.BoxVakken
+                vakken_screen = MDApp.get_running_app().root.get_screen("vakken").ids.BoxVakken
                 for vak in vakken_screen.children:
                     if vak.text == old_name:
                         vak.text = text
@@ -136,7 +127,7 @@ class PopupVak(Popup):
         conn.commit()
         conn.close()
 
-        vakken_screen = App.get_running_app().root.get_screen("vakken").ids.BoxVakken
+        vakken_screen = MDApp.get_running_app().root.get_screen("vakken").ids.BoxVakken
         
         for vak in vakken_screen.children:
             if vak.text == naam:
@@ -225,8 +216,7 @@ class CijferBerekenen(Screen):
 class WindowManager(ScreenManager):
     pass
 
-
-class Scorro(App):
+class Scorro(MDApp):
     def build(self):
         self.icon = "Images/Logo.png"
         
@@ -287,13 +277,14 @@ class Scorro(App):
                 
                 #reset buttons
                 lijst_dagen = []
-                self.root.get_screen('nieuw vak').ids.maandag.background_color = (1,0,0,1)
-                self.root.get_screen('nieuw vak').ids.dinsdag.background_color = (1,0,0,1)
-                self.root.get_screen('nieuw vak').ids.woensdag.background_color = (1,0,0,1)
-                self.root.get_screen('nieuw vak').ids.donderdag.background_color = (1,0,0,1)
-                self.root.get_screen('nieuw vak').ids.vrijdag.background_color = (1,0,0,1)
-                self.root.get_screen('nieuw vak').ids.zaterdag.background_color = (1,0,0,1)
-                self.root.get_screen('nieuw vak').ids.zondag.background_color = (1,0,0,1)
+                origin = self.root.get_screen('nieuw vak')
+                origin.ids.maandag.background_color = (1,0,0,1)
+                origin.ids.dinsdag.background_color = (1,0,0,1)
+                origin.ids.woensdag.background_color = (1,0,0,1)
+                origin.ids.donderdag.background_color = (1,0,0,1)
+                origin.ids.vrijdag.background_color = (1,0,0,1)
+                origin.ids.zaterdag.background_color = (1,0,0,1)
+                origin.ids.zondag.background_color = (1,0,0,1)
 
                 self.root.get_screen('nieuw vak').ids.naam_vak.text = ''
                 print("vak opgeslagen")
@@ -366,6 +357,7 @@ class Scorro(App):
         naam = self.root.get_screen('nieuw proefwerk').ids.welkPW.text
         datum = self.root.get_screen('nieuw proefwerk').ids.datumPW.text
         vak = self.root.get_screen('nieuw proefwerk').ids.kiesvakPW.text
+        beschrijving = self.root.get_screen('nieuw proefwerk').ids.infoPW.text
         if naam != "":
             if datum != "":
                 if vak != "Selecteer een vak":
@@ -374,10 +366,10 @@ class Scorro(App):
 
                     c.execute("INSERT INTO proefwerken VALUES (:naam, :datum, :beschrijving, :vak)",
                     {
-                        'naam': self.root.get_screen('nieuw proefwerk').ids.welkPW.text,
-                        'datum': self.root.get_screen('nieuw proefwerk').ids.datumPW.text,
-                        'beschrijving': self.root.get_screen('nieuw proefwerk').ids.infoPW.text,
-                        'vak': self.root.get_screen('nieuw proefwerk').ids.kiesvakPW.text,
+                        'naam': naam,
+                        'datum': datum,
+                        'beschrijving': beschrijving,
+                        'vak': vak,
                     })
 
 
@@ -411,8 +403,10 @@ class Scorro(App):
     #functies voor huiswerk
     def submit_huiswerk(self):
         naam = self.root.get_screen('nieuw huiswerk').ids.welkHW.text
-        datum = self.root.get_screen('nieuw huiswerk').ids.datumHW.text
+        datum = self.root.get_screen('nieuw huiswerk').ids.date_label.text
         vak = self.root.get_screen('nieuw huiswerk').ids.kiesvakHW.text
+        beschrijving = self.root.get_screen('nieuw huiswerk').ids.infoHW.text
+
         if naam != "":
             if datum != "":
                 if vak != "Selecteer een vak":
@@ -421,15 +415,15 @@ class Scorro(App):
 
                     c.execute("INSERT INTO huiswerk VALUES (:naam, :datum, :beschrijving, :vak)",
                     {
-                        'naam': self.root.get_screen('nieuw huiswerk').ids.welkHW.text,
-                        'datum': self.root.get_screen('nieuw huiswerk').ids.datumHW.text,
-                        'beschrijving': self.root.get_screen('nieuw huiswerk').ids.infoHW.text,
-                        'vak': self.root.get_screen('nieuw huiswerk').ids.kiesvakHW.text,
+                        'naam': naam,
+                        'datum': datum,
+                        'beschrijving': beschrijving,
+                        'vak': vak,
                     })
 
 
                     self.root.get_screen('nieuw huiswerk').ids.welkHW.text = ''
-                    self.root.get_screen('nieuw huiswerk').ids.datumHW.text = ''
+                    self.root.get_screen('nieuw huiswerk').ids.date_label.text = ''
                     self.root.get_screen('nieuw huiswerk').ids.infoHW.text = ''
                     self.root.get_screen('nieuw huiswerk').ids.kiesvakHW.text = 'Selecteer een vak'
 
@@ -453,9 +447,22 @@ class Scorro(App):
         conn.close()
         return records
     
+
+    def get_date(self, instance, value, date_range):
+        d = str(value).split("-")
+        d1 = d[2]
+        d2 = d[1]
+        d3 = d[0]
+        date = str(d1 + "-" + d2 + "-" + d3)
+        self.root.get_screen('nieuw huiswerk').ids.date_label.text = date
+
     def kies_datum(self):
         date_dialog = MDDatePicker()
+        date_dialog.bind(on_save=self.get_date)
         date_dialog.open()
+        Window.size = (1, 1)
+        Window.size = (350, 600)
+        
 
         
 Window.size = (350, 600)

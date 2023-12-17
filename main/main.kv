@@ -307,28 +307,9 @@ WindowManager:
                     pos: self.pos
                     size: self.size
         GridLayout:
-            pos_hint: {"top": 1}
-            cols: 4
-            size_hint: 1, .2
-            valign: "middle"
-            canvas.before:
-                Color:
-                    rgba: 0, 1, 1, 1
-                Rectangle:
-                    pos: self.pos
-                    size: self.size
-            Label:
-                text: "Werk"
-            Label:
-                text: "Datum"
-            Label:
-                text: "Beschrijving"
-            Label:
-                text: "Vak"
-        #Lijst met Huiswerk en Toetsen
-        BoxLayout:
+            #Lijst met Huiswerk en Toetsen
             id: BoxHwPw
-            orientation:"vertical"
+            cols: 1
         BoxLayout:
             orientation: "horizontal"
             size_hint: 1, .1
@@ -370,19 +351,13 @@ WindowManager:
             hint_text: "Extra informatie"
         Label:
             id: date_label
+            color: 0,0,0,1
             size_hint: 1, .2
         Button:
             id: date_picker
             text: "Kies Datum"
             size_hint: 1, .2
             on_release: app.kies_datum()
-        #TextInput:
-            #datum
-            #id: datumHW
-            #multiline: False
-            #size_hint: 1, .2
-            #hint_text: "Datum"
-        
         Spinner:
             id: kiesvakHW
             size_hint: 1, .2
