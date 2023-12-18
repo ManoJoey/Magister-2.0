@@ -86,6 +86,28 @@ WindowManager:
                 on_release: root.verwijderKlas()
                 on_release: root.dismiss()
 
+<PopupSW>:
+    name: "popup schoolwerk"
+    size_hint: (None, None)
+    size_hint: (0.9, 0.9)
+    BoxLayout:
+        orientation: "vertical"
+        size_hint: 1, .9
+        pos_hint: {"top": 1}
+        TextInput:
+            #naam huiswerk
+            id: naam_hwP
+            multiline: False
+            size_hint: 1, .2
+        TextInput:
+            #extra info
+            id: info_hwP
+            multiline: False
+            size_hint: 1, .2
+        Button:
+            id: datm_hwP
+            size_hint: 1, .2
+
 
 <Navbar>:
     name: "Navbar"
@@ -279,7 +301,6 @@ WindowManager:
         BoxLayout:
             orientation: "horizontal"
             #Dagoverzicht
-
         BoxLayout:
             orientation: "horizontal"
             size_hint: 1, .1
@@ -306,10 +327,15 @@ WindowManager:
                 Rectangle:
                     pos: self.pos
                     size: self.size
-        GridLayout:
-            #Lijst met Huiswerk en Toetsen
-            id: BoxHwPw
-            cols: 1
+        ScrollView:
+            do_scroll_x: False
+            do_scroll_y: True
+            GridLayout:
+                id: BoxHwPw
+                cols: 1
+                size_hint_y: None
+                height: self.minimum_height
+                #Lijst met pw en hw
         BoxLayout:
             orientation: "horizontal"
             size_hint: 1, .1
@@ -343,16 +369,6 @@ WindowManager:
             multiline: False
             size_hint: 1, .2
             hint_text: "Huiswerk"
-        TextInput:
-            #extra info
-            id: infoHW
-            multiline: True
-            size_hint: 1, .2
-            hint_text: "Extra informatie"
-        Label:
-            id: date_label
-            color: 0,0,0,1
-            size_hint: 1, .2
         Button:
             id: date_picker
             text: "Kies Datum"
@@ -363,6 +379,12 @@ WindowManager:
             size_hint: 1, .2
             text: "Selecteer een vak"
             on_press: root.spinnerHW_clicked()
+        TextInput:
+            #extra info
+            id: infoHW
+            multiline: True
+            size_hint: 1, .2
+            hint_text: "Extra informatie"
         Button:
             text: "Opslaan"
             on_release: app.submit_huiswerk()

@@ -13,6 +13,7 @@ from kivy.clock import Clock
 from kivy.uix.popup import Popup
 
 import sqlite3
+from datetime import datetime
 
 lijst_dagen = []
 dagen_popup = []
@@ -24,20 +25,34 @@ class Dashboard(Screen):
     pass
 class Planning(Screen):
     pass
+
+class PopupSW(Popup):
+    pass
+
 class Schoolwerk(Screen):
+    def popupSW(self, text):
+        naam = text.split("\n")[0]
+        popup = PopupSW(title=f"{naam} - huiswerk aanpassen")
+        popup.ids.naam_hwP.text = naam
+        popup.open()
+
     def on_enter(self):
+        window_size = int(Window.size[1]) / 10
+
         pw_lijst = Scorro.show_proefwerken(self)
         self.ids.BoxHwPw.clear_widgets()
         for item in pw_lijst:
-            replace = str(item).replace("(", "").replace(")", "").replace("'", "")
-            button = Button(text=str(replace))
+            replace = str(item).replace("(", "").replace(")", "").replace("'", "").replace(" ", "").split(",")
+            button = Button(text=str(replace[0] + "\n" + replace[3] + " - " + replace[1]), halign="left", size_hint_y=None, height=window_size)
             self.ids.BoxHwPw.add_widget(button)
             
         hw_lijst = Scorro.show_huiswerk(self)
         for item in hw_lijst:
             replace = str(item).replace("(", "").replace(")", "").replace("'", "").replace(" ", "").split(",")
-            button = Button(text=str(replace[0] + "\n" + replace[3] + " - " + replace[1]), halign="left")
+            button = Button(text=str(replace[0] + "\n" + replace[3] + " - " + replace[1]), halign="left", size_hint_y=None, height=window_size, on_press=lambda button: self.popupSW(button.text))
             self.ids.BoxHwPw.add_widget(button)
+        
+        self.ids.BoxHwPw.children.sort(reverse=True, key=lambda date: datetime.strptime(date.text.split("\n")[1].split(" - ")[1], "%d-%m-%Y"))
 
 class PopupVak(Popup):
     def on_open(self):
@@ -107,10 +122,7 @@ class PopupVak(Popup):
                     if vak.text == old_name:
                         vak.text = text
                 
-                sorted_buttons = sorted(vakken_screen.children, key=lambda x: x.text)
-                vakken_screen.clear_widgets()
-                for button in sorted_buttons:
-                    vakken_screen.add_widget(button)
+                vakken_screen.children.sort(reverse=True, key=lambda x: x.text.lower())
             else:
                 print("Geen tekst")
         else:
@@ -139,6 +151,7 @@ class Vakken(Screen):
         popup.ids.naam_vakAP.text = naam
         popup.open()
 
+
     def on_enter(self):
         window_size = int(Window.size[1]) / 10
         vakken_lijst = Scorro.show_klassen(self)
@@ -149,10 +162,7 @@ class Vakken(Screen):
             button.bind(on_press=lambda button: self.popupVak(button.text))
             self.ids.BoxVakken.add_widget(button)
         
-        sorted_buttons = sorted(self.ids.BoxVakken.children, key=lambda x: x.text)
-        self.ids.BoxVakken.clear_widgets()
-        for button in sorted_buttons:
-            self.ids.BoxVakken.add_widget(button)
+        self.ids.BoxVakken.children.sort(reverse=True, key=lambda x: x.text.lower())
 
 
 class Cijfers(Screen):
@@ -403,12 +413,12 @@ class Scorro(MDApp):
     #functies voor huiswerk
     def submit_huiswerk(self):
         naam = self.root.get_screen('nieuw huiswerk').ids.welkHW.text
-        datum = self.root.get_screen('nieuw huiswerk').ids.date_label.text
+        datum = self.root.get_screen('nieuw huiswerk').ids.date_picker.text
         vak = self.root.get_screen('nieuw huiswerk').ids.kiesvakHW.text
         beschrijving = self.root.get_screen('nieuw huiswerk').ids.infoHW.text
 
         if naam != "":
-            if datum != "":
+            if datum != "Kies Datum":
                 if vak != "Selecteer een vak":
                     conn = sqlite3.connect('ScorroDB.db')
                     c = conn.cursor()
@@ -423,7 +433,7 @@ class Scorro(MDApp):
 
 
                     self.root.get_screen('nieuw huiswerk').ids.welkHW.text = ''
-                    self.root.get_screen('nieuw huiswerk').ids.date_label.text = ''
+                    self.root.get_screen('nieuw huiswerk').ids.date_picker.text = 'Kies Datum'
                     self.root.get_screen('nieuw huiswerk').ids.infoHW.text = ''
                     self.root.get_screen('nieuw huiswerk').ids.kiesvakHW.text = 'Selecteer een vak'
 
@@ -454,7 +464,7 @@ class Scorro(MDApp):
         d2 = d[1]
         d3 = d[0]
         date = str(d1 + "-" + d2 + "-" + d3)
-        self.root.get_screen('nieuw huiswerk').ids.date_label.text = date
+        self.root.get_screen('nieuw huiswerk').ids.date_picker.text = date
 
     def kies_datum(self):
         date_dialog = MDDatePicker()
