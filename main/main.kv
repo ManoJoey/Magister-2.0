@@ -99,13 +99,18 @@ WindowManager:
             id: naam_hwP
             multiline: False
             size_hint: 1, .2
+        Button:
+            id: datum_hwP
+            size_hint: 1, .2
+            on_press: root.kies_datum_HwP()
+        Spinner:
+            id: kiesvakHwP
+            size_hint: 1, .2
+            on_press: root.spinnerHwP_clicked()
         TextInput:
             #extra info
             id: info_hwP
             multiline: False
-            size_hint: 1, .2
-        Button:
-            id: datm_hwP
             size_hint: 1, .2
 
 

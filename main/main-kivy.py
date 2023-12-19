@@ -27,28 +27,66 @@ class Planning(Screen):
     pass
 
 class PopupSW(Popup):
-    pass
+    def on_open(self):
+        naam = self.title.split(" - ")[0]
+
+        conn = sqlite3.connect('ScorroDB.db')
+        c = conn.cursor()
+
+        c.execute(f"SELECT * FROM huiswerk WHERE naam = '{naam}'")
+        records = c.fetchall()
+
+        conn.commit()
+        conn.close()
+        print(records)
+    #functies datepicker
+    def get_date(self, instance, value, date_range):
+        d = str(value).split("-")
+        d1 = d[2]
+        d2 = d[1]
+        d3 = d[0]
+        date = str(d1 + "-" + d2 + "-" + d3)
+        self.ids.datum_hwP.text = date
+
+    def kies_datum_HwP(self):
+        date = self.ids.datum_hwP.text.split("-")
+        day = int(date[0])
+        month = int(date[1])
+        year = int(date[2])
+        date_dialog = MDDatePicker(year=year, month=month, day=day)
+        date_dialog.bind(on_save=self.get_date)
+        date_dialog.open()
+        Window.size = (1, 1)
+        Window.size = (350, 600)
+    
+    #functie spinner
+    def spinnerHwP_clicked(self):
+        data = Scorro.show_klassen(self)
+        spinner = self.ids.kiesvakHwP
+        spinner.values = [str(item[0]) for item in data]
 
 class Schoolwerk(Screen):
     def popupSW(self, text):
         naam = text.split("\n")[0]
         popup = PopupSW(title=f"{naam} - huiswerk aanpassen")
         popup.ids.naam_hwP.text = naam
+        popup.ids.datum_hwP.text = text.split("\n")[1].split(" - ")[1]
+        popup.ids.kiesvakHwP.text = text.split("\n")[1].split(" - ")[0]
         popup.open()
 
     def on_enter(self):
         window_size = int(Window.size[1]) / 10
+        self.ids.BoxHwPw.clear_widgets()
 
         pw_lijst = Scorro.show_proefwerken(self)
-        self.ids.BoxHwPw.clear_widgets()
         for item in pw_lijst:
-            replace = str(item).replace("(", "").replace(")", "").replace("'", "").replace(" ", "").split(",")
+            replace = str(item).replace("(", "").replace(")", "").replace("'", "").split(", ")
             button = Button(text=str(replace[0] + "\n" + replace[3] + " - " + replace[1]), halign="left", size_hint_y=None, height=window_size)
             self.ids.BoxHwPw.add_widget(button)
             
         hw_lijst = Scorro.show_huiswerk(self)
         for item in hw_lijst:
-            replace = str(item).replace("(", "").replace(")", "").replace("'", "").replace(" ", "").split(",")
+            replace = str(item).replace("(", "").replace(")", "").replace("'", "").split(", ")
             button = Button(text=str(replace[0] + "\n" + replace[3] + " - " + replace[1]), halign="left", size_hint_y=None, height=window_size, on_press=lambda button: self.popupSW(button.text))
             self.ids.BoxHwPw.add_widget(button)
         
@@ -313,7 +351,7 @@ class Scorro(MDApp):
 
         conn.commit()
         conn.close()
-
+        records.sort(key=lambda x: x[0].lower())
         return records
 
     #functies voor cijfers
@@ -472,7 +510,6 @@ class Scorro(MDApp):
         date_dialog.open()
         Window.size = (1, 1)
         Window.size = (350, 600)
-        
 
         
 Window.size = (350, 600)
