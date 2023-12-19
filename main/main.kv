@@ -80,10 +80,14 @@ WindowManager:
             Button:
                 text: "Opslaan"
                 on_release: root.OW_klas()
-                on_release: root.dismiss()
+        GridLayout:
+            cols: 2
+            size_hint: 1, .1
             Button:
                 text: "Verwijderen"
                 on_release: root.verwijderKlas()
+            Button:
+                text: "Terug"
                 on_release: root.dismiss()
 
 <PopupSW>:
@@ -112,6 +116,19 @@ WindowManager:
             id: info_hwP
             multiline: False
             size_hint: 1, .2
+        Button:
+            text: "Opslaan"
+            size_hint: 1, .1
+            on_release: root.OW_hw()
+        GridLayout:
+            cols: 2
+            size_hint: 1, .1
+            Button:
+                text: "Verwijderen"
+                on_release: root.verwijderHw()
+            Button:
+                text: "Terug"
+                on_release: root.dismiss()
 
 
 <Navbar>:
@@ -378,7 +395,7 @@ WindowManager:
             id: date_picker
             text: "Kies Datum"
             size_hint: 1, .2
-            on_release: app.kies_datum()
+            on_release: root.kies_datumHW()
         Spinner:
             id: kiesvakHW
             size_hint: 1, .2
@@ -416,22 +433,23 @@ WindowManager:
             id: welkPW
             multiline: False
             size_hint: 1, .2
-        TextInput:
-            #extra info
-            id: infoPW
-            multiline: True
+            hint_text: "Proefwerk"
+        Button:
+            id: date_pickerPW
+            text: "Kies Datum"
             size_hint: 1, .2
-        TextInput:
-            #datum
-            id: datumPW
-            multiline: False
-            size_hint: 1, .2
-        
+            on_release: root.kies_datumPW()
         Spinner:
             id: kiesvakPW
             size_hint: 1, .2
             text: "Selecteer een vak"
             on_press: root.spinnerPW_clicked()
+        TextInput:
+            #extra info
+            id: infoPW
+            multiline: True
+            size_hint: 1, .2
+            hint_text: "Extra informatie"
         Button:
             text: "Opslaan"
             on_release: app.submit_proefwerk()
