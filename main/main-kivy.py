@@ -27,6 +27,7 @@ class Dashboard(Screen):
 class Planning(Screen):
     pass
 
+
 class PopupSW(Popup):
     def on_open(self):
         naam = self.title.split(" - ")[0]
@@ -194,6 +195,7 @@ class Schoolwerk(Screen):
         
         self.ids.BoxHwPw.children.sort(reverse=True, key=lambda date: datetime.strptime(date.text.split("\n")[1].split(" - ")[1], "%d-%m-%Y"))
 
+
 class PopupVak(Popup):
     def on_open(self):
         dagen_popup.clear()
@@ -288,6 +290,7 @@ class PopupVak(Popup):
         
         self.dismiss()
 
+
 class Vakken(Screen):
     def popupVak(self, naam):
         popup = PopupVak(title=f"{naam} - vak aanpassen")
@@ -309,7 +312,14 @@ class Vakken(Screen):
 
 class Cijfers(Screen):
     def on_enter(self):
-        print(Scorro.show_cijfers(self))
+        window_size = int(Window.size[1]) / 20
+        cijferlijst = Scorro.show_cijfers(self)
+        cijferlijst.sort(key=lambda x: x[3].lower())
+        for item in cijferlijst:
+            replace = str(item).replace("(", "").replace(")", "").replace("'", "").split(", ")
+            button = Button(text=str(replace[0] + " - " + replace[3] + " - " + replace[1] + "x"), halign="left", size_hint_y=None, height=window_size)
+            self.ids.BoxCfVak.add_widget(button)
+
 
 class NieuwHuiswerk(Screen):
     def get_date(self, instance, value, date_range):
@@ -331,6 +341,7 @@ class NieuwHuiswerk(Screen):
         data = Scorro.show_klassen(self)
         spinner = self.ids.kiesvakHW
         spinner.values = [str(item[0]) for item in data]
+
 
 class NieuwProefwerk(Screen):
     def get_date(self, instance, value, date_range):
@@ -354,11 +365,13 @@ class NieuwProefwerk(Screen):
         spinner = self.ids.kiesvakPW
         spinner.values = [str(item[0]) for item in data]
 
+
 class NieuwCijfer(Screen):
     def spinnerCF_clicked(self):
         data = Scorro.show_klassen(self)
         spinner = self.ids.kiesvakCF
         spinner.values = [str(item[0]) for item in data]
+
 
 class NieuwVak(Screen):
     def on_enter(self):
@@ -393,9 +406,9 @@ class NieuwVak(Screen):
             lijst_dagen.append(dag)
             self.ids[dag].background_color = colour_selec
 
+
 class CijferBerekenen(Screen):
     pass
-
 class WindowManager(ScreenManager):
     pass
 
@@ -492,7 +505,7 @@ class Scorro(MDApp):
     #functies voor cijfers
     def submit_cijfer(self):
         naam = self.root.get_screen('nieuw cijfer').ids.welkCF.text
-        weging = self.root.get_screen('nieuw cijfer').ids.wegingCF.text
+        weging = self.root.get_screen('nieuw cijfer').ids.wegingCF.text.replace("x", "").replace("X", "")
         vak = self.root.get_screen('nieuw cijfer').ids.kiesvakCF.text
         if naam != "":
             if weging != "":
@@ -502,10 +515,10 @@ class Scorro(MDApp):
 
                     c.execute("INSERT INTO cijfers VALUES (:cijfer, :weging, :beschrijving, :vak)",
                     {
-                        'cijfer': self.root.get_screen('nieuw cijfer').ids.welkCF.text,
-                        'weging': self.root.get_screen('nieuw cijfer').ids.wegingCF.text,
+                        'cijfer': naam,
+                        'weging': weging,
                         'beschrijving': self.root.get_screen('nieuw cijfer').ids.infoCF.text,
-                        'vak': self.root.get_screen('nieuw cijfer').ids.kiesvakCF.text,
+                        'vak': vak,
                     })
 
 
