@@ -184,13 +184,13 @@ class Schoolwerk(Screen):
         pw_lijst = Scorro.show_proefwerken(self)
         for item in pw_lijst:
             replace = str(item).replace("(", "").replace(")", "").replace("'", "").split(", ")
-            button = Button(text=str(replace[0] + "\n" + replace[3] + " - " + replace[1]), halign="left", size_hint_y=None, height=window_size, on_press=lambda button: self.popupSW(button.text), background_color=(1,0,0,1))
+            button = Button(text=str(replace[0] + "\n" + replace[3] + " - " + replace[1]), size_hint_y=None, height=window_size, on_press=lambda button: self.popupSW(button.text), background_color=(1,0,0,1))
             self.ids.BoxHwPw.add_widget(button)
             
         hw_lijst = Scorro.show_huiswerk(self)
         for item in hw_lijst:
             replace = str(item).replace("(", "").replace(")", "").replace("'", "").split(", ")
-            button = Button(text=str(replace[0] + "\n" + replace[3] + " - " + replace[1]), halign="left", size_hint_y=None, height=window_size, on_press=lambda button: self.popupSW(button.text))
+            button = Button(text=str(replace[0] + "\n" + replace[3] + " - " + replace[1]), size_hint_y=None, height=window_size, on_press=lambda button: self.popupSW(button.text))
             self.ids.BoxHwPw.add_widget(button)
         
         self.ids.BoxHwPw.children.sort(reverse=True, key=lambda date: datetime.strptime(date.text.split("\n")[1].split(" - ")[1], "%d-%m-%Y"))
@@ -214,7 +214,7 @@ class PopupVak(Popup):
         colour_deselec = (1,0,0,1)
 
         try:
-            dagen = records[0][1].replace("[", "").replace("]", "").replace(" ", "").replace("'", "").split(",")
+            dagen = records[0][1].replace("[", "").replace("]", "").replace("'", "").split(", ")
             for dag in dagen:
                 dagen_popup.append(dag)
             
@@ -309,15 +309,76 @@ class Vakken(Screen):
         
         self.ids.BoxVakken.children.sort(reverse=True, key=lambda x: x.text.lower())
 
+TotCF = ""
+class PopupCF(Popup):
+    def on_open(self):
+        global TotCF
+        vak = self.title.split(" | ")[0]
+        cijfer = self.title.split(" | ")[1]
+        weging = self.title.split(" | ")[2].split(" - ")[0].replace("x", "")
+        self.title = vak + " - cijfer aanpassen"
+
+        TotCF = vak + "|" + cijfer + "|" + weging
+    
+        conn = sqlite3.connect('ScorroDB.db')
+        c = conn.cursor()
+
+        c.execute(f"SELECT * FROM cijfers WHERE cijfer = '{cijfer}' AND weging = '{weging}' AND vak = '{vak}'")
+        records = c.fetchall()
+
+        conn.commit()
+        conn.close()
+
+        records = str(records).replace("(", "").replace(")", "").replace("[", "").replace("]", "").replace("'", "").split(", ")
+        self.ids.welkCF_p.text = records[0]
+        self.ids.wegingCF_p.text = records[1] + "x"
+        self.ids.infoCF_p.text = records[2]
+        self.ids.kiesvakCF_p.text = records[3]
+
+    def verwijdercf(self):
+        vak = TotCF.split("|")[0]
+        cijfer = TotCF.split("|")[1]
+        weging = TotCF.split("|")[2]
+        
+        conn = sqlite3.connect('ScorroDB.db')
+        c = conn.cursor()
+
+        c.execute(f"DELETE FROM cijfers WHERE cijfer = '{cijfer}' AND weging = '{weging}' AND vak = '{vak}'")
+
+        conn.commit()
+        conn.close()
+
+        cijfers_box = MDApp.get_running_app().root.get_screen("cijfers").ids.BoxCfVak
+        
+        for cf in cijfers_box.children:
+            if cf.text.split(" - ")[0] == cijfer and cf.text.split(" - ")[1] == vak and cf.text.split(" - ")[2] == str(weging + "x"):
+                cijfers_box.remove_widget(cf)
+        
+        self.dismiss()
+
+    def spinnerCFp_clicked(self):
+        data = Scorro.show_klassen(self)
+        spinner = self.ids.kiesvakCF_p
+        spinner.values = [str(item[0]) for item in data]
+
 
 class Cijfers(Screen):
+    def popupCF(self, naam):
+        vak = naam.split(" - ")[1]
+        cijfer = naam.split(" - ")[0]
+        weging = naam.split(" - ")[2]
+        popup = PopupCF(title=f"{vak} | {cijfer} | {weging} - cijfer aanpassen")
+        popup.open()
+    
     def on_enter(self):
+        self.ids.BoxCfVak.clear_widgets()
         window_size = int(Window.size[1]) / 20
         cijferlijst = Scorro.show_cijfers(self)
         cijferlijst.sort(key=lambda x: x[3].lower())
         for item in cijferlijst:
             replace = str(item).replace("(", "").replace(")", "").replace("'", "").split(", ")
-            button = Button(text=str(replace[0] + " - " + replace[3] + " - " + replace[1] + "x"), halign="left", size_hint_y=None, height=window_size)
+            button = Button(text=str(replace[0] + " - " + replace[3] + " - " + replace[1] + "x"), size_hint_y=None, height=window_size)
+            button.bind(on_press=lambda button: self.popupCF(button.text))
             self.ids.BoxCfVak.add_widget(button)
 
 
@@ -328,7 +389,7 @@ class NieuwHuiswerk(Screen):
         d2 = d[1]
         d3 = d[0]
         date = str(d1 + "-" + d2 + "-" + d3)
-        self.root.get_screen('nieuw huiswerk').ids.date_picker.text = date
+        self.ids.date_picker.text = date
 
     def kies_datumHW(self):
         date_dialog = MDDatePicker()

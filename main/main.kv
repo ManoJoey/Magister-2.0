@@ -23,14 +23,13 @@ WindowManager:
     size_hint: (0.9, 0.9)
     BoxLayout:
         orientation: "vertical"
-        size_hint: 1, .9
         pos_hint: {"top": 1}
-        
         TextInput:
             #naam vak
             id: naam_vakAP
             multiline: False
             size_hint: 1, .2
+            hint_text: "Vak"
         BoxLayout:
             id: BoxDagenAP
             orientation: "horizontal"
@@ -96,13 +95,13 @@ WindowManager:
     size_hint: (0.9, 0.9)
     BoxLayout:
         orientation: "vertical"
-        size_hint: 1, .9
         pos_hint: {"top": 1}
         TextInput:
             #naam huiswerk
             id: naam_hwP
             multiline: False
             size_hint: 1, .2
+            hint_text: "Huiswerk"
         Button:
             id: datum_hwP
             size_hint: 1, .2
@@ -116,6 +115,7 @@ WindowManager:
             id: info_hwP
             multiline: False
             size_hint: 1, .2
+            hint_text: "Extra informatie"
         Button:
             text: "Opslaan"
             size_hint: 1, .1
@@ -126,6 +126,50 @@ WindowManager:
             Button:
                 text: "Verwijderen"
                 on_release: root.verwijderHw()
+            Button:
+                text: "Terug"
+                on_release: root.dismiss()
+
+<PopupCF>:
+    name: "popup cijfer"
+    size_hint: (None, None)
+    size_hint: (0.9, 0.9)
+    BoxLayout:
+        orientation: "vertical"
+        pos_hint: {"top": 1}
+        TextInput:
+            #cijfer
+            id: welkCF_p
+            multiline: False
+            size_hint: 1, .2
+            hint_text: "Cijfer"
+        TextInput:
+            #weging
+            id: wegingCF_p
+            multiline: False
+            size_hint: 1, .2
+            hint_text: "Weging"
+        TextInput:
+            #omschrijving - optioneel
+            id: infoCF_p
+            multiline: False
+            size_hint: 1, .2
+            hint_text: "Omschrijving - optioneel"
+        Spinner:
+            id: kiesvakCF_p
+            size_hint: 1, .2
+            text: "Selecteer een vak"
+            on_press: root.spinnerCFp_clicked()
+        Button:
+            text: "Opslaan"
+            size_hint: 1, .1
+            on_release: root.OW_cf()
+        GridLayout:
+            cols: 2
+            size_hint: 1, .1
+            Button:
+                text: "Verwijderen"
+                on_release: root.verwijdercf()
             Button:
                 text: "Terug"
                 on_release: root.dismiss()
@@ -391,16 +435,16 @@ WindowManager:
             multiline: False
             size_hint: 1, .2
             hint_text: "Huiswerk"
-        Button:
-            id: date_picker
-            text: "Kies Datum"
-            size_hint: 1, .2
-            on_release: root.kies_datumHW()
         Spinner:
             id: kiesvakHW
             size_hint: 1, .2
             text: "Selecteer een vak"
             on_press: root.spinnerHW_clicked()
+        Button:
+            id: date_picker
+            text: "Kies Datum"
+            size_hint: 1, .2
+            on_release: root.kies_datumHW()
         TextInput:
             #extra info
             id: infoHW
@@ -434,16 +478,16 @@ WindowManager:
             multiline: False
             size_hint: 1, .2
             hint_text: "Proefwerk"
-        Button:
-            id: date_pickerPW
-            text: "Kies Datum"
-            size_hint: 1, .2
-            on_release: root.kies_datumPW()
         Spinner:
             id: kiesvakPW
             size_hint: 1, .2
             text: "Selecteer een vak"
             on_press: root.spinnerPW_clicked()
+        Button:
+            id: date_pickerPW
+            text: "Kies Datum"
+            size_hint: 1, .2
+            on_release: root.kies_datumPW()
         TextInput:
             #extra info
             id: infoPW
@@ -609,6 +653,7 @@ WindowManager:
             id: naam_vak
             multiline: False
             size_hint: 1, .2
+            hint_text: "Vak"
         BoxLayout:
             id: BoxDagen
             orientation: "horizontal"
