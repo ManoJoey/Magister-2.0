@@ -18,6 +18,7 @@ import ast
 
 lijst_dagen = []
 dagen_popup = []
+TotCF = ""
 
 #Verschillende schermen benoemen
 class Navbar(Screen):
@@ -309,7 +310,7 @@ class Vakken(Screen):
         
         self.ids.BoxVakken.children.sort(reverse=True, key=lambda x: x.text.lower())
 
-TotCF = ""
+
 class PopupCF(Popup):
     def on_open(self):
         global TotCF
@@ -334,6 +335,53 @@ class PopupCF(Popup):
         self.ids.wegingCF_p.text = records[1] + "x"
         self.ids.infoCF_p.text = records[2]
         self.ids.kiesvakCF_p.text = records[3]
+
+    def OW_cf(self):
+        #TotCF = vak + "|" + cijfer + "|" + weging
+        Ovak = TotCF.split("|")[0]
+        Ocijfer = TotCF.split("|")[1]
+        Oweging = TotCF.split("|")[2]
+
+        cf = self.ids.welkCF_p.text
+        weging = self.ids.wegingCF_p.text.replace("x", "")
+        info = self.ids.infoCF_p.text
+        vak = self.ids.kiesvakCF_p.text
+
+        if cf != "" and weging != "" and vak != "":
+            conn = sqlite3.connect('ScorroDB.db')
+            c = conn.cursor()
+        
+            c.execute("""UPDATE cijfers SET
+                cijfer = :cijfer,
+                weging = :weging,
+                beschrijving = :info,
+                vak = :vak
+                WHERE cijfer = :Ocijfer AND vak = :Ovak AND weging = :Oweging""",
+                {
+                'cijfer': cf,
+                'weging': weging,
+                'info': info,
+                'vak': vak,
+                'Ocijfer': Ocijfer,
+                'Oweging': Oweging,
+                'Ovak': Ovak,
+            })
+
+            conn.commit()
+            conn.close()
+            print("vak opgeslagen")
+
+            
+            cijfers_box = MDApp.get_running_app().root.get_screen("cijfers").ids.BoxCfVak
+        
+            for bu in cijfers_box.children:
+                if bu.text.split(" - ")[0] == Ocijfer and bu.text.split(" - ")[1] == Ovak and bu.text.split(" - ")[2] == str(Oweging + "x"):
+                    bu.text = cf + " - " + vak + " - " + weging + "x"
+            
+            cijfers_box.children.sort(reverse=True, key=lambda x: x.text)
+            self.dismiss()
+        else:
+            print("Je vergeet iets!")
 
     def verwijdercf(self):
         vak = TotCF.split("|")[0]
@@ -469,7 +517,38 @@ class NieuwVak(Screen):
 
 
 class CijferBerekenen(Screen):
-    pass
+    def spinnerCFB_clicked(self):
+        data = Scorro.show_klassen(self)
+        spinner = self.ids.kiesvakCFB
+        spinner.values = [str(item[0]) for item in data]
+    
+    def vak_gekozen(self):
+        vak = self.ids.kiesvakCFB.text
+
+        conn = sqlite3.connect('ScorroDB.db')
+        c = conn.cursor()
+
+        c.execute(f"SELECT * FROM cijfers WHERE vak = '{vak}'")
+        records = c.fetchall()
+
+        conn.commit()
+        conn.close()
+        
+        window_size = int(Window.size[1]) / 20
+        for item in records:
+            l = Label(text=item[0], color=(0,0,0,1), size_hint_y=None, height=window_size)
+            e = Label(text=str(item[1] + "x"), color=(0,0,0,1), size_hint_y=None, height=window_size)
+            self.ids.BoxCF_WE.add_widget(l)
+            self.ids.BoxCF_WE.add_widget(e)
+        
+    def bereken_cf(self):
+        goal = self.ids.welkCFW.text
+        if goal != "":
+            print("")
+        else:
+            print("Welk cijfer wil je staan?")
+
+
 class WindowManager(ScreenManager):
     pass
 

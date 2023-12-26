@@ -559,7 +559,7 @@ WindowManager:
                     id: BoxCfVak
                     cols: 1
                     size_hint_y: None
-                    height: self.minimum_height  
+                    height: self.minimum_height
         BoxLayout:
             size_hint: 1, .05
             orientation: "horizontal"
@@ -623,12 +623,45 @@ WindowManager:
         pos_hint: {"top": 1}
         Label:
             text: "Cijfer Berekenen"
+            size_hint: 1, .2
             canvas.before:
                 Color:
                     rgba: 1, 0, 0, 1
                 Rectangle:
                     pos: self.pos
                     size: self.size
+        Spinner:
+            id: kiesvakCFB
+            size_hint: 1, .2
+            text: "Selecteer een vak"
+            on_press: root.spinnerCFB_clicked()
+            on_text: root.vak_gekozen()
+        ScrollView:
+            do_scroll_x: False
+            do_scroll_y: True
+            size_hint: 1, .5
+            GridLayout:
+                id: BoxCF_WE
+                cols: 2
+                size_hint_y: None
+                height: self.minimum_height
+        TextInput:
+            id: welkCFW
+            multiline: False
+            size_hint: 1, .2
+            hint_text: "Welk cijfer wil je staan?"
+        TextInput:
+            id: welkWEW
+            multiline: False
+            size_hint: 1, .2
+            hint_text: "(verwachte) weging volgende proefwerk?"
+        Button:
+            text: "Bereken"
+            size_hint: 1, .2
+            on_release: root.bereken_cf()
+        Label:
+            id: CF_BH
+            color: 0,0,0,1
     Navbar:
 
 
