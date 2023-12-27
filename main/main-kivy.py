@@ -401,7 +401,14 @@ class PopupCF(Popup):
         for cf in cijfers_box.children:
             if cf.text.split(" - ")[0] == cijfer and cf.text.split(" - ")[1] == vak and cf.text.split(" - ")[2] == str(weging + "x"):
                 cijfers_box.remove_widget(cf)
-        
+
+        """
+        |   NOT WORKING
+        v   NOT WORKING
+        """
+        C = Cijfers()
+        C.update_TotGem()
+
         self.dismiss()
 
     def spinnerCFp_clicked(self):
@@ -418,16 +425,38 @@ class Cijfers(Screen):
         popup = PopupCF(title=f"{vak} | {cijfer} | {weging} - cijfer aanpassen")
         popup.open()
     
+    def update_TotGem(self):
+        cijferlijst = Scorro.show_cijfers(self)
+        tot = 0
+        weg_t = 0
+        for item in cijferlijst:
+            tot += float(item[0].replace(",", ".")) * float(item[1].replace(",", "."))
+            weg_t += float(item[1].replace(",", "."))
+        
+        tot2 = tot / weg_t
+        self.ids.tot_gem.text = "Totale gemiddelde: " + str(round(tot2, 1)).replace(".", ",")
+        if tot2 >= 5.5:
+            self.ids.tot_gem.bg_colour = (0,1,0,1)
+        else:
+            self.ids.tot_gem.bg_colour = (1,0,0,1)
+        
+        print("done!")
+
     def on_enter(self):
         self.ids.BoxCfVak.clear_widgets()
         window_size = int(Window.size[1]) / 20
         cijferlijst = Scorro.show_cijfers(self)
         cijferlijst.sort(key=lambda x: x[3].lower())
+
         for item in cijferlijst:
-            replace = str(item).replace("(", "").replace(")", "").replace("'", "").split(", ")
-            button = Button(text=str(replace[0] + " - " + replace[3] + " - " + replace[1] + "x"), size_hint_y=None, height=window_size)
+            button = Button(text=str(item[0] + " - " + item[3] + " - " + item[1] + "x"), size_hint_y=None, height=window_size)
             button.bind(on_press=lambda button: self.popupCF(button.text))
             self.ids.BoxCfVak.add_widget(button)
+        
+        self.update_TotGem()
+
+
+            
 
 
 class NieuwHuiswerk(Screen):
@@ -517,13 +546,25 @@ class NieuwVak(Screen):
 
 
 class CijferBerekenen(Screen):
+    def on_enter(self):
+        self.refresh()
+
     def spinnerCFB_clicked(self):
         data = Scorro.show_klassen(self)
         spinner = self.ids.kiesvakCFB
         spinner.values = [str(item[0]) for item in data]
     
+    def refresh(self):
+        self.ids.BoxCF_WE.clear_widgets()
+        self.ids.kiesvakCFB.text = "Selecteer een vak"
+        self.ids.CF_BH.text = ""
+        self.ids.welkCFW.text = ""
+        self.ids.welkWEW.text = ""
+
+
     def vak_gekozen(self):
         vak = self.ids.kiesvakCFB.text
+        self.ids.BoxCF_WE.clear_widgets()
 
         conn = sqlite3.connect('ScorroDB.db')
         c = conn.cursor()
@@ -542,11 +583,31 @@ class CijferBerekenen(Screen):
             self.ids.BoxCF_WE.add_widget(e)
         
     def bereken_cf(self):
-        goal = self.ids.welkCFW.text
-        if goal != "":
-            print("")
+        goal = float(self.ids.welkCFW.text.replace(",", "."))
+        weg = float(self.ids.welkWEW.text.replace(",", ".").replace("x", "").replace("X", ""))
+        if goal != "" and weg != "":
+
+            conn = sqlite3.connect('ScorroDB.db')
+            c = conn.cursor()
+
+            c.execute(f"SELECT * FROM cijfers WHERE vak = '{self.ids.kiesvakCFB.text}'")
+            records = c.fetchall()
+
+            conn.commit()
+            conn.close()
+
+            tot = 0
+            weg_t = 0
+            for item in records:
+                tot += float(item[1]) * float(item[0].replace(",", "."))
+                weg_t += float(item[1])
+            weg_t += weg
+            grade_weg = goal * weg_t - tot
+            grade_to_get = grade_weg / weg
+
+            self.ids.CF_BH.text = str(round(grade_to_get, 1)).replace(".", ",")
         else:
-            print("Welk cijfer wil je staan?")
+            print("Wat is de weging / het cijfer?")
 
 
 class WindowManager(ScreenManager):

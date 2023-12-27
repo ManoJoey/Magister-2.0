@@ -549,8 +549,15 @@ WindowManager:
                         size: self.size
             Label:
                 size_hint: 1, .1
-                text: "Totale gemiddelde"
+                id: tot_gem
                 color: 0,0,0,1
+                bg_colour: (1,1,1,1)
+                canvas.before:
+                    Color:
+                        rgba: self.bg_colour
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
             ScrollView:
                 do_scroll_x: False
                 do_scroll_y: True
@@ -654,14 +661,28 @@ WindowManager:
             id: welkWEW
             multiline: False
             size_hint: 1, .2
-            hint_text: "(verwachte) weging volgende proefwerk?"
+            hint_text: "(Verwachte) weging volgende proefwerk?"
         Button:
             text: "Bereken"
             size_hint: 1, .2
             on_release: root.bereken_cf()
         Label:
+            text: "Je moet halen:"
+            color: 0,0,0,1
+            size_hint: 1, .1
+        Label:
             id: CF_BH
             color: 0,0,0,1
+            size_hint: 1, .3
+        GridLayout:
+            cols: 2
+            size_hint: 1, .2
+            Button:
+                text: "Terug"
+                on_release: app.root.current = "cijfers"
+            Button:
+                text: "Refresh"
+                on_release: root.refresh()
     Navbar:
 
 
