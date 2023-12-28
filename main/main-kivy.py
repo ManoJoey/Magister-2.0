@@ -13,21 +13,86 @@ from kivy.clock import Clock
 from kivy.uix.popup import Popup
 
 import sqlite3
-from datetime import datetime
+from datetime import datetime, timedelta
 import ast
 
 lijst_dagen = []
 dagen_popup = []
 TotCF = ""
 
-#Verschillende schermen benoemen
+
 class Navbar(Screen):
     pass
-class Dashboard(Screen):
-    pass
-class Planning(Screen):
+
+class BootScreen(Screen):
     pass
 
+
+class Dashboard(Screen):
+    def change(self):
+        app = MDApp.get_running_app()
+        app.call_cf()
+
+    def on_enter(self):
+        cijferlijst = Scorro.show_cijfers(self)
+        cijferlijst.sort(key=lambda x: x[4])
+
+        lay = self.ids.LayCf
+        lay.clear_widgets()
+        cf_size = int(int(Window.size[1]) / 20)
+        vak_size = int(int(Window.size[1]) / 50)
+        w = int(int(Window.size[0]) / 3)
+
+        if cijferlijst != []:
+            if len(cijferlijst) >= 3:
+                l1 = Button(markup=True, text="[size={}]{}[/size]\n[size={}]{}[/size]".format(cf_size, cijferlijst[0][0], vak_size, cijferlijst[0][3]),
+                    halign="center", size_hint_x=None, width=w, valign="center")
+                l1.bind(size=l1.setter('text_size'))
+                l1.bind(on_release=lambda x: self.change())
+                lay.add_widget(l1)
+
+                l2 = Button(markup=True, text="[size={}]{}[/size]\n[size={}]{}[/size]".format(cf_size, cijferlijst[1][0], vak_size, cijferlijst[1][3]),
+                halign="center", size_hint_x=None, width=w, valign="center")
+                l2.bind(size=l2.setter('text_size'))
+                l2.bind(on_release=lambda x: self.change())
+                lay.add_widget(l2)
+
+                l3 = Button(markup=True, text="[size={}]{}[/size]\n[size={}]{}[/size]".format(cf_size, cijferlijst[2][0], vak_size, cijferlijst[2][3]),
+                halign="center", size_hint_x=None, width=w, valign="center")
+                l3.bind(size=l3.setter('text_size'))
+                l3.bind(on_release=lambda x: self.change())
+                lay.add_widget(l3)
+            elif len(cijferlijst) == 2:
+                l1 = Button(markup=True, text="[size={}]{}[/size]\n[size={}]{}[/size]".format(cf_size, cijferlijst[0][0], vak_size, cijferlijst[0][3]),
+                halign="center", size_hint_x=None, width=w, valign="center")
+                l1.bind(size=l1.setter('text_size'))
+                l1.bind(on_release=lambda x: self.change())
+                lay.add_widget(l1)
+
+                l2 = Button(markup=True, text="[size={}]{}[/size]\n[size={}]{}[/size]".format(cf_size, cijferlijst[1][0], vak_size, cijferlijst[1][3]),
+                halign="center", size_hint_x=None, width=w, valign="center")
+                l2.bind(size=l2.setter('text_size'))
+                l2.bind(on_release=lambda x: self.change())
+                lay.add_widget(l2)
+
+                l3 = Button()
+                lay.add_widget(l3)
+            elif len(cijferlijst) == 1:
+                l1 = Button(markup=True, text="{}\n[size={}]{}[/size]".format(cijferlijst[0][0], vak_size, cijferlijst[0][3]),
+                halign="center", size_hint_x=None, width=w, valign="center")
+                l1.bind(size=l1.setter('text_size'))
+                l1.bind(on_release=lambda x: self.change())
+                lay.add_widget(l1)
+
+                l2 = Button()
+                lay.add_widget(l2)
+                
+                l3 = Button()
+                lay.add_widget(l3)
+
+
+class Planning(Screen):
+    pass
 
 class PopupSW(Popup):
     def on_open(self):
@@ -185,13 +250,17 @@ class Schoolwerk(Screen):
         pw_lijst = Scorro.show_proefwerken(self)
         for item in pw_lijst:
             replace = str(item).replace("(", "").replace(")", "").replace("'", "").split(", ")
-            button = Button(text=str(replace[0] + "\n" + replace[3] + " - " + replace[1]), size_hint_y=None, height=window_size, on_press=lambda button: self.popupSW(button.text), background_color=(1,0,0,1))
+            button = Button(text=str(replace[0] + "\n" + replace[3] + " - " + replace[1]), size_hint=(None, None), height=window_size, width=Window.size[0], on_press=lambda button: self.popupSW(button.text), background_color=(1,0,0,1))
+            button.text_size = (button.width-(Window.size[0]/10), None)
+            button.bind(size=button.setter('text_size'))
             self.ids.BoxHwPw.add_widget(button)
             
         hw_lijst = Scorro.show_huiswerk(self)
         for item in hw_lijst:
             replace = str(item).replace("(", "").replace(")", "").replace("'", "").split(", ")
-            button = Button(text=str(replace[0] + "\n" + replace[3] + " - " + replace[1]), size_hint_y=None, height=window_size, on_press=lambda button: self.popupSW(button.text))
+            button = Button(text=str(replace[0] + "\n" + replace[3] + " - " + replace[1]), size_hint=(None, None), height=window_size, width=Window.size[0], on_press=lambda button: self.popupSW(button.text))
+            button.text_size = (button.width-(Window.size[0]/10), None)
+            button.bind(size=button.setter('text_size'))
             self.ids.BoxHwPw.add_widget(button)
         
         self.ids.BoxHwPw.children.sort(reverse=True, key=lambda date: datetime.strptime(date.text.split("\n")[1].split(" - ")[1], "%d-%m-%Y"))
@@ -337,7 +406,6 @@ class PopupCF(Popup):
         self.ids.kiesvakCF_p.text = records[3]
 
     def OW_cf(self):
-        #TotCF = vak + "|" + cijfer + "|" + weging
         Ovak = TotCF.split("|")[0]
         Ocijfer = TotCF.split("|")[1]
         Oweging = TotCF.split("|")[2]
@@ -379,6 +447,9 @@ class PopupCF(Popup):
                     bu.text = cf + " - " + vak + " - " + weging + "x"
             
             cijfers_box.children.sort(reverse=True, key=lambda x: x.text)
+
+            MDApp.get_running_app().root.get_screen("cijfers").update_TotGem()
+
             self.dismiss()
         else:
             print("Je vergeet iets!")
@@ -402,12 +473,7 @@ class PopupCF(Popup):
             if cf.text.split(" - ")[0] == cijfer and cf.text.split(" - ")[1] == vak and cf.text.split(" - ")[2] == str(weging + "x"):
                 cijfers_box.remove_widget(cf)
 
-        """
-        |   NOT WORKING
-        v   NOT WORKING
-        """
-        C = Cijfers()
-        C.update_TotGem()
+        MDApp.get_running_app().root.get_screen("cijfers").update_TotGem()
 
         self.dismiss()
 
@@ -427,20 +493,19 @@ class Cijfers(Screen):
     
     def update_TotGem(self):
         cijferlijst = Scorro.show_cijfers(self)
-        tot = 0
-        weg_t = 0
-        for item in cijferlijst:
-            tot += float(item[0].replace(",", ".")) * float(item[1].replace(",", "."))
-            weg_t += float(item[1].replace(",", "."))
-        
-        tot2 = tot / weg_t
-        self.ids.tot_gem.text = "Totale gemiddelde: " + str(round(tot2, 1)).replace(".", ",")
-        if tot2 >= 5.5:
-            self.ids.tot_gem.bg_colour = (0,1,0,1)
-        else:
-            self.ids.tot_gem.bg_colour = (1,0,0,1)
-        
-        print("done!")
+        if cijferlijst != []:
+            tot = 0
+            weg_t = 0
+            for item in cijferlijst:
+                tot += float(item[0].replace(",", ".")) * float(item[1].replace(",", "."))
+                weg_t += float(item[1].replace(",", "."))
+            
+            tot2 = tot / weg_t
+            self.ids.tot_gem.text = "Totale gemiddelde: " + str(round(tot2, 1)).replace(".", ",")
+            if tot2 >= 5.5:
+                self.ids.tot_gem.bg_colour = (0,1,0,1)
+            else:
+                self.ids.tot_gem.bg_colour = (1,0,0,1)
 
     def on_enter(self):
         self.ids.BoxCfVak.clear_widgets()
@@ -456,8 +521,12 @@ class Cijfers(Screen):
         self.update_TotGem()
 
 
-            
+dutch_to_numeric = {'maandag': 0, 'dinsdag': 1, 'woensdag': 2, 'donderdag': 3, 'vrijdag': 4, 'zaterdag': 5, 'zondag': 6}
 
+def get_next_weekday(current_date, target_weekday):
+    days_until_target = (target_weekday - current_date.weekday() + 7) % 7
+    next_weekday = current_date + timedelta(days=days_until_target)
+    return next_weekday
 
 class NieuwHuiswerk(Screen):
     def get_date(self, instance, value, date_range):
@@ -469,7 +538,11 @@ class NieuwHuiswerk(Screen):
         self.ids.date_picker.text = date
 
     def kies_datumHW(self):
-        date_dialog = MDDatePicker()
+        date = self.ids.date_picker.text.split("-")
+        year = int(date[2])
+        month = int(date[1])
+        day = int(date[0])
+        date_dialog = MDDatePicker(year=year, month=month, day=day)
         date_dialog.bind(on_save=self.get_date)
         date_dialog.open()
         Window.size = (1, 1)
@@ -479,6 +552,32 @@ class NieuwHuiswerk(Screen):
         data = Scorro.show_klassen(self)
         spinner = self.ids.kiesvakHW
         spinner.values = [str(item[0]) for item in data]
+
+    def enable_date(self):
+        self.ids.date_picker.disabled = False
+        vak = self.ids.kiesvakHW.text
+        
+        conn = sqlite3.connect('ScorroDB.db')
+        c = conn.cursor()
+
+        c.execute(f"SELECT * FROM vakken WHERE naam = '{vak}'")
+        records = c.fetchall()
+
+        conn.commit()
+        conn.close()
+        
+        records = list(records[0])
+        records[1] = ast.literal_eval(records[1])
+
+        current_date = datetime.now()
+
+        list_dates_days = []
+        for day in records[1]:
+            next_instance_day = get_next_weekday(current_date, target_weekday=dutch_to_numeric[day])
+            list_dates_days.append(next_instance_day)
+        
+        closest_date = min(list_dates_days, key=lambda date: date - current_date).strftime("%d-%m-%Y")
+        self.ids.date_picker.text = closest_date
 
 
 class NieuwProefwerk(Screen):
@@ -491,17 +590,46 @@ class NieuwProefwerk(Screen):
         self.ids.date_pickerPW.text = date
 
     def kies_datumPW(self):
-        date_dialog = MDDatePicker()
+        date = self.ids.date_pickerPW.text.split("-")
+        year = int(date[2])
+        month = int(date[1])
+        day = int(date[0])
+        date_dialog = MDDatePicker(year=year, month=month, day=day)
         date_dialog.bind(on_save=self.get_date)
         date_dialog.open()
         Window.size = (1, 1)
         Window.size = (350, 600)
 
-
     def spinnerPW_clicked(self):
         data = Scorro.show_klassen(self)
         spinner = self.ids.kiesvakPW
         spinner.values = [str(item[0]) for item in data]
+    
+    def enable_date(self):
+        self.ids.date_pickerPW.disabled = False
+        vak = self.ids.kiesvakPW.text
+        
+        conn = sqlite3.connect('ScorroDB.db')
+        c = conn.cursor()
+
+        c.execute(f"SELECT * FROM vakken WHERE naam = '{vak}'")
+        records = c.fetchall()
+
+        conn.commit()
+        conn.close()
+        
+        records = list(records[0])
+        records[1] = ast.literal_eval(records[1])
+
+        current_date = datetime.now()
+
+        list_dates_days = []
+        for day in records[1]:
+            next_instance_day = get_next_weekday(current_date, target_weekday=dutch_to_numeric[day])
+            list_dates_days.append(next_instance_day)
+        
+        closest_date = min(list_dates_days, key=lambda date: date - current_date).strftime("%d-%m-%Y")
+        self.ids.date_pickerPW.text = closest_date
 
 
 class NieuwCijfer(Screen):
@@ -614,6 +742,9 @@ class WindowManager(ScreenManager):
     pass
 
 class Scorro(MDApp):
+    def call_cf(self):
+        self.root.current = "cijfers"
+
     def build(self):
         self.icon = "Images/Logo.png"
         
@@ -629,7 +760,8 @@ class Scorro(MDApp):
             cijfer text,
             weging text,
             beschrijving text,
-            vak text)
+            vak text,
+            date text)
         """)
 
         c.execute("""CREATE TABLE if not exists proefwerken(
@@ -652,6 +784,8 @@ class Scorro(MDApp):
         kv = Builder.load_file('main.kv')
         return kv
 
+    def on_start(self):
+        self.root.current = "dashboard"
 
     #functies voor klassen
     def submit_klas(self):
@@ -708,18 +842,20 @@ class Scorro(MDApp):
         naam = self.root.get_screen('nieuw cijfer').ids.welkCF.text
         weging = self.root.get_screen('nieuw cijfer').ids.wegingCF.text.replace("x", "").replace("X", "")
         vak = self.root.get_screen('nieuw cijfer').ids.kiesvakCF.text
+        now = datetime.now()
         if naam != "":
             if weging != "":
                 if vak != "Selecteer een vak":
                     conn = sqlite3.connect('ScorroDB.db')
                     c = conn.cursor()
 
-                    c.execute("INSERT INTO cijfers VALUES (:cijfer, :weging, :beschrijving, :vak)",
+                    c.execute("INSERT INTO cijfers VALUES (:cijfer, :weging, :beschrijving, :vak, :date)",
                     {
                         'cijfer': naam,
                         'weging': weging,
                         'beschrijving': self.root.get_screen('nieuw cijfer').ids.infoCF.text,
                         'vak': vak,
+                        'date': now,
                     })
 
 
@@ -846,6 +982,7 @@ class Scorro(MDApp):
 
         
 Window.size = (350, 600)
+#Window.size = (233, 400)
 
 if __name__ == "__main__":
     Scorro().run()

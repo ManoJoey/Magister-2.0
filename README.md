@@ -32,3 +32,7 @@ Plan van aanpak voor nu:
 #Algemene statistieken
 #Huiswerkoverzicht/Kalender met notificaties
 #Toetsplanner (met Google Agenda als er tijd is)
+
+
+Bugs:
+Aanpassen van naam van vak past het niet aan in al gemaakte knoppen (cijfers, huiswerk, proefwerken)

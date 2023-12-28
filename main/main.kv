@@ -2,6 +2,7 @@
 #: import NoTransition kivy.uix.screenmanager.NoTransition
 
 WindowManager:
+    BootScreen:
     Dashboard:
     Navbar:
     Cijfers:
@@ -16,6 +17,8 @@ WindowManager:
 
 <ScreenManager>:
     transition: NoTransition()
+
+<BootScreen>:
 
 <PopupVak>:
     name: "popup vak"
@@ -191,7 +194,7 @@ WindowManager:
                 allow_stretch: True
                 keep_ratio: True
                 size: (25, 25)
-            Label: 
+            Label:
                 text: "Dashboard"
                 color: (0,0,0,1)
                 font_size: 12
@@ -209,7 +212,7 @@ WindowManager:
                 allow_stretch: True
                 keep_ratio: True
                 size: (25, 25)
-            Label: 
+            Label:
                 text: "Planning"
                 color: (0,0,0,1)
                 font_size: 12
@@ -227,7 +230,7 @@ WindowManager:
                 allow_stretch: True
                 keep_ratio: True
                 size: (25, 25)
-            Label: 
+            Label:
                 text: "Schoolwerk"
                 color: (0,0,0,1)
                 font_size: 12
@@ -245,7 +248,7 @@ WindowManager:
                 allow_stretch: True
                 keep_ratio: True
                 size: (25, 25)
-            Label: 
+            Label:
                 text: "Cijfers"
                 color: (0,0,0,1)
                 font_size: 12
@@ -263,7 +266,7 @@ WindowManager:
                 allow_stretch: True
                 keep_ratio: True
                 size: (25, 25)
-            Label: 
+            Label:
                 text: "Vakken"
                 color: (0,0,0,1)
                 font_size: 12
@@ -308,9 +311,8 @@ WindowManager:
                     center_y: self.parent.center_y
                     allow_stretch: True
                     keep_ratio: True
-                    size: (self.parent.center_x / 3, self.parent.center_y / 3)
-                
-            Button: 
+                    size: (self.parent.center_x / 3, self.parent.center_y / 3)    
+            Button:
                 background_normal : ""
                 background_color: (0,0,1,1)
                 text: "Schoolwerk"
@@ -331,21 +333,13 @@ WindowManager:
                     background_normal: ""
                     background_color: (0,1,0,1)
                     on_release: app.root.current = "nieuw huiswerk"
-                Button: 
+                Button:
                     text: "Cijferoverzicht"
                     on_release: app.root.current = "cijfers"
             GridLayout:
                 cols: 3
                 background_normal: ""
-                Button:
-                    text: "Cijfer 1"
-                    on_release: app.root.current = "cijfers"
-                Button:
-                    text: "Cijfer 2"
-                    on_release: app.root.current = "cijfers"
-                Button:
-                    text: "Cijfer 3"
-                    on_release: app.root.current = "cijfers"
+                id: LayCf
     Navbar:
 
 # hier komt alles te staan dat vandaag af moet, zoals huiswerk voor morgen of proefwerken van binnen een week
@@ -370,10 +364,16 @@ WindowManager:
         BoxLayout:
             orientation: "horizontal"
             size_hint: 1, .1
-            Button: 
+            Button:
+                text_size: self.size
+                valign: "middle"
+                halign: "center"
                 text: "Huiswerk toevoegen"
                 on_release: app.root.current = "nieuw huiswerk"
             Button:
+                text_size: self.size
+                valign: "middle"
+                halign: "center"
                 text: "Proefwerk toevoegen"
                 on_release: app.root.current = "nieuw proefwerk"
     Navbar:
@@ -405,10 +405,17 @@ WindowManager:
         BoxLayout:
             orientation: "horizontal"
             size_hint: 1, .1
-            Button: 
+            Button:
+                text_size: self.size
+                valign: "middle"
+                halign: "center"
                 text: "Huiswerk toevoegen"
                 on_release: app.root.current = "nieuw huiswerk"
             Button:
+                text_size: self.size
+                valign: "middle"
+                halign: "center"
+                text_size: self.size
                 text: "Proefwerk toevoegen"
                 on_release: app.root.current = "nieuw proefwerk"
     Navbar:
@@ -440,11 +447,13 @@ WindowManager:
             size_hint: 1, .2
             text: "Selecteer een vak"
             on_press: root.spinnerHW_clicked()
+            on_text: root.enable_date()
         Button:
             id: date_picker
             text: "Kies Datum"
             size_hint: 1, .2
             on_release: root.kies_datumHW()
+            disabled: True
         TextInput:
             #extra info
             id: infoHW
@@ -483,11 +492,13 @@ WindowManager:
             size_hint: 1, .2
             text: "Selecteer een vak"
             on_press: root.spinnerPW_clicked()
+            on_text: root.enable_date()
         Button:
             id: date_pickerPW
             text: "Kies Datum"
             size_hint: 1, .2
             on_release: root.kies_datumPW()
+            disabled: True
         TextInput:
             #extra info
             id: infoPW

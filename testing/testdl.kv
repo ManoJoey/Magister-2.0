@@ -2,6 +2,7 @@
 #: import NoTransition kivy.uix.screenmanager.NoTransition
 
 WindowManager:
+    BootScreen:
     Dashboard:
     Navbar:
     Cijfers:
@@ -17,20 +18,21 @@ WindowManager:
 <ScreenManager>:
     transition: NoTransition()
 
+<BootScreen>:
+
 <PopupVak>:
     name: "popup vak"
     size_hint: (None, None)
     size_hint: (0.9, 0.9)
     BoxLayout:
         orientation: "vertical"
-        size_hint: 1, .9
         pos_hint: {"top": 1}
-        
         TextInput:
             #naam vak
             id: naam_vakAP
             multiline: False
             size_hint: 1, .2
+            hint_text: "Vak"
         BoxLayout:
             id: BoxDagenAP
             orientation: "horizontal"
@@ -80,10 +82,99 @@ WindowManager:
             Button:
                 text: "Opslaan"
                 on_release: root.OW_klas()
-                on_release: root.dismiss()
+        GridLayout:
+            cols: 2
+            size_hint: 1, .1
             Button:
                 text: "Verwijderen"
                 on_release: root.verwijderKlas()
+            Button:
+                text: "Terug"
+                on_release: root.dismiss()
+
+<PopupSW>:
+    name: "popup schoolwerk"
+    size_hint: (None, None)
+    size_hint: (0.9, 0.9)
+    BoxLayout:
+        orientation: "vertical"
+        pos_hint: {"top": 1}
+        TextInput:
+            #naam huiswerk
+            id: naam_hwP
+            multiline: False
+            size_hint: 1, .2
+            hint_text: "Huiswerk"
+        Button:
+            id: datum_hwP
+            size_hint: 1, .2
+            on_press: root.kies_datum_HwP()
+        Spinner:
+            id: kiesvakHwP
+            size_hint: 1, .2
+            on_press: root.spinnerHwP_clicked()
+        TextInput:
+            #extra info
+            id: info_hwP
+            multiline: False
+            size_hint: 1, .2
+            hint_text: "Extra informatie"
+        Button:
+            text: "Opslaan"
+            size_hint: 1, .1
+            on_release: root.OW_hw()
+        GridLayout:
+            cols: 2
+            size_hint: 1, .1
+            Button:
+                text: "Verwijderen"
+                on_release: root.verwijderHw()
+            Button:
+                text: "Terug"
+                on_release: root.dismiss()
+
+<PopupCF>:
+    name: "popup cijfer"
+    size_hint: (None, None)
+    size_hint: (0.9, 0.9)
+    BoxLayout:
+        orientation: "vertical"
+        pos_hint: {"top": 1}
+        TextInput:
+            #cijfer
+            id: welkCF_p
+            multiline: False
+            size_hint: 1, .2
+            hint_text: "Cijfer"
+        TextInput:
+            #weging
+            id: wegingCF_p
+            multiline: False
+            size_hint: 1, .2
+            hint_text: "Weging"
+        TextInput:
+            #omschrijving - optioneel
+            id: infoCF_p
+            multiline: False
+            size_hint: 1, .2
+            hint_text: "Omschrijving - optioneel"
+        Spinner:
+            id: kiesvakCF_p
+            size_hint: 1, .2
+            text: "Selecteer een vak"
+            on_press: root.spinnerCFp_clicked()
+        Button:
+            text: "Opslaan"
+            size_hint: 1, .1
+            on_release: root.OW_cf()
+        GridLayout:
+            cols: 2
+            size_hint: 1, .1
+            Button:
+                text: "Verwijderen"
+                on_release: root.verwijdercf()
+            Button:
+                text: "Terug"
                 on_release: root.dismiss()
 
 
@@ -103,7 +194,7 @@ WindowManager:
                 allow_stretch: True
                 keep_ratio: True
                 size: (25, 25)
-            Label: 
+            Label:
                 text: "Dashboard"
                 color: (0,0,0,1)
                 font_size: 12
@@ -121,7 +212,7 @@ WindowManager:
                 allow_stretch: True
                 keep_ratio: True
                 size: (25, 25)
-            Label: 
+            Label:
                 text: "Planning"
                 color: (0,0,0,1)
                 font_size: 12
@@ -139,7 +230,7 @@ WindowManager:
                 allow_stretch: True
                 keep_ratio: True
                 size: (25, 25)
-            Label: 
+            Label:
                 text: "Schoolwerk"
                 color: (0,0,0,1)
                 font_size: 12
@@ -157,7 +248,7 @@ WindowManager:
                 allow_stretch: True
                 keep_ratio: True
                 size: (25, 25)
-            Label: 
+            Label:
                 text: "Cijfers"
                 color: (0,0,0,1)
                 font_size: 12
@@ -175,7 +266,7 @@ WindowManager:
                 allow_stretch: True
                 keep_ratio: True
                 size: (25, 25)
-            Label: 
+            Label:
                 text: "Vakken"
                 color: (0,0,0,1)
                 font_size: 12
@@ -220,9 +311,8 @@ WindowManager:
                     center_y: self.parent.center_y
                     allow_stretch: True
                     keep_ratio: True
-                    size: (self.parent.center_x / 3, self.parent.center_y / 3)
-                
-            Button: 
+                    size: (self.parent.center_x / 3, self.parent.center_y / 3)    
+            Button:
                 background_normal : ""
                 background_color: (0,0,1,1)
                 text: "Schoolwerk"
@@ -243,21 +333,13 @@ WindowManager:
                     background_normal: ""
                     background_color: (0,1,0,1)
                     on_release: app.root.current = "nieuw huiswerk"
-                Button: 
+                Button:
                     text: "Cijferoverzicht"
                     on_release: app.root.current = "cijfers"
             GridLayout:
                 cols: 3
                 background_normal: ""
-                Button:
-                    text: "Cijfer 1"
-                    on_release: app.root.current = "cijfers"
-                Button:
-                    text: "Cijfer 2"
-                    on_release: app.root.current = "cijfers"
-                Button:
-                    text: "Cijfer 3"
-                    on_release: app.root.current = "cijfers"
+                id: LayCf
     Navbar:
 
 # hier komt alles te staan dat vandaag af moet, zoals huiswerk voor morgen of proefwerken van binnen een week
@@ -279,14 +361,19 @@ WindowManager:
         BoxLayout:
             orientation: "horizontal"
             #Dagoverzicht
-
         BoxLayout:
             orientation: "horizontal"
             size_hint: 1, .1
-            Button: 
+            Button:
+                text_size: self.size
+                valign: "middle"
+                halign: "center"
                 text: "Huiswerk toevoegen"
                 on_release: app.root.current = "nieuw huiswerk"
             Button:
+                text_size: self.size
+                valign: "middle"
+                halign: "center"
                 text: "Proefwerk toevoegen"
                 on_release: app.root.current = "nieuw proefwerk"
     Navbar:
@@ -306,36 +393,29 @@ WindowManager:
                 Rectangle:
                     pos: self.pos
                     size: self.size
-        GridLayout:
-            pos_hint: {"top": 1}
-            cols: 4
-            size_hint: 1, .2
-            valign: "middle"
-            canvas.before:
-                Color:
-                    rgba: 0, 1, 1, 1
-                Rectangle:
-                    pos: self.pos
-                    size: self.size
-            Label:
-                text: "Werk"
-            Label:
-                text: "Datum"
-            Label:
-                text: "Beschrijving"
-            Label:
-                text: "Vak"
-        #Lijst met Huiswerk en Toetsen
-        BoxLayout:
-            id: BoxHwPw
-            orientation:"vertical"
+        ScrollView:
+            do_scroll_x: False
+            do_scroll_y: True
+            GridLayout:
+                id: BoxHwPw
+                cols: 1
+                size_hint_y: None
+                height: self.minimum_height
+                #Lijst met pw en hw
         BoxLayout:
             orientation: "horizontal"
             size_hint: 1, .1
-            Button: 
+            Button:
+                text_size: self.size
+                valign: "middle"
+                halign: "center"
                 text: "Huiswerk toevoegen"
                 on_release: app.root.current = "nieuw huiswerk"
             Button:
+                text_size: self.size
+                valign: "middle"
+                halign: "center"
+                text_size: self.size
                 text: "Proefwerk toevoegen"
                 on_release: app.root.current = "nieuw proefwerk"
     Navbar:
@@ -361,22 +441,25 @@ WindowManager:
             id: welkHW
             multiline: False
             size_hint: 1, .2
-        TextInput:
-            #extra info
-            id: infoHW
-            multiline: True
-            size_hint: 1, .2
-        TextInput:
-            #datum
-            id: datumHW
-            multiline: False
-            size_hint: 1, .2
-        
+            hint_text: "Huiswerk"
         Spinner:
             id: kiesvakHW
             size_hint: 1, .2
             text: "Selecteer een vak"
             on_press: root.spinnerHW_clicked()
+            on_text: root.enable_date()
+        Button:
+            id: date_picker
+            text: "Kies Datum"
+            size_hint: 1, .2
+            on_release: root.kies_datumHW()
+            disabled: True
+        TextInput:
+            #extra info
+            id: infoHW
+            multiline: True
+            size_hint: 1, .2
+            hint_text: "Extra informatie"
         Button:
             text: "Opslaan"
             on_release: app.submit_huiswerk()
@@ -403,22 +486,25 @@ WindowManager:
             id: welkPW
             multiline: False
             size_hint: 1, .2
-        TextInput:
-            #extra info
-            id: infoPW
-            multiline: True
-            size_hint: 1, .2
-        TextInput:
-            #datum
-            id: datumPW
-            multiline: False
-            size_hint: 1, .2
-        
+            hint_text: "Proefwerk"
         Spinner:
             id: kiesvakPW
             size_hint: 1, .2
             text: "Selecteer een vak"
             on_press: root.spinnerPW_clicked()
+            on_text: root.enable_date()
+        Button:
+            id: date_pickerPW
+            text: "Kies Datum"
+            size_hint: 1, .2
+            on_release: root.kies_datumPW()
+            disabled: True
+        TextInput:
+            #extra info
+            id: infoPW
+            multiline: True
+            size_hint: 1, .2
+            hint_text: "Extra informatie"
         Button:
             text: "Opslaan"
             on_release: app.submit_proefwerk()
@@ -461,7 +547,6 @@ WindowManager:
                     Rectangle:
                         pos: self.pos
                         size: self.size
-        
         BoxLayout:
             orientation: "vertical"
             size_hint: 1, .2
@@ -475,8 +560,24 @@ WindowManager:
                         size: self.size
             Label:
                 size_hint: 1, .1
-                text: "Totale gemiddelde"
-
+                id: tot_gem
+                color: 0,0,0,1
+                bg_colour: (1,1,1,1)
+                canvas.before:
+                    Color:
+                        rgba: self.bg_colour
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+            ScrollView:
+                do_scroll_x: False
+                do_scroll_y: True
+                size_hint: 1, .5
+                GridLayout:
+                    id: BoxCfVak
+                    cols: 1
+                    size_hint_y: None
+                    height: self.minimum_height
         BoxLayout:
             size_hint: 1, .05
             orientation: "horizontal"
@@ -508,17 +609,19 @@ WindowManager:
             id: welkCF
             multiline: False
             size_hint: 1, .2
+            hint_text: "Cijfer"
         TextInput:
             #weging
             id: wegingCF
             multiline: False
             size_hint: 1, .2
+            hint_text: "Weging"
         TextInput:
             #omschrijving - optioneel
             id: infoCF
             multiline: False
             size_hint: 1, .2
-        
+            hint_text: "Omschrijving - optioneel"
         Spinner:
             id: kiesvakCF
             size_hint: 1, .2
@@ -538,12 +641,59 @@ WindowManager:
         pos_hint: {"top": 1}
         Label:
             text: "Cijfer Berekenen"
+            size_hint: 1, .2
             canvas.before:
                 Color:
                     rgba: 1, 0, 0, 1
                 Rectangle:
                     pos: self.pos
                     size: self.size
+        Spinner:
+            id: kiesvakCFB
+            size_hint: 1, .2
+            text: "Selecteer een vak"
+            on_press: root.spinnerCFB_clicked()
+            on_text: root.vak_gekozen()
+        ScrollView:
+            do_scroll_x: False
+            do_scroll_y: True
+            size_hint: 1, .5
+            GridLayout:
+                id: BoxCF_WE
+                cols: 2
+                size_hint_y: None
+                height: self.minimum_height
+        TextInput:
+            id: welkCFW
+            multiline: False
+            size_hint: 1, .2
+            hint_text: "Welk cijfer wil je staan?"
+        TextInput:
+            id: welkWEW
+            multiline: False
+            size_hint: 1, .2
+            hint_text: "(Verwachte) weging volgende proefwerk?"
+        Button:
+            text: "Bereken"
+            size_hint: 1, .2
+            on_release: root.bereken_cf()
+        Label:
+            text: "Je moet halen:"
+            color: 0,0,0,1
+            size_hint: 1, .1
+        Label:
+            id: CF_BH
+            color: 0,0,0,1
+            size_hint: 1, .3
+        GridLayout:
+            cols: 2
+            size_hint: 1, .2
+            Button:
+                text: "Terug"
+                on_release: app.root.current = "cijfers"
+            Button:
+                text: "Refresh"
+                on_release: root.refresh()
     Navbar:
 
 
@@ -568,6 +718,7 @@ WindowManager:
             id: naam_vak
             multiline: False
             size_hint: 1, .2
+            hint_text: "Vak"
         BoxLayout:
             id: BoxDagen
             orientation: "horizontal"
