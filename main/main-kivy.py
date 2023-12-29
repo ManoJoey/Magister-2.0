@@ -554,30 +554,31 @@ class NieuwHuiswerk(Screen):
         spinner.values = [str(item[0]) for item in data]
 
     def enable_date(self):
-        self.ids.date_picker.disabled = False
         vak = self.ids.kiesvakHW.text
+        if vak != "Selecteer een vak":
+            self.ids.date_picker.disabled = False
         
-        conn = sqlite3.connect('ScorroDB.db')
-        c = conn.cursor()
+            conn = sqlite3.connect('ScorroDB.db')
+            c = conn.cursor()
 
-        c.execute(f"SELECT * FROM vakken WHERE naam = '{vak}'")
-        records = c.fetchall()
+            c.execute(f"SELECT * FROM vakken WHERE naam = '{vak}'")
+            records = c.fetchall()
 
-        conn.commit()
-        conn.close()
-        
-        records = list(records[0])
-        records[1] = ast.literal_eval(records[1])
+            conn.commit()
+            conn.close()
+            
+            records = list(records[0])
+            records[1] = ast.literal_eval(records[1])
 
-        current_date = datetime.now()
+            current_date = datetime.now()
 
-        list_dates_days = []
-        for day in records[1]:
-            next_instance_day = get_next_weekday(current_date, target_weekday=dutch_to_numeric[day])
-            list_dates_days.append(next_instance_day)
-        
-        closest_date = min(list_dates_days, key=lambda date: date - current_date).strftime("%d-%m-%Y")
-        self.ids.date_picker.text = closest_date
+            list_dates_days = []
+            for day in records[1]:
+                next_instance_day = get_next_weekday(current_date, target_weekday=dutch_to_numeric[day])
+                list_dates_days.append(next_instance_day)
+            
+            closest_date = min(list_dates_days, key=lambda date: date - current_date).strftime("%d-%m-%Y")
+            self.ids.date_picker.text = closest_date
 
 
 class NieuwProefwerk(Screen):
@@ -606,30 +607,31 @@ class NieuwProefwerk(Screen):
         spinner.values = [str(item[0]) for item in data]
     
     def enable_date(self):
-        self.ids.date_pickerPW.disabled = False
         vak = self.ids.kiesvakPW.text
-        
-        conn = sqlite3.connect('ScorroDB.db')
-        c = conn.cursor()
+        if vak != "Selecteer een vak":
+            self.ids.date_pickerPW.disabled = False
+            
+            conn = sqlite3.connect('ScorroDB.db')
+            c = conn.cursor()
 
-        c.execute(f"SELECT * FROM vakken WHERE naam = '{vak}'")
-        records = c.fetchall()
+            c.execute(f"SELECT * FROM vakken WHERE naam = '{vak}'")
+            records = c.fetchall()
 
-        conn.commit()
-        conn.close()
-        
-        records = list(records[0])
-        records[1] = ast.literal_eval(records[1])
+            conn.commit()
+            conn.close()
+            
+            records = list(records[0])
+            records[1] = ast.literal_eval(records[1])
 
-        current_date = datetime.now()
+            current_date = datetime.now()
 
-        list_dates_days = []
-        for day in records[1]:
-            next_instance_day = get_next_weekday(current_date, target_weekday=dutch_to_numeric[day])
-            list_dates_days.append(next_instance_day)
-        
-        closest_date = min(list_dates_days, key=lambda date: date - current_date).strftime("%d-%m-%Y")
-        self.ids.date_pickerPW.text = closest_date
+            list_dates_days = []
+            for day in records[1]:
+                next_instance_day = get_next_weekday(current_date, target_weekday=dutch_to_numeric[day])
+                list_dates_days.append(next_instance_day)
+            
+            closest_date = min(list_dates_days, key=lambda date: date - current_date).strftime("%d-%m-%Y")
+            self.ids.date_pickerPW.text = closest_date
 
 
 class NieuwCijfer(Screen):
@@ -908,6 +910,7 @@ class Scorro(MDApp):
 
                     self.root.get_screen('nieuw proefwerk').ids.welkPW.text = ''
                     self.root.get_screen('nieuw proefwerk').ids.date_pickerPW.text = 'Kies Datum'
+                    self.root.get_screen('nieuw huiswerk').ids.date_pickerPW.disabled = True
                     self.root.get_screen('nieuw proefwerk').ids.infoPW.text = ''
                     self.root.get_screen('nieuw proefwerk').ids.kiesvakPW.text = 'Selecteer een vak'
 
@@ -957,6 +960,7 @@ class Scorro(MDApp):
 
                     self.root.get_screen('nieuw huiswerk').ids.welkHW.text = ''
                     self.root.get_screen('nieuw huiswerk').ids.date_picker.text = 'Kies Datum'
+                    self.root.get_screen('nieuw huiswerk').ids.date_picker.disabled = True
                     self.root.get_screen('nieuw huiswerk').ids.infoHW.text = ''
                     self.root.get_screen('nieuw huiswerk').ids.kiesvakHW.text = 'Selecteer een vak'
 
