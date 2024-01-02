@@ -20,6 +20,13 @@ WindowManager:
 
 <BootScreen>:
 
+<Rounded@Button>
+    canvas.before:
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [58]
+
 <PopupVak>:
     name: "popup vak"
     size_hint: (None, None)
@@ -290,53 +297,55 @@ WindowManager:
                 Rectangle:
                     pos: self.pos
                     size: self.size
-
             Image:
                 source: "Images/LogoTekstZijkant.png"
                 center_x: self.parent.center_x
-                center_y: self.parent.center_y / 0.8
+                center_y: self.parent.center_y
                 allow_stretch: True
                 keep_ratio: True
-                size_hint: 1, 1
-            
-            Button:
-                text: "Planning"
-                background_normal : ""
-                background_color: (1,0,0,1)
-                on_release: app.root.current = "planning"
-                color: 0,0,0,1
-                Image:
-                    source: "Images/planning.png"
-                    center_x: self.parent.center_x - (self.parent.center_x / 1.2)
-                    center_y: self.parent.center_y
-                    allow_stretch: True
-                    keep_ratio: True
-                    size: (self.parent.center_x / 3, self.parent.center_y / 3)    
-            Button:
-                background_normal : ""
-                background_color: (0,0,1,1)
-                text: "Schoolwerk"
-                on_release: app.root.current = "schoolwerk"
-                color: 0,0,0,1
-                Image:
-                    source: "Images/schoolwerk.png"
-                    center_x: self.parent.center_x - (self.parent.center_x / 1.2)
-                    center_y: self.parent.center_y
-                    allow_stretch: True
-                    keep_ratio: True
-                    size: (self.parent.center_x / 3, self.parent.center_y / 3)
+                size_hint: 0.5, 0.5
+            BoxLayout:
+                orientation: "vertical"
+                spacing: root.height / 30
+                padding: root.width / 25
+                RoundedButton:
+                    text: "Planning"
+                    on_release: app.root.current = "planning"
+                    color: 0,0,0,1
+                    Image:
+                        source: "Images/planning.png"
+                        center_x: self.parent.center_x - (self.parent.center_x / 1.9)
+                        center_y: self.parent.center_y / 1.01
+                        allow_stretch: True
+                        keep_ratio: True
+                        size: (self.parent.center_x / 3.5, self.parent.center_y / 3.5)    
+                RoundedButton:
+                    text: "Schoolwerk"
+                    on_release: app.root.current = "schoolwerk"
+                    color: 0,0,0,1
+                    Image:
+                        source: "Images/schoolwerk.png"
+                        center_x: self.parent.center_x - (self.parent.center_x / 1.9)
+                        center_y: self.parent.center_y / 1.01
+                        allow_stretch: True
+                        keep_ratio: True
+                        size: (self.parent.center_x / 3.5, self.parent.center_y / 3.5)
 
+                GridLayout:
+                    cols: 2
+                    spacing: root.height / 20
+                    RoundedButton2:
+                        color: 0,0,0,1
+                        size: (self.parent.center_x / 4, self.parent.center_y / 3.5)
+                        text: "Nieuw Huiswerk"
+                        on_release: app.root.current = "nieuw huiswerk"
+                    RoundedButton2:
+                        color: 0,0,0,1
+                        size: (self.parent.center_x / 4, self.parent.center_y / 3.5)
+                        text: "Cijferoverzicht"
+                        on_release: app.root.current = "cijfers"
             GridLayout:
-                cols: 2
-                Button:
-                    text: "Nieuw Huiswerk"
-                    background_normal: ""
-                    background_color: (0,1,0,1)
-                    on_release: app.root.current = "nieuw huiswerk"
-                Button:
-                    text: "Cijferoverzicht"
-                    on_release: app.root.current = "cijfers"
-            GridLayout:
+                size_hint: 1, .3
                 cols: 3
                 background_normal: ""
                 id: LayCf
@@ -802,3 +811,25 @@ WindowManager:
                 text: "Vak toevoegen"
                 on_release: app.root.current = "nieuw vak"
     Navbar:
+
+<RoundedButton@Button>
+    background_color: (0,0,0,0)
+    backround_normal: ''
+    canvas.before:
+        Color: 
+            rgba: (0,204,255,1)
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [18]
+
+<RoundedButton2@Button>
+    background_color: (0,0,0,0)
+    backround_normal: ''
+    canvas.before:
+        Color: 
+            rgba: (0,204,255,1)
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [20]
