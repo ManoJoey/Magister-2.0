@@ -46,31 +46,28 @@ class Dashboard(Screen):
         if cijferlijst != []:
             if len(cijferlijst) >= 3:
                 l1 = Button(markup=True, text="[size={}]{}[/size]\n[size={}]{}[/size]".format(cf_size, cijferlijst[0][0], vak_size, cijferlijst[0][3]),
-                    halign="center", size_hint_x=None, width=w, valign="center")
-                l1.bind(size=l1.setter('text_size'))
+                halign="center", valign="center", background_color="white", background_normal="", color="gray")
                 l1.bind(on_release=lambda x: self.change())
                 lay.add_widget(l1)
 
                 l2 = Button(markup=True, text="[size={}]{}[/size]\n[size={}]{}[/size]".format(cf_size, cijferlijst[1][0], vak_size, cijferlijst[1][3]),
-                halign="center", size_hint_x=None, width=w, valign="center")
-                l2.bind(size=l2.setter('text_size'))
+                halign="center", valign="center", background_color="white", background_normal="", color="gray")
                 l2.bind(on_release=lambda x: self.change())
                 lay.add_widget(l2)
 
                 l3 = Button(markup=True, text="[size={}]{}[/size]\n[size={}]{}[/size]".format(cf_size, cijferlijst[2][0], vak_size, cijferlijst[2][3]),
-                halign="center", size_hint_x=None, width=w, valign="center")
-                l3.bind(size=l3.setter('text_size'))
+                halign="center", valign="center", background_color="white", background_normal="", color="gray")
                 l3.bind(on_release=lambda x: self.change())
                 lay.add_widget(l3)
             elif len(cijferlijst) == 2:
                 l1 = Button(markup=True, text="[size={}]{}[/size]\n[size={}]{}[/size]".format(cf_size, cijferlijst[0][0], vak_size, cijferlijst[0][3]),
-                halign="center", size_hint_x=None, width=w, valign="center")
+                halign="center", valign="center", background_color="white", background_normal="", color="gray")
                 l1.bind(size=l1.setter('text_size'))
                 l1.bind(on_release=lambda x: self.change())
                 lay.add_widget(l1)
 
                 l2 = Button(markup=True, text="[size={}]{}[/size]\n[size={}]{}[/size]".format(cf_size, cijferlijst[1][0], vak_size, cijferlijst[1][3]),
-                halign="center", size_hint_x=None, width=w, valign="center")
+                halign="center", valign="center", background_color="white", background_normal="", color="gray")
                 l2.bind(size=l2.setter('text_size'))
                 l2.bind(on_release=lambda x: self.change())
                 lay.add_widget(l2)
@@ -79,7 +76,7 @@ class Dashboard(Screen):
                 lay.add_widget(l3)
             elif len(cijferlijst) == 1:
                 l1 = Button(markup=True, text="{}\n[size={}]{}[/size]".format(cijferlijst[0][0], vak_size, cijferlijst[0][3]),
-                halign="center", size_hint_x=None, width=w, valign="center")
+                halign="center", valign="center", background_color="white", background_normal="", color="gray")
                 l1.bind(size=l1.setter('text_size'))
                 l1.bind(on_release=lambda x: self.change())
                 lay.add_widget(l1)

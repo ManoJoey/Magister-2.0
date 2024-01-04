@@ -310,6 +310,7 @@ WindowManager:
                 padding: root.width / 25
                 RoundedButton:
                     text: "Planning"
+                    bold: "true"
                     on_release: app.root.current = "planning"
                     color: 0,0,0,1
                     Image:
@@ -323,6 +324,7 @@ WindowManager:
                     text: "Schoolwerk"
                     on_release: app.root.current = "schoolwerk"
                     color: 0,0,0,1
+                    bold: "true"
                     Image:
                         source: "Images/schoolwerk.png"
                         center_x: self.parent.center_x - (self.parent.center_x / 1.9)
@@ -337,12 +339,14 @@ WindowManager:
                     RoundedButton2:
                         color: 0,0,0,1
                         size: (self.parent.center_x / 4, self.parent.center_y / 3.5)
+                        bold: "true"
                         text: "Nieuw Huiswerk"
                         on_release: app.root.current = "nieuw huiswerk"
                     RoundedButton2:
                         color: 0,0,0,1
                         size: (self.parent.center_x / 4, self.parent.center_y / 3.5)
                         text: "Cijferoverzicht"
+                        bold: "true"
                         on_release: app.root.current = "cijfers"
             GridLayout:
                 size_hint: 1, .3
