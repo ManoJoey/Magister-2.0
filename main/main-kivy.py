@@ -3,6 +3,7 @@ from kivymd.app import MDApp
 
 from kivy.uix.label import Label
 from kivy.uix.button import Button
+from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.scrollview import ScrollView
 from kivymd.uix.pickers import MDDatePicker
 from kivy.uix.widget import Widget 
@@ -13,7 +14,7 @@ from kivy.clock import Clock
 from kivy.uix.popup import Popup
 
 import sqlite3
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 import ast
 
 lijst_dagen = []
@@ -88,7 +89,69 @@ class Dashboard(Screen):
 
 
 class Planning(Screen):
-    pass
+    def on_enter(self):
+        try: 
+            self.ids.boxmains.clear_widgets()
+        except:
+            pass
+        window_size = int(Window.size[1]) / 10
+        pw_lijst = Scorro.show_proefwerken(self)
+        hw_lijst = Scorro.show_huiswerk(self)
+        pw_lijst.sort(key=lambda x: x[1])
+        hw_lijst.sort(key=lambda x: x[1])
+        print(str(hw_lijst) + "/n/n")
+        print(pw_lijst)
+        lijst_pw_kort = []
+        lijst_pw_lang = []
+        lijst_pw_red = []
+        lijst_hw = []
+        c1 = 0
+        c2 = 0
+        c3 = 0
+        for item in pw_lijst:
+            date1 = datetime.strptime(item[1], "%d-%m-%Y")
+            cdate = str(date.today())
+            cdate = datetime.strptime(cdate, "%Y-%m-%d")
+            dif = str(date1 - cdate).split(" ")[0]
+            if int(dif) <= 3:
+                lijst_pw_kort.append(item)
+                c1 += 1
+            elif int(dif) >= 8:
+                lijst_pw_red.append(item)
+                c2 += 1
+            elif int(dif) <= 11:
+                lijst_pw_lang.append(item)
+                c3 += 1
+        try: 
+            lijst_hw.append(hw_lijst[0])
+        except: 
+            pass
+        try:
+            lijst_hw.append(hw_lijst[1])
+        except: 
+            pass
+        print(c1)
+        print(c2)
+        print(c3)
+        if c3 > 0:
+            b1 = BoxLayout(orientation="vertical")
+            self.ids.boxmains.add_widget(b1)
+            l1 = Label(text="Bestudeer globaal de stof van:", color=(0,0,0,1))
+            b1.add_widget(l1)
+        if c2 > 0:
+            b2 = BoxLayout(orientation="vertical")
+            self.ids.boxmains.add_widget(b2)
+            l2 = Label(text="Bestudeer goed de stof van:", color=(0,0,0,1))
+            b2.add_widget(l2)
+        if c1 > 0:
+            b3 = BoxLayout(orientation="vertical")
+            self.ids.boxmains.add_widget(b3)
+            l3 = Label(text="Bestudeer de lastige stof van:", color=(0,0,0,1))
+            b3.add_widget(l3)
+
+        
+    
+
 
 class PopupSW(Popup):
     def on_open(self):

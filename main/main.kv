@@ -375,24 +375,13 @@ WindowManager:
                     pos: self.pos
                     size: self.size
         BoxLayout:
-            orientation: "vertical"
-            id: boxmains
-            BoxLayout:
-                orientation:'vertical'
-                id: verpw
-            BoxLayout:
-                orientation:'vertical'
-                id: redpw
-            BoxLayout:
-                orientation:'vertical'
-                id: dicpw
-            BoxLayout:
-                id: hw
-                orientation:'vertical'
-                
-                
-
-
+            orientation:'vertical'
+            ScrollView:
+                do_scroll_x: False
+                do_scroll_y: True
+                BoxLayout:
+                    id: boxmains
+                    orientation: "vertical"
         BoxLayout:
             orientation: "vertical"
             size_hint: 1, .25
