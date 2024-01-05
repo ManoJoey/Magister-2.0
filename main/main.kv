@@ -361,6 +361,7 @@ WindowManager:
     BoxLayout:
         orientation: "vertical"
         size_hint: 1, .9
+        id: boxmain
         pos_hint: {"top": 1}
         Label:
             text: "Planning"
@@ -374,8 +375,24 @@ WindowManager:
                     pos: self.pos
                     size: self.size
         BoxLayout:
-            orientation: "horizontal"
-            #Dagoverzicht
+            orientation: "vertical"
+            id: boxmains
+            BoxLayout:
+                orientation:'vertical'
+                id: verpw
+            BoxLayout:
+                orientation:'vertical'
+                id: redpw
+            BoxLayout:
+                orientation:'vertical'
+                id: dicpw
+            BoxLayout:
+                id: hw
+                orientation:'vertical'
+                
+                
+
+
         BoxLayout:
             orientation: "vertical"
             size_hint: 1, .25
@@ -460,7 +477,7 @@ WindowManager:
         size_hint: 1, .9
         pos_hint: {"top": 1}
         Label:
-            text: "Schoolwerk"
+            text: "Nieuw Huiswerk"
             font_size: self.width/10
             bold: "true"
             size_hint: 1, .16
@@ -716,16 +733,23 @@ WindowManager:
                     size: self.size
         BoxLayout:
             orientation: "vertical"
-            Spinner:
+            padding: root.height/30
+            spacing: root.width/30
+            RoundedSpin:
                 id: kiesvakCFB
                 size_hint: 1, .2
                 text: "Selecteer een vak"
+                color: 0,0,0,1
                 on_press: root.spinnerCFB_clicked()
                 on_text: root.vak_gekozen()
+            Label:
+                text:'Cijfers tot nu toe:'
+                size_hint: 1, .1
+                color: 0,0,0,1
             ScrollView:
                 do_scroll_x: False
                 do_scroll_y: True
-                size_hint: 1, .5
+                size_hint: 1, .4
                 GridLayout:
                     id: BoxCF_WE
                     cols: 2
@@ -741,9 +765,11 @@ WindowManager:
                 multiline: False
                 size_hint: 1, .2
                 hint_text: "(Verwachte) weging volgende proefwerk?"
-            Button:
+            RoundedButton:
                 text: "Bereken"
                 size_hint: 1, .2
+                bold: "true"
+                color: 0,0,0,1
                 on_release: root.bereken_cf()
             Label:
                 text: "Je moet halen:"
