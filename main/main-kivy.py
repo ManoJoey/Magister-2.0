@@ -27,7 +27,6 @@ class Navbar(Screen):
 class BootScreen(Screen):
     pass
 
-
 class Dashboard(Screen):
     def change(self):
         app = MDApp.get_running_app()
@@ -35,7 +34,7 @@ class Dashboard(Screen):
 
     def on_enter(self):
         cijferlijst = Scorro.show_cijfers(self)
-        cijferlijst.sort(key=lambda x: x[4])
+        cijferlijst.sort(key=lambda x: x[4], reverse=True)
 
         lay = self.ids.LayCf
         lay.clear_widgets()
@@ -75,7 +74,7 @@ class Dashboard(Screen):
                 l3 = Button()
                 lay.add_widget(l3)
             elif len(cijferlijst) == 1:
-                l1 = Button(markup=True, text="{}\n[size={}]{}[/size]".format(cijferlijst[0][0], vak_size, cijferlijst[0][3]),
+                l1 = Button(markup=True, text="{}\n[size={}]{}[/size]".format(cijferlijst[0][0], vak_size, cijferlijst[0][0]),
                 halign="center", valign="center", background_color="white", background_normal="", color="gray")
                 l1.bind(size=l1.setter('text_size'))
                 l1.bind(on_release=lambda x: self.change())

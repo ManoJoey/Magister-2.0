@@ -650,40 +650,50 @@ WindowManager:
         size_hint: 1, .9
         pos_hint: {"top": 1}
         Label:
-            text: "Nieuw Cijfer"
-            size_hint: 1, .16
+            text: "Nieuw cijfer"
+            font_size: self.width/10
+            bold: "true"
+            size_hint: 1, .165
             canvas.before:
                 Color:
-                    rgba: 0, 0, 1, 1
+                    rgba: 0, 116/255, 255, 0.8
                 Rectangle:
                     pos: self.pos
                     size: self.size
-        TextInput:
-            #cijfer
-            id: welkCF
-            multiline: False
-            size_hint: 1, .2
-            hint_text: "Cijfer"
-        TextInput:
-            #weging
-            id: wegingCF
-            multiline: False
-            size_hint: 1, .2
-            hint_text: "Weging"
-        TextInput:
-            #omschrijving - optioneel
-            id: infoCF
-            multiline: False
-            size_hint: 1, .2
-            hint_text: "Omschrijving - optioneel"
-        Spinner:
-            id: kiesvakCF
-            size_hint: 1, .2
-            text: "Selecteer een vak"
-            on_press: root.spinnerCF_clicked()
-        Button:
-            text: "Opslaan"
-            on_release: app.submit_cijfer()
+        BoxLayout:
+            orientation: "vertical"
+            padding: root.height/20
+            spacing: root.height/20
+            TextInput:
+                #cijfer
+                id: welkCF
+                multiline: False
+                size_hint: 1, .1
+                hint_text: "Cijfer"
+            TextInput:
+                #weging
+                id: wegingCF
+                multiline: False
+                size_hint: 1, .1
+                hint_text: "Weging"
+            TextInput:
+                #omschrijving - optioneel
+                id: infoCF
+                multiline: False
+                size_hint: 1, .3
+                hint_text: "Omschrijving - optioneel"
+            RoundedSpin:
+                color: 0,0,0,1
+                id: kiesvakCF
+                size_hint: 1, .1
+                text: "Selecteer een vak"
+                on_press: root.spinnerCF_clicked()
+            RoundedButton:
+                text: "Opslaan"
+                color: 0,0,0,1
+                bold: "true"
+                size_hint: 1, .2
+                on_release: app.submit_cijfer()
     Navbar:
 
 
@@ -694,60 +704,64 @@ WindowManager:
         size_hint: 1, .9
         pos_hint: {"top": 1}
         Label:
-            text: "Cijfer Berekenen"
-            size_hint: 1, .2
+            text: "Nieuw cijfer"
+            font_size: self.width/10
+            bold: "true"
+            size_hint: 1, .165
             canvas.before:
                 Color:
-                    rgba: 1, 0, 0, 1
+                    rgba: 0, 116/255, 255, 0.8
                 Rectangle:
                     pos: self.pos
                     size: self.size
-        Spinner:
-            id: kiesvakCFB
-            size_hint: 1, .2
-            text: "Selecteer een vak"
-            on_press: root.spinnerCFB_clicked()
-            on_text: root.vak_gekozen()
-        ScrollView:
-            do_scroll_x: False
-            do_scroll_y: True
-            size_hint: 1, .5
+        BoxLayout:
+            orientation: "vertical"
+            Spinner:
+                id: kiesvakCFB
+                size_hint: 1, .2
+                text: "Selecteer een vak"
+                on_press: root.spinnerCFB_clicked()
+                on_text: root.vak_gekozen()
+            ScrollView:
+                do_scroll_x: False
+                do_scroll_y: True
+                size_hint: 1, .5
+                GridLayout:
+                    id: BoxCF_WE
+                    cols: 2
+                    size_hint_y: None
+                    height: self.minimum_height
+            TextInput:
+                id: welkCFW
+                multiline: False
+                size_hint: 1, .2
+                hint_text: "Welk cijfer wil je staan?"
+            TextInput:
+                id: welkWEW
+                multiline: False
+                size_hint: 1, .2
+                hint_text: "(Verwachte) weging volgende proefwerk?"
+            Button:
+                text: "Bereken"
+                size_hint: 1, .2
+                on_release: root.bereken_cf()
+            Label:
+                text: "Je moet halen:"
+                color: 0,0,0,1
+                size_hint: 1, .1
+            Label:
+                id: CF_BH
+                color: 0,0,0,1
+                size_hint: 1, .3
             GridLayout:
-                id: BoxCF_WE
                 cols: 2
-                size_hint_y: None
-                height: self.minimum_height
-        TextInput:
-            id: welkCFW
-            multiline: False
-            size_hint: 1, .2
-            hint_text: "Welk cijfer wil je staan?"
-        TextInput:
-            id: welkWEW
-            multiline: False
-            size_hint: 1, .2
-            hint_text: "(Verwachte) weging volgende proefwerk?"
-        Button:
-            text: "Bereken"
-            size_hint: 1, .2
-            on_release: root.bereken_cf()
-        Label:
-            text: "Je moet halen:"
-            color: 0,0,0,1
-            size_hint: 1, .1
-        Label:
-            id: CF_BH
-            color: 0,0,0,1
-            size_hint: 1, .3
-        GridLayout:
-            cols: 2
-            size_hint: 1, .2
-            Button:
-                text: "Terug"
-                on_release: app.root.current = "cijfers"
-            Button:
-                text: "Refresh"
-                on_release: root.refresh()
+                size_hint: 1, .2
+                Button:
+                    text: "Terug"
+                    on_release: app.root.current = "cijfers"
+                Button:
+                    text: "Refresh"
+                    on_release: root.refresh()
     Navbar:
 
 
