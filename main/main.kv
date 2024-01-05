@@ -193,7 +193,7 @@ WindowManager:
         Button:
             on_release: app.root.current = "dashboard"
             background_normal: ""
-            background_color: (1,1,1,1)
+            background_color: (1, 0.102, 0.102)
             Image:
                 source: "Images/dashboard.png"
                 center_x: self.parent.center_x
@@ -211,7 +211,7 @@ WindowManager:
         Button:
             on_release: app.root.current = "planning"
             background_normal: ""
-            background_color: (1,1,1,1)
+            background_color: (1, 0.102, 0.102)
             Image:
                 source: "Images/planning.png"
                 center_x: self.parent.center_x
@@ -229,7 +229,7 @@ WindowManager:
         Button:
             on_release: app.root.current = "schoolwerk"
             background_normal: ""
-            background_color: (1,1,1,1)
+            background_color: (1, 0.102, 0.102)
             Image:
                 source: "Images/schoolwerk.png"
                 center_x: self.parent.center_x
@@ -247,7 +247,7 @@ WindowManager:
         Button:
             on_release: app.root.current = "cijfers"
             background_normal: ""
-            background_color: (1,1,1,1)
+            background_color: (1, 0.102, 0.102)
             Image:
                 source: "Images/grade.png"
                 center_x: self.parent.center_x
@@ -265,7 +265,7 @@ WindowManager:
         Button:
             on_release: app.root.current = "vakken"
             background_normal: ""
-            background_color: (1,1,1,1)
+            background_color: (1, 0.102, 0.102)
             Image:
                 source: "Images/subject.png"
                 center_x: self.parent.center_x
@@ -364,10 +364,12 @@ WindowManager:
         pos_hint: {"top": 1}
         Label:
             text: "Planning"
-            size_hint: 1, .1
+            font_size: self.width/10
+            bold: "true"
+            size_hint: 1, .2
             canvas.before:
                 Color:
-                    rgba: 1, 0, 0, 1
+                    rgba: 0, 116/255, 255, 0.8
                 Rectangle:
                     pos: self.pos
                     size: self.size
@@ -375,18 +377,25 @@ WindowManager:
             orientation: "horizontal"
             #Dagoverzicht
         BoxLayout:
-            orientation: "horizontal"
-            size_hint: 1, .1
-            Button:
+            orientation: "vertical"
+            size_hint: 1, .25
+            spacing: root.width / 20
+            padding: root.height / 80
+            RoundedButton:
                 text_size: self.size
+                bold: "true"
                 valign: "middle"
                 halign: "center"
+                color: 0,0,0,1
                 text: "Huiswerk toevoegen"
                 on_release: app.root.current = "nieuw huiswerk"
-            Button:
+            RoundedButton:
                 text_size: self.size
                 valign: "middle"
                 halign: "center"
+                bold: "true"
+                text_size: self.size
+                color: 0,0,0,1
                 text: "Proefwerk toevoegen"
                 on_release: app.root.current = "nieuw proefwerk"
     Navbar:
@@ -399,10 +408,12 @@ WindowManager:
         pos_hint: {"top": 1}
         Label:
             text: "Schoolwerk"
-            size_hint: 1, .1
+            font_size: self.width/10
+            bold: "true"
+            size_hint: 1, .2
             canvas.before:
                 Color:
-                    rgba: 0, 0, 1, 1
+                    rgba: 0, 116/255, 255, 0.8
                 Rectangle:
                     pos: self.pos
                     size: self.size
@@ -410,25 +421,33 @@ WindowManager:
             do_scroll_x: False
             do_scroll_y: True
             GridLayout:
+                spacing: root.width/30
+                padding: root.height/30
                 id: BoxHwPw
                 cols: 1
                 size_hint_y: None
                 height: self.minimum_height
                 #Lijst met pw en hw
         BoxLayout:
-            orientation: "horizontal"
-            size_hint: 1, .1
-            Button:
+            orientation: "vertical"
+            size_hint: 1, .25
+            spacing: root.width / 20
+            padding: root.height / 80
+            RoundedButton:
                 text_size: self.size
+                bold: "true"
                 valign: "middle"
                 halign: "center"
+                color: 0,0,0,1
                 text: "Huiswerk toevoegen"
                 on_release: app.root.current = "nieuw huiswerk"
-            Button:
+            RoundedButton:
                 text_size: self.size
                 valign: "middle"
                 halign: "center"
+                bold: "true"
                 text_size: self.size
+                color: 0,0,0,1
                 text: "Proefwerk toevoegen"
                 on_release: app.root.current = "nieuw proefwerk"
     Navbar:
@@ -441,41 +460,51 @@ WindowManager:
         size_hint: 1, .9
         pos_hint: {"top": 1}
         Label:
-            text: "Nieuw Huiswerk"
+            text: "Schoolwerk"
+            font_size: self.width/10
+            bold: "true"
             size_hint: 1, .16
             canvas.before:
                 Color:
-                    rgba: 0, 0, 1, 1
+                    rgba: 0, 116/255, 255, 0.8
                 Rectangle:
                     pos: self.pos
                     size: self.size
-        TextInput:
-            #wat is het
-            id: welkHW
-            multiline: False
-            size_hint: 1, .2
-            hint_text: "Huiswerk"
-        Spinner:
-            id: kiesvakHW
-            size_hint: 1, .2
-            text: "Selecteer een vak"
-            on_press: root.spinnerHW_clicked()
-            on_text: root.enable_date()
-        Button:
-            id: date_picker
-            text: "Kies Datum"
-            size_hint: 1, .2
-            on_release: root.kies_datumHW()
-            disabled: True
-        TextInput:
-            #extra info
-            id: infoHW
-            multiline: True
-            size_hint: 1, .2
-            hint_text: "Extra informatie"
-        Button:
-            text: "Opslaan"
-            on_release: app.submit_huiswerk()
+        BoxLayout:
+            orientation: "vertical"
+            padding: root.width / 20
+            spacing: root.height / 20 
+            TextInput:
+                #wat is het
+                id: welkHW
+                multiline: False
+                size_hint: 1, .1
+                hint_text: "Huiswerk"
+            RoundedSpin:
+                id: kiesvakHW
+                size_hint: 1, .1
+                color: 0,0,0,1
+                text: "Selecteer een vak"
+                on_press: root.spinnerHW_clicked()
+                on_text: root.enable_date()
+            RoundedButton:
+                id: date_picker
+                text: "Kies Datum"
+                size_hint: 1, .1
+                color: 0,0,0,1
+                on_release: root.kies_datumHW()
+                disabled: True
+            TextInput:
+                #extra info
+                id: infoHW
+                multiline: True
+                size_hint: 1, .5
+                hint_text: "Extra informatie"
+            RoundedButton:
+                text: "Opslaan"
+                color: 0,0,0,1
+                on_release: app.submit_huiswerk()
+                size_hint: 1, .1
     Navbar:
 
 
@@ -487,40 +516,51 @@ WindowManager:
         pos_hint: {"top": 1}
         Label:
             text: "Nieuw Proefwerk"
+            font_size: self.width/10
+            bold: "true"
             size_hint: 1, .16
             canvas.before:
                 Color:
-                    rgba: 0, 0, 1, 1
+                    rgba: 0, 116/255, 255, 0.8
                 Rectangle:
                     pos: self.pos
                     size: self.size
-        TextInput:
-            #wat is het
-            id: welkPW
-            multiline: False
-            size_hint: 1, .2
-            hint_text: "Proefwerk"
-        Spinner:
-            id: kiesvakPW
-            size_hint: 1, .2
-            text: "Selecteer een vak"
-            on_press: root.spinnerPW_clicked()
-            on_text: root.enable_date()
-        Button:
-            id: date_pickerPW
-            text: "Kies Datum"
-            size_hint: 1, .2
-            on_release: root.kies_datumPW()
-            disabled: True
-        TextInput:
-            #extra info
-            id: infoPW
-            multiline: True
-            size_hint: 1, .2
-            hint_text: "Extra informatie"
-        Button:
-            text: "Opslaan"
-            on_release: app.submit_proefwerk()
+        BoxLayout:
+            orientation: "vertical"
+            padding: root.width / 20
+            spacing: root.height / 20 
+            TextInput:
+                #wat is het
+                id: welkPW
+                multiline: False
+                size_hint: 1, .1
+                hint_text: "Stof voor het proefwerk"
+            RoundedSpin:
+                id: kiesvakPW
+                size_hint: 1, .1
+                text: "Selecteer een vak"
+                color: 0,0,0,1
+                on_press: root.spinnerPW_clicked()
+                on_text: root.enable_date()
+            RoundedButton:
+                id: date_pickerPW
+                text: "Kies Datum"
+                color: 0,0,0,1
+                size_hint: 1, .1
+                on_release: root.kies_datumPW()
+                disabled: True
+            TextInput:
+                #extra info
+                id: infoPW
+                multiline: True
+                size_hint: 1, .5
+                hint_text: "Extra informatie"
+            RoundedButton:
+                text: "Opslaan"
+                color: 0,0,0,1
+                bold: "true"
+                size_hint: 1, .1
+                on_release: app.submit_proefwerk()
     Navbar:
 
 
@@ -531,15 +571,16 @@ WindowManager:
         pos_hint: {"top": 1}
         size_hint: 1, .9
         Label:
-            size_hint: 1, .027
             text: "Cijfers"
+            font_size: self.width/10
+            bold: "true"
+            size_hint: 1, .05
             canvas.before:
                 Color:
-                    rgba: 1, 0, 1, 1
+                    rgba: 0, 116/255, 255, 0.8
                 Rectangle:
                     pos: self.pos
                     size: self.size
-
         BoxLayout:
             orientation: "horizontal"
             pos_hint: {"top": 1}
@@ -718,20 +759,27 @@ WindowManager:
         pos_hint: {"top": 1}
         Label:
             text: "Nieuw Vak"
+            font_size: self.width/10
+            bold: "true"
             size_hint: 1, .2
             canvas.before:
                 Color:
-                    rgba: 1, 0, 0, 1
+                    rgba: 0, 116/255, 255, 0.8
                 Rectangle:
                     pos: self.pos
                     size: self.size
         
-        TextInput:
-            #naam vak
-            id: naam_vak
-            multiline: False
+        BoxLayout:
+            orientation: "vertical"
+            padding: root.width / 20
+            spacing: root.height / 20 
             size_hint: 1, .2
-            hint_text: "Vak"
+            TextInput:
+                #naam vak
+                id: naam_vak
+                multiline: False
+                size_hint: 1, .2
+                hint_text: "Naam vak"
         BoxLayout:
             id: BoxDagen
             orientation: "horizontal"
@@ -777,8 +825,12 @@ WindowManager:
         BoxLayout:
             id: BoxMessage
             orientation: "vertical"
+            spacing: root.height / 30
+            padding: root.width / 25
             size_hint: 1, .2
-            Button:
+            RoundedButton:
+                color: 0, 0, 0, 1
+                bold: "true"
                 text: "Opslaan"
                 on_release: app.submit_klas()
                 on_release: root.SavedVak()
@@ -792,10 +844,12 @@ WindowManager:
         size_hint: 1, .9
         Label:
             text: "Vakken"
+            font_size: self.width/10
+            bold: "true"
             size_hint: 1, .2
             canvas.before:
                 Color:
-                    rgba: 1, 1, 0, 1
+                    rgba: 0, 116/255, 255, 0.8
                 Rectangle:
                     pos: self.pos
                     size: self.size
@@ -807,12 +861,15 @@ WindowManager:
                 cols: 1
                 size_hint_y: None
                 height: self.minimum_height
-                #Lijst met Vakken
         BoxLayout:
+            spacing: root.height / 30
+            padding: root.width / 25
             orientation: "horizontal"
             size_hint: 1, .2
-            Button: 
+            RoundedButton: 
                 text: "Vak toevoegen"
+                color: 0,0,0,1
+                bold: "true"
                 on_release: app.root.current = "nieuw vak"
     Navbar:
 
@@ -837,3 +894,17 @@ WindowManager:
             size: self.size
             pos: self.pos
             radius: [20]
+
+<RoundedSpin@Spinner>
+    background_color: (0,0,0,0)
+    backround_normal: ''
+    canvas.before:
+        Color: 
+            rgba: (0,204,255,1)
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [20]
+
+
+

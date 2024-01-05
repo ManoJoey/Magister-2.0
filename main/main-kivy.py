@@ -247,7 +247,7 @@ class Schoolwerk(Screen):
         pw_lijst = Scorro.show_proefwerken(self)
         for item in pw_lijst:
             replace = str(item).replace("(", "").replace(")", "").replace("'", "").split(", ")
-            button = Button(text=str(replace[0] + "\n" + replace[3] + " - " + replace[1]), size_hint=(None, None), height=window_size, width=Window.size[0], on_press=lambda button: self.popupSW(button.text), background_color=(1,0,0,1))
+            button = Button(text=str(replace[0] + "\n" + replace[3] + " - " + replace[1]), size_hint=(None, None), height=window_size, width=Window.size[0], on_press=lambda button: self.popupSW(button.text), background_normal="", background_color=(1,133/255,39/255,1))
             button.text_size = (button.width-(Window.size[0]/10), None)
             button.bind(size=button.setter('text_size'))
             self.ids.BoxHwPw.add_widget(button)
@@ -255,7 +255,7 @@ class Schoolwerk(Screen):
         hw_lijst = Scorro.show_huiswerk(self)
         for item in hw_lijst:
             replace = str(item).replace("(", "").replace(")", "").replace("'", "").split(", ")
-            button = Button(text=str(replace[0] + "\n" + replace[3] + " - " + replace[1]), size_hint=(None, None), height=window_size, width=Window.size[0], on_press=lambda button: self.popupSW(button.text))
+            button = Button(text=str(replace[0] + "\n" + replace[3] + " - " + replace[1]), size_hint=(None, None), height=window_size, width=Window.size[0], on_press=lambda button: self.popupSW(button.text), background_normal="", background_color=(0, 163/255, 130/255,))
             button.text_size = (button.width-(Window.size[0]/10), None)
             button.bind(size=button.setter('text_size'))
             self.ids.BoxHwPw.add_widget(button)
@@ -360,7 +360,7 @@ class PopupVak(Popup):
 
 class Vakken(Screen):
     def popupVak(self, naam):
-        popup = PopupVak(title=f"{naam} - vak aanpassen")
+        popup = PopupVak(title=f"{naam} - Aanpassen")
         popup.ids.naam_vakAP.text = naam
         popup.open()
 
@@ -370,7 +370,7 @@ class Vakken(Screen):
         self.ids.BoxVakken.clear_widgets()
 
         for vak in vakken_lijst:
-            button = Button(text=str(vak[0]), size_hint_y=None, height=window_size)
+            button = Button(text=str(vak[0]), size_hint_y=None, height=window_size, background_color=(0, 13/255, 154/255, 1))
             button.bind(on_press=lambda button: self.popupVak(button.text))
             self.ids.BoxVakken.add_widget(button)
         
@@ -657,9 +657,10 @@ class NieuwVak(Screen):
         text = self.ids.naam_vak.text
         if lijst_dagen != []:
             if text != "":
-                message = Label(text="Vak opgeslagen!")
-                self.ids.BoxMessage.add_widget(message)
-                Clock.schedule_once(lambda x: self.hide_message(), 1.5)
+                # message = Label(text="Vak opgeslagen!")
+                # self.ids.BoxMessage.add_widget(message)
+                # Clock.schedule_once(lambda x: self.hide_message(), 1.5)
+                pass
 
     def Savedag(self, dag):
         colour_selec = (0,1,0,1)
@@ -907,7 +908,7 @@ class Scorro(MDApp):
 
                     self.root.get_screen('nieuw proefwerk').ids.welkPW.text = ''
                     self.root.get_screen('nieuw proefwerk').ids.date_pickerPW.text = 'Kies Datum'
-                    self.root.get_screen('nieuw huiswerk').ids.date_pickerPW.disabled = True
+                    self.root.get_screen('nieuw proefwerk').ids.date_pickerPW.disabled = True
                     self.root.get_screen('nieuw proefwerk').ids.infoPW.text = ''
                     self.root.get_screen('nieuw proefwerk').ids.kiesvakPW.text = 'Selecteer een vak'
 
