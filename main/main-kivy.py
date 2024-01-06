@@ -3,7 +3,7 @@ from kivymd.app import MDApp
 
 from kivy.uix.label import Label
 from kivy.uix.button import Button
-from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.gridlayout import GridLayout
 from kivy.uix.scrollview import ScrollView
 from kivymd.uix.pickers import MDDatePicker
 from kivy.uix.widget import Widget 
@@ -88,71 +88,6 @@ class Dashboard(Screen):
                 lay.add_widget(l3)
 
 
-class Planning(Screen):
-    def on_enter(self):
-        try: 
-            self.ids.boxmains.clear_widgets()
-        except:
-            pass
-        window_size = int(Window.size[1]) / 10
-        pw_lijst = Scorro.show_proefwerken(self)
-        hw_lijst = Scorro.show_huiswerk(self)
-        pw_lijst.sort(key=lambda x: x[1])
-        hw_lijst.sort(key=lambda x: x[1])
-        print(str(hw_lijst) + "/n/n")
-        print(pw_lijst)
-        lijst_pw_kort = []
-        lijst_pw_lang = []
-        lijst_pw_red = []
-        lijst_hw = []
-        c1 = 0
-        c2 = 0
-        c3 = 0
-        for item in pw_lijst:
-            date1 = datetime.strptime(item[1], "%d-%m-%Y")
-            cdate = str(date.today())
-            cdate = datetime.strptime(cdate, "%Y-%m-%d")
-            dif = str(date1 - cdate).split(" ")[0]
-            if int(dif) <= 3:
-                lijst_pw_kort.append(item)
-                c1 += 1
-            elif int(dif) >= 8:
-                lijst_pw_red.append(item)
-                c2 += 1
-            elif int(dif) <= 11:
-                lijst_pw_lang.append(item)
-                c3 += 1
-        try: 
-            lijst_hw.append(hw_lijst[0])
-        except: 
-            pass
-        try:
-            lijst_hw.append(hw_lijst[1])
-        except: 
-            pass
-        print(c1)
-        print(c2)
-        print(c3)
-        if c3 > 0:
-            b1 = BoxLayout(orientation="vertical")
-            self.ids.boxmains.add_widget(b1)
-            l1 = Label(text="Bestudeer globaal de stof van:", color=(0,0,0,1))
-            b1.add_widget(l1)
-        if c2 > 0:
-            b2 = BoxLayout(orientation="vertical")
-            self.ids.boxmains.add_widget(b2)
-            l2 = Label(text="Bestudeer goed de stof van:", color=(0,0,0,1))
-            b2.add_widget(l2)
-        if c1 > 0:
-            b3 = BoxLayout(orientation="vertical")
-            self.ids.boxmains.add_widget(b3)
-            l3 = Label(text="Bestudeer de lastige stof van:", color=(0,0,0,1))
-            b3.add_widget(l3)
-
-        
-    
-
-
 class PopupSW(Popup):
     def on_open(self):
         naam = self.title.split(" - ")[0]
@@ -229,6 +164,16 @@ class PopupSW(Popup):
         for hw in schoolwerk_screen.children:
             if hw.text.split("\n")[0] == naam:
                 schoolwerk_screen.remove_widget(hw)
+
+        planning_screen = MDApp.get_running_app().root.get_screen("planning").ids.boxmains
+        
+        for hw in planning_screen.children:
+            if hw.text.split("\n")[0] == naam:
+                planning_screen.remove_widget(hw)
+        if "button" not in str(planning_screen.children):
+            planning_screen.clear_widgets()
+
+
         
         self.dismiss()
     
@@ -295,6 +240,123 @@ class PopupSW(Popup):
         data = Scorro.show_klassen(self)
         spinner = self.ids.kiesvakHwP
         spinner.values = [str(item[0]) for item in data]
+
+class Planning(Screen):
+    def popupSW(self, text):
+        naam = text.split("\n")[0]
+        popup = PopupSW(title=f"{naam} - aanpassen")
+        popup.open()
+
+        
+    def on_enter(self):
+        self.ids.boxmains.clear_widgets()
+        window_size = int(Window.size[1]) / 10
+        pw_lijst = Scorro.show_proefwerken(self)
+        hw_lijst = Scorro.show_huiswerk(self)
+        pw_lijst.sort(key=lambda x: x[1])
+        hw_lijst.sort(key=lambda x: x[1])
+        lijst_pw_kort = []
+        lijst_pw_lang = []
+        lijst_pw_red = []
+        lijst_hw = []
+        c1 = 0
+        c2 = 0
+        c3 = 0
+        for item in pw_lijst:
+            date1 = datetime.strptime(item[1], "%d-%m-%Y")
+            cdate = str(date.today())
+            cdate = datetime.strptime(cdate, "%Y-%m-%d")
+            dif = str(date1 - cdate).split(" ")[0]
+            if dif == "0:00:00" or int(dif) < 0:
+                naam = item[0]
+                conn = sqlite3.connect('ScorroDB.db')
+                c = conn.cursor()
+                c.execute(f"DELETE FROM proefwerken WHERE naam = '{naam}'")
+                conn.commit()
+                conn.close()
+            elif int(dif) <= 3:
+                lijst_pw_kort.append(item)
+                c1 += 1
+            elif int(dif) <= 8:
+                lijst_pw_red.append(item)
+                c2 += 1
+            elif int(dif) <= 11:
+                lijst_pw_lang.append(item)
+                c3 += 1
+        try: 
+            lijst_hw.append(hw_lijst[0])
+        except: 
+            pass
+        try:
+            lijst_hw.append(hw_lijst[1])
+        except: 
+            pass
+        if c3 > 0:
+            window_width, window_height = Window.size
+            # b1 = GridLayout(cols=1, size_hint_y=None, padding=window_height/30, spacing=window_width/40)
+            # self.ids.boxmains.add_widget(b1)
+            # l1 = Label(text="Bestudeer globaal de stof van:", color=(0,0,0,1))
+            # b1.add_widget(l1)
+            l1 = Label(text="Bestudeer globaal de stof van:", color=(0,0,0,1), text_size=self.ids.boxmains.size, halign="left")
+            l5 = Label(text=" ")
+            self.ids.boxmains.add_widget(l1)
+            self.ids.boxmains.add_widget(l5)
+            for item in lijst_pw_lang:
+                replace = str(item).replace("(", "").replace(")", "").replace("'", "").split(", ")
+                button = Button(text=str(replace[0] + "\n" + replace[3] + " - " + replace[1]), size_hint=(None, None), height=window_size, width=Window.size[0], on_press=lambda button: self.popupSW(button.text), background_normal="", background_color=(1,133/255,39/255,1))
+                button.text_size = (button.width-(Window.size[0]/10), None)
+                button.bind(size=button.setter('text_size'))
+                self.ids.boxmains.add_widget(button)
+        if c2 > 0:
+            window_width, window_height = Window.size
+            # b2 = GridLayout(cols=1, size_hint_y=None, padding=window_height/30, spacing=window_width/40)
+            # self.ids.boxmains.add_widget(b2)
+            # l2 = Label(text="Bestudeer goed de stof van:", color=(0,0,0,1))
+            # b2.add_widget(l2)
+            l2 = Label(text="Bestudeer goed de stof van:", color=(0,0,0,1), text_size=self.ids.boxmains.size, halign="left")
+            l6 = Label(text=" ")
+            self.ids.boxmains.add_widget(l2)
+            self.ids.boxmains.add_widget(l6)
+            for item in lijst_pw_red:
+                replace = str(item).replace("(", "").replace(")", "").replace("'", "").split(", ")
+                button = Button(text=str(replace[0] + "\n" + replace[3] + " - " + replace[1]), size_hint=(None, None), height=window_size, width=Window.size[0], on_press=lambda button: self.popupSW(button.text), background_normal="", background_color=(1,133/255,39/255,1))
+                button.text_size = (button.width-(Window.size[0]/10), None)
+                button.bind(size=button.setter('text_size'))
+                self.ids.boxmains.add_widget(button)
+        if c1 > 0:
+            # window_width, window_height = Window.size
+            # b3 = GridLayout(cols=1, size_hint_y=None, padding=window_height/30, spacing=window_width/40)
+            # self.ids.boxmains.add_widget(b3)
+            # l3 = Label(text="Bestudeer de lastige stof van:", color=(0,0,0,1))
+            # b3.add_widget(l3)
+            window_width, window_height = Window.size
+            l3 = Label(text="Bestudeer de lastige stof van:", color=(0,0,0,1), text_size=self.ids.boxmains.size, halign="left")
+            l7 = Label(text=" ")
+            self.ids.boxmains.add_widget(l3)
+            self.ids.boxmains.add_widget(l7)
+            for item in lijst_pw_kort:
+                replace = str(item).replace("(", "").replace(")", "").replace("'", "").split(", ")
+                button = Button(text=str(replace[0] + "\n" + replace[3] + " - " + replace[1]), size_hint=(None, None), height=window_size, width=Window.size[0], on_press=lambda button: self.popupSW(button.text), background_normal="", background_color=(1,133/255,39/255,1))
+                button.text_size = (button.width-(Window.size[0]/10), None)
+                button.bind(size=button.setter('text_size'))
+                self.ids.boxmains.add_widget(button)
+        if str(lijst_hw) != "[]":
+            window_width, window_height = Window.size
+            # b4 = GridLayout(cols=1, size_hint_y=None, padding=window_height/30, spacing=window_width/40)
+            # self.ids.boxmains.add_widget(b4)
+            # l4 = Label(text="Ga verder met:", color=(0,0,0,1))
+            # b4.add_widget(l4)
+            l4 = Label(text="Ga verder met:", color=(0,0,0,1), text_size=self.ids.boxmains.size, halign="left")
+            l8 = Label(text=" ")
+            self.ids.boxmains.add_widget(l4)
+            self.ids.boxmains.add_widget(l8)
+            for item in lijst_hw:
+                replace = str(item).replace("(", "").replace(")", "").replace("'", "").split(", ")
+                button = Button(text=str(replace[0] + "\n" + replace[3] + " - " + replace[1]), size_hint=(None, None), height=window_size, width=Window.size[0], on_press=lambda button: self.popupSW(button.text), background_normal="", background_color=(0, 163/255, 130/255,))
+                button.text_size = (button.width-(Window.size[0]/10), None)
+                button.bind(size=button.setter('text_size'))
+                self.ids.boxmains.add_widget(button)
+        print(str(self.ids.boxmains.children))
 
 class Schoolwerk(Screen):
     def popupSW(self, text):

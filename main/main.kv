@@ -376,12 +376,17 @@ WindowManager:
                     size: self.size
         BoxLayout:
             orientation:'vertical'
+            id: box
             ScrollView:
                 do_scroll_x: False
                 do_scroll_y: True
-                BoxLayout:
+                GridLayout:
                     id: boxmains
-                    orientation: "vertical"
+                    cols: 1
+                    spacing: root.width/30
+                    padding: root.height/30
+                    size_hint_y: None
+                    height: self.minimum_height
         BoxLayout:
             orientation: "vertical"
             size_hint: 1, .25
