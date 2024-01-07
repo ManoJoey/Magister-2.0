@@ -10,7 +10,7 @@ from kivy.uix.widget import Widget
 from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.clock import Clock
+#from kivy.clock import Clock
 from kivy.uix.popup import Popup
 
 import sqlite3
@@ -371,8 +371,7 @@ class Planning(Screen):
                 button.bind(size=button.setter('text_size'))
                 self.ids.boxmains_pwL.add_widget(button)
         else:
-            #self.ids.boxmains_pwL_t.clear_widgets()
-            self.ids.boxmains.remove_widget(boxmains_pwL_t)
+            self.ids.boxmains_pwL_t.clear_widgets()
         if c2 > 0:
             for item in lijst_pw_red:
                 replace = str(item).replace("(", "").replace(")", "").replace("'", "").split(", ")
@@ -381,8 +380,7 @@ class Planning(Screen):
                 button.bind(size=button.setter('text_size'))
                 self.ids.boxmains_pwRL.add_widget(button)
         else:
-            #self.ids.boxmains_pwRL_t.clear_widgets()
-            self.ids.boxmains.remove_widget(boxmains_pwRL_t)
+            self.ids.boxmains_pwRL_t.clear_widgets()
         if c1 > 0:
             for item in lijst_pw_kort:
                 replace = str(item).replace("(", "").replace(")", "").replace("'", "").split(", ")
@@ -391,8 +389,7 @@ class Planning(Screen):
                 button.bind(size=button.setter('text_size'))
                 self.ids.boxmains_pwK.add_widget(button)
         else:
-            #self.ids.boxmains_pwK_t.clear_widgets()
-            self.ids.boxmains.remove_widget(boxmains_pwK_t)
+            self.ids.boxmains_pwK_t.clear_widgets()
         if str(lijst_hw) != "[]":
             for item in lijst_hw:
                 replace = str(item).replace("(", "").replace(")", "").replace("'", "").split(", ")
@@ -401,8 +398,7 @@ class Planning(Screen):
                 button.bind(size=button.setter('text_size'))
                 self.ids.boxmains_hw.add_widget(button)
         else:
-            #self.ids.boxmains_hw_t.clear_widgets()
-            self.ids.boxmains.remove_widget(boxmains_hw_t)
+            self.ids.boxmains_hw_t.clear_widgets()
         
         count =  0
         for item in self.ids.boxmains.children:
