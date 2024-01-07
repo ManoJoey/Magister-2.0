@@ -311,8 +311,6 @@ class Planning(Screen):
         popup = PopupSW(title=f"{naam} - aanpassen")
         popup.open()
     
-
-
     def on_enter(self):
         window_size = int(Window.size[1]) / 10
 
@@ -373,7 +371,8 @@ class Planning(Screen):
                 button.bind(size=button.setter('text_size'))
                 self.ids.boxmains_pwL.add_widget(button)
         else:
-            self.ids.boxmains_pwL_t.clear_widgets()
+            #self.ids.boxmains_pwL_t.clear_widgets()
+            self.ids.boxmains.remove_widget(boxmains_pwL_t)
         if c2 > 0:
             for item in lijst_pw_red:
                 replace = str(item).replace("(", "").replace(")", "").replace("'", "").split(", ")
@@ -382,7 +381,8 @@ class Planning(Screen):
                 button.bind(size=button.setter('text_size'))
                 self.ids.boxmains_pwRL.add_widget(button)
         else:
-            self.ids.boxmains_pwRL_t.clear_widgets()
+            #self.ids.boxmains_pwRL_t.clear_widgets()
+            self.ids.boxmains.remove_widget(boxmains_pwRL_t)
         if c1 > 0:
             for item in lijst_pw_kort:
                 replace = str(item).replace("(", "").replace(")", "").replace("'", "").split(", ")
@@ -391,7 +391,8 @@ class Planning(Screen):
                 button.bind(size=button.setter('text_size'))
                 self.ids.boxmains_pwK.add_widget(button)
         else:
-            self.ids.boxmains_pwK_t.clear_widgets()
+            #self.ids.boxmains_pwK_t.clear_widgets()
+            self.ids.boxmains.remove_widget(boxmains_pwK_t)
         if str(lijst_hw) != "[]":
             for item in lijst_hw:
                 replace = str(item).replace("(", "").replace(")", "").replace("'", "").split(", ")
@@ -400,7 +401,8 @@ class Planning(Screen):
                 button.bind(size=button.setter('text_size'))
                 self.ids.boxmains_hw.add_widget(button)
         else:
-            self.ids.boxmains_hw_t.clear_widgets()
+            #self.ids.boxmains_hw_t.clear_widgets()
+            self.ids.boxmains.remove_widget(boxmains_hw_t)
         
         count =  0
         for item in self.ids.boxmains.children:
@@ -958,7 +960,7 @@ class Scorro(MDApp):
         conn.commit()
         conn.close()
 
-        kv = Builder.load_file('main.kv')
+        kv = Builder.load_file('main_kv.kv')
         return kv
 
     def on_start(self):
