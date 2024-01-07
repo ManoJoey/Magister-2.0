@@ -193,7 +193,7 @@ WindowManager:
         Button:
             on_release: app.root.current = "dashboard"
             background_normal: ""
-            background_color: (1, 0.102, 0.102)
+            background_color: (1, 0.329, 0.341)
             Image:
                 source: "Images/dashboard.png"
                 center_x: self.parent.center_x
@@ -211,7 +211,7 @@ WindowManager:
         Button:
             on_release: app.root.current = "planning"
             background_normal: ""
-            background_color: (1, 0.102, 0.102)
+            background_color: (1, 0.329, 0.341)
             Image:
                 source: "Images/planning.png"
                 center_x: self.parent.center_x
@@ -229,7 +229,7 @@ WindowManager:
         Button:
             on_release: app.root.current = "schoolwerk"
             background_normal: ""
-            background_color: (1, 0.102, 0.102)
+            background_color: (1, 0.329, 0.341)
             Image:
                 source: "Images/schoolwerk.png"
                 center_x: self.parent.center_x
@@ -247,7 +247,7 @@ WindowManager:
         Button:
             on_release: app.root.current = "cijfers"
             background_normal: ""
-            background_color: (1, 0.102, 0.102)
+            background_color: (1, 0.329, 0.341)
             Image:
                 source: "Images/grade.png"
                 center_x: self.parent.center_x
@@ -265,7 +265,7 @@ WindowManager:
         Button:
             on_release: app.root.current = "vakken"
             background_normal: ""
-            background_color: (1, 0.102, 0.102)
+            background_color: (1, 0.329, 0.341)
             Image:
                 source: "Images/subject.png"
                 center_x: self.parent.center_x
@@ -291,6 +291,7 @@ WindowManager:
         GridLayout:
             size: root.width, root.height
             cols: 1
+            padding: root.width/30
             canvas.before:
                 Color:
                     rgba: 1, 1, 1, 1
@@ -377,16 +378,91 @@ WindowManager:
         BoxLayout:
             orientation:'vertical'
             id: box
+
             ScrollView:
+                id: sv
                 do_scroll_x: False
                 do_scroll_y: True
                 GridLayout:
                     id: boxmains
                     cols: 1
-                    spacing: root.width/30
-                    padding: root.height/30
                     size_hint_y: None
                     height: self.minimum_height
+                    GridLayout:
+                        cols: 1
+                        id: boxmains_pwL_t
+                        padding: root.height/30
+                        spacing: root.width/30
+                        size_hint_y: None
+                        height: self.minimum_height
+                        Label:
+                            text: "Bestudeer globaal de stof van:"
+                            color: (0,0,0,1)
+                            text_size: self.size
+                            halign: "left"
+                        GridLayout:
+                            id: boxmains_pwL
+                            cols: 1
+                            spacing: root.width/30
+                            size_hint_y: None
+                            height: self.minimum_height
+                    
+                    GridLayout:
+                        cols: 1
+                        id: boxmains_pwRL_t
+                        padding: root.height/30
+                        spacing: root.width/30
+                        size_hint_y: None
+                        height: self.minimum_height
+                        Label:
+                            text: "Bestudeer goed stof van:"
+                            color: (0,0,0,1)
+                            text_size: self.size
+                            halign: "left"
+                        GridLayout:
+                            id: boxmains_pwRL
+                            spacing: root.width/30
+                            cols: 1
+                            size_hint_y: None
+                            height: self.minimum_height
+                            
+                    GridLayout:
+                        cols: 1
+                        id: boxmains_pwK_t
+                        padding: root.height/30
+                        spacing: root.width/30
+                        size_hint_y: None
+                        height: self.minimum_height
+                        Label:
+                            text: "Bestudeer de lastige stof van:"
+                            color: (0,0,0,1)
+                            text_size: self.size
+                            halign: "left"
+                        GridLayout:
+                            id: boxmains_pwK
+                            cols: 1
+                            spacing: root.width/30
+                            size_hint_y: None
+                            height: self.minimum_height
+
+                    GridLayout:
+                        cols: 1
+                        id: boxmains_hw_t
+                        padding: root.height/30
+                        spacing: root.width/30
+                        size_hint_y: None
+                        height: self.minimum_height
+                        Label:
+                            text: "Ga verder met:"
+                            color: (0,0,0,1)
+                            text_size: self.size
+                            halign: "left"
+                        GridLayout:
+                            id: boxmains_hw
+                            cols: 1
+                            spacing: root.width/30
+                            size_hint_y: None
+                            height: self.minimum_height
         BoxLayout:
             orientation: "vertical"
             size_hint: 1, .25
@@ -513,6 +589,7 @@ WindowManager:
                 hint_text: "Extra informatie"
             RoundedButton:
                 text: "Opslaan"
+                bold: "true"
                 color: 0,0,0,1
                 on_release: app.submit_huiswerk()
                 size_hint: 1, .1
