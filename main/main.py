@@ -158,60 +158,12 @@ class PopupSW(Popup):
 
         conn.commit()
         conn.close()
-
-        schoolwerk_screen = MDApp.get_running_app().root.get_screen("schoolwerk").ids.BoxHwPw
         
-        for hw in schoolwerk_screen.children:
-            if hw.text.split("\n")[0] == naam:
-                schoolwerk_screen.remove_widget(hw)
-
-        planning_screen_boxmains = MDApp.get_running_app().root.get_screen("planning").ids.boxmains
-
-        planning_screen_l = MDApp.get_running_app().root.get_screen("planning").ids.boxmains_pwL
-        planning_screen_red = MDApp.get_running_app().root.get_screen("planning").ids.boxmains_pwRL
-        planning_screen_k = MDApp.get_running_app().root.get_screen("planning").ids.boxmains_pwK
-        planning_screen_hw = MDApp.get_running_app().root.get_screen("planning").ids.boxmains_hw
-
-        planning_screen_l_t = MDApp.get_running_app().root.get_screen("planning").ids.boxmains_pwL_t
-        planning_screen_red_t = MDApp.get_running_app().root.get_screen("planning").ids.boxmains_pwRL_t
-        planning_screen_k_t = MDApp.get_running_app().root.get_screen("planning").ids.boxmains_pwK_t
-        planning_screen_hw_t = MDApp.get_running_app().root.get_screen("planning").ids.boxmains_hw_t
-
-        for hw in planning_screen_hw.children:
-            if hw.text.split("\n")[0] == naam:
-                planning_screen_hw.remove_widget(hw)
-        if str(planning_screen_hw.children) == "[]":
-            planning_screen_hw_hw.clear_widgets()
-        
-        for hw in planning_screen_l.children:
-            if hw.text.split("\n")[0] == naam:
-                planning_screen_l.remove_widget(hw)
-        if str(planning_screen_l.children) == "[]":
-            planning_screen_l_t.clear_widgets()
-
-        for hw in planning_screen_red.children:
-            if hw.text.split("\n")[0] == naam:
-                planning_screen_red.remove_widget(hw)
-        if str(planning_screen_red.children) == "[]":
-            planning_screen_red_t.clear_widgets()
-        
-        for hw in planning_screen_k.children:
-            if hw.text.split("\n")[0] == naam:
-                planning_screen_k.remove_widget(hw)
-        if str(planning_screen_k.children) == "[]":
-            planning_screen_k_t.clear_widgets()
-        
-        count =  0
-        for item in planning_screen_boxmains.children:
-            if item.children == "[]":
-                count += 1
-        
-        if count == 4:
-            l = Label(text="Er staat niks op de planning. Ga relaxen!!!", color=(0,0,0,1))
-            planning_screen_boxmains.add_widget(l)
-            print("Er staat niks op de planning. Ga relaxen!!!")
-
-
+        # bouw scherm opnieuw op
+        if str(MDApp.get_running_app().current_ScreenName()) == "planning":
+            MDApp.get_running_app().root.get_screen("planning").on_enter()
+        elif str(MDApp.get_running_app().current_ScreenName()) == "schoolwerk":
+            MDApp.get_running_app().root.get_screen("schoolwerk").on_enter()
         
         self.dismiss()
     
@@ -262,38 +214,11 @@ class PopupSW(Popup):
             conn.close()
             print("Opgeslagen")
             
-            schoolwerk_screen = MDApp.get_running_app().root.get_screen("schoolwerk").ids.BoxHwPw
-            t = new_name + "\n" + new_vak + " - " + new_date
-            for hw in schoolwerk_screen.children:
-                if hw.text.split("\n")[0] == old_name:
-                    hw.text = t
-            
-            schoolwerk_screen.children.sort(reverse=True, key=lambda date: datetime.strptime(date.text.split("\n")[1].split(" - ")[1], "%d-%m-%Y"))
-
-
-            planning_screen_l = MDApp.get_running_app().root.get_screen("planning").ids.boxmains_pwL
-            planning_screen_red = MDApp.get_running_app().root.get_screen("planning").ids.boxmains_pwRL
-            planning_screen_k = MDApp.get_running_app().root.get_screen("planning").ids.boxmains_pwK
-            planning_screen_hw = MDApp.get_running_app().root.get_screen("planning").ids.boxmains_hw
-            
-        
-            t = new_name + "\n" + new_vak + " - " + new_date
-            for hw in planning_screen_l.children:
-                if hw.text.split("\n")[0] == old_name:
-                    hw.text = t
-            
-            for hw in planning_screen_red.children:
-                if hw.text.split("\n")[0] == old_name:
-                    hw.text = t
-            
-            for hw in planning_screen_k.children:
-                if hw.text.split("\n")[0] == old_name:
-                    hw.text = t
-            
-            for hw in planning_screen_hw.children:
-                if hw.text.split("\n")[0] == old_name:
-                    hw.text = t
-
+            # bouw scherm opnieuw op
+            if str(MDApp.get_running_app().current_ScreenName()) == "planning":
+                MDApp.get_running_app().root.get_screen("planning").on_enter()
+            elif str(MDApp.get_running_app().current_ScreenName()) == "schoolwerk":
+                MDApp.get_running_app().root.get_screen("schoolwerk").on_enter()
 
             self.dismiss()
         else:
@@ -316,6 +241,7 @@ class Planning(Screen):
 
         for grid in self.ids.boxmains.children:
             if isinstance(grid, Label):
+                # voor verwijderen van label 'niks te doen'
                 self.ids.boxmains.remove_widget(grid)
             else:
                 for item in grid.children:
@@ -362,8 +288,9 @@ class Planning(Screen):
             lijst_hw.append(hw_lijst[1])
         except: 
             pass
-
+            
         if c3 > 0:
+            self.ids.StudeerGlobaal.text = "Bestudeer globaal de stof van:"
             for item in lijst_pw_lang:
                 replace = str(item).replace("(", "").replace(")", "").replace("'", "").split(", ")
                 button = Button(text=str(replace[0] + "\n" + replace[3] + " - " + replace[1]), size_hint=(None, None), height=window_size, width=Window.size[0], on_press=lambda button: self.popupSW(button.text), background_normal="", background_color=(1,133/255,39/255,1))
@@ -371,8 +298,9 @@ class Planning(Screen):
                 button.bind(size=button.setter('text_size'))
                 self.ids.boxmains_pwL.add_widget(button)
         else:
-            self.ids.boxmains_pwL_t.clear_widgets()
+            self.ids.StudeerGlobaal.text = "Geen langetermijnproefwerken!"
         if c2 > 0:
+            self.ids.StudeerGoed.text = "Bestudeer goed de stof van:"
             for item in lijst_pw_red:
                 replace = str(item).replace("(", "").replace(")", "").replace("'", "").split(", ")
                 button = Button(text=str(replace[0] + "\n" + replace[3] + " - " + replace[1]), size_hint=(None, None), height=window_size, width=Window.size[0], on_press=lambda button: self.popupSW(button.text), background_normal="", background_color=(1,133/255,39/255,1))
@@ -380,8 +308,9 @@ class Planning(Screen):
                 button.bind(size=button.setter('text_size'))
                 self.ids.boxmains_pwRL.add_widget(button)
         else:
-            self.ids.boxmains_pwRL_t.clear_widgets()
+            self.ids.StudeerGoed.text = "Geen middeltermijnproefwerken!"
         if c1 > 0:
+            self.ids.LastigeStof.text = "Bestudeer de lastige stof van:"
             for item in lijst_pw_kort:
                 replace = str(item).replace("(", "").replace(")", "").replace("'", "").split(", ")
                 button = Button(text=str(replace[0] + "\n" + replace[3] + " - " + replace[1]), size_hint=(None, None), height=window_size, width=Window.size[0], on_press=lambda button: self.popupSW(button.text), background_normal="", background_color=(1,133/255,39/255,1))
@@ -389,8 +318,9 @@ class Planning(Screen):
                 button.bind(size=button.setter('text_size'))
                 self.ids.boxmains_pwK.add_widget(button)
         else:
-            self.ids.boxmains_pwK_t.clear_widgets()
+            self.ids.LastigeStof.text = "Geen kortetermijnproefwerken!"
         if str(lijst_hw) != "[]":
+            self.ids.GaVerderMet.text = "Ga verder met:"
             for item in lijst_hw:
                 replace = str(item).replace("(", "").replace(")", "").replace("'", "").split(", ")
                 button = Button(text=str(replace[0] + "\n" + replace[3] + " - " + replace[1]), size_hint=(None, None), height=window_size, width=Window.size[0], on_press=lambda button: self.popupSW(button.text), background_normal="", background_color=(0, 163/255, 130/255,))
@@ -398,16 +328,8 @@ class Planning(Screen):
                 button.bind(size=button.setter('text_size'))
                 self.ids.boxmains_hw.add_widget(button)
         else:
-            self.ids.boxmains_hw_t.clear_widgets()
-        
-        count =  0
-        for item in self.ids.boxmains.children:
-            if item.children == "[]":
-                count += 1
-        
-        if count == 4:
-            l = Label(text="Er staat niks op de planning. Ga relaxen!!!", color=(0,0,0,1), pos_hint=(0.5, 0.5))
-            self.ids.boxmains.add_widget(l)
+            self.ids.GaVerderMet.text = "Er staat geen huiswerk op de planning!"
+
 
 class Schoolwerk(Screen):
     def popupSW(self, text):
@@ -917,6 +839,9 @@ class WindowManager(ScreenManager):
     pass
 
 class Scorro(MDApp):
+    def current_ScreenName(self):
+        return self.root.current
+
     def call_cf(self):
         self.root.current = "cijfers"
 

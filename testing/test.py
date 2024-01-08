@@ -783,7 +783,7 @@ class Scorro(MDApp):
         conn.commit()
         conn.close()
 
-        kv = Builder.load_file('main.kv')
+        kv = Builder.load_file('testdl.kv')
         return kv
 
     def on_start(self):

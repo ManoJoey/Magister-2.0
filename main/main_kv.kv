@@ -377,7 +377,7 @@ WindowManager:
         BoxLayout:
             orientation:'vertical'
             id: box
-
+            padding: root.width/30
             ScrollView:
                 id: sv
                 do_scroll_x: False
@@ -387,86 +387,92 @@ WindowManager:
                     cols: 1
                     size_hint_y: None
                     height: self.minimum_height
+                    spacing: root.height/30
+
+                    # Langetermijnproefwerken
                     GridLayout:
                         cols: 1
                         id: boxmains_pwL_t
-                        padding: root.height/30
-                        spacing: root.width/30
                         size_hint_y: None
                         height: self.minimum_height
+                        spacing: root.height/40
                         Label:
                             text: "Bestudeer globaal de stof van:"
+                            id: StudeerGlobaal
                             color: (0,0,0,1)
                             text_size: self.size
                             halign: "left"
                         GridLayout:
                             id: boxmains_pwL
                             cols: 1
-                            spacing: root.width/30
                             size_hint_y: None
                             height: self.minimum_height
+                            spacing: root.height/60
                     
+                    # Middeltermijnproefwerken
                     GridLayout:
                         cols: 1
                         id: boxmains_pwRL_t
-                        padding: root.height/30
-                        spacing: root.width/30
                         size_hint_y: None
                         height: self.minimum_height
+                        spacing: root.height/40
                         Label:
-                            text: "Bestudeer goed stof van:"
+                            text: "Bestudeer goed de stof van:"
+                            id: StudeerGoed
                             color: (0,0,0,1)
                             text_size: self.size
                             halign: "left"
                         GridLayout:
                             id: boxmains_pwRL
-                            spacing: root.width/30
                             cols: 1
                             size_hint_y: None
                             height: self.minimum_height
-                            
+                            spacing: root.height/60
+
+                    # Kortetermijnproefwerken
                     GridLayout:
                         cols: 1
                         id: boxmains_pwK_t
-                        padding: root.height/30
-                        spacing: root.width/30
                         size_hint_y: None
                         height: self.minimum_height
+                        spacing: root.height/40
                         Label:
                             text: "Bestudeer de lastige stof van:"
+                            id: LastigeStof
                             color: (0,0,0,1)
                             text_size: self.size
                             halign: "left"
                         GridLayout:
                             id: boxmains_pwK
                             cols: 1
-                            spacing: root.width/30
                             size_hint_y: None
                             height: self.minimum_height
+                            spacing: root.height/60
 
+                    # Huiswerk
                     GridLayout:
                         cols: 1
                         id: boxmains_hw_t
-                        padding: root.height/30
-                        spacing: root.width/30
                         size_hint_y: None
                         height: self.minimum_height
+                        spacing: root.height/40
                         Label:
                             text: "Ga verder met:"
+                            id: GaVerderMet
                             color: (0,0,0,1)
                             text_size: self.size
                             halign: "left"
                         GridLayout:
                             id: boxmains_hw
                             cols: 1
-                            spacing: root.width/30
                             size_hint_y: None
                             height: self.minimum_height
+                            spacing: root.height/60
         BoxLayout:
             orientation: "vertical"
             size_hint: 1, .25
-            spacing: root.width / 20
-            padding: root.height / 80
+            spacing: root.height / 40
+            padding: root.width / 40
             RoundedButton:
                 text_size: self.size
                 bold: "true"
@@ -503,22 +509,24 @@ WindowManager:
                 Rectangle:
                     pos: self.pos
                     size: self.size
-        ScrollView:
-            do_scroll_x: False
-            do_scroll_y: True
-            GridLayout:
-                spacing: root.width/30
-                padding: root.height/30
-                id: BoxHwPw
-                cols: 1
-                size_hint_y: None
-                height: self.minimum_height
-                #Lijst met pw en hw
+        BoxLayout:
+            orientation: "vertical"
+            padding: root.width/30
+            ScrollView:
+                do_scroll_x: False
+                do_scroll_y: True
+                GridLayout:
+                    spacing: root.height/60
+                    id: BoxHwPw
+                    cols: 1
+                    size_hint_y: None
+                    height: self.minimum_height
+                    #Lijst met pw en hw
         BoxLayout:
             orientation: "vertical"
             size_hint: 1, .25
-            spacing: root.width / 20
-            padding: root.height / 80
+            spacing: root.height / 40
+            padding: root.width / 40
             RoundedButton:
                 text_size: self.size
                 bold: "true"
@@ -749,7 +757,7 @@ WindowManager:
                     size: self.size
         BoxLayout:
             orientation: "vertical"
-            padding: root.height/20
+            padding: root.width/10
             spacing: root.height/20
             TextInput:
                 #cijfer
@@ -803,8 +811,8 @@ WindowManager:
                     size: self.size
         BoxLayout:
             orientation: "vertical"
-            padding: root.height/30
-            spacing: root.width/30
+            padding: root.width/15
+            spacing: root.height/60
             RoundedSpin:
                 id: kiesvakCFB
                 size_hint: 1, .2
