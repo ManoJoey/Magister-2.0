@@ -72,7 +72,7 @@ class Dashboard(Screen):
                 l2.bind(on_release=lambda x: self.change())
                 lay.add_widget(l2)
 
-                l3 = Button()
+                l3 = Button(background_color="white", background_normal="", color="gray")
                 lay.add_widget(l3)
             elif len(cijferlijst) == 1:
                 l1 = Button(markup=True, text="{}\n[size={}]{}[/size]".format(cijferlijst[0][0], vak_size, cijferlijst[0][0]),
@@ -81,10 +81,10 @@ class Dashboard(Screen):
                 l1.bind(on_release=lambda x: self.change())
                 lay.add_widget(l1)
 
-                l2 = Button()
+                l2 = Button(background_color="white", background_normal="", color="gray")
                 lay.add_widget(l2)
                 
-                l3 = Button()
+                l3 = Button(background_color="white", background_normal="", color="gray")
                 lay.add_widget(l3)
 
 
@@ -293,37 +293,44 @@ class Planning(Screen):
             self.ids.StudeerGlobaal.text = "Bestudeer globaal de stof van:"
             for item in lijst_pw_lang:
                 replace = str(item).replace("(", "").replace(")", "").replace("'", "").split(", ")
-                button = Button(text=str(replace[0] + "\n" + replace[3] + " - " + replace[1]), size_hint=(None, None), height=window_size, width=Window.size[0], on_press=lambda button: self.popupSW(button.text), background_normal="", background_color=(1,133/255,39/255,1))
+                button = Button(text=str(replace[0] + "\n" + replace[3] + " - " + replace[1]), size_hint=(None, None), height=window_size, width=Window.size[0],
+                    on_press=lambda button: self.popupSW(button.text), background_normal="", background_color=(1,133/255,39/255,1), font_size=int(int(Window.size[0])/20))
                 button.text_size = (button.width-(Window.size[0]/10), None)
                 button.bind(size=button.setter('text_size'))
                 self.ids.boxmains_pwL.add_widget(button)
         else:
-            self.ids.StudeerGlobaal.text = "Geen langetermijnproefwerken!"
+            # 8-11
+            self.ids.StudeerGlobaal.text = "Volgende week geen proefwerken!"
         if c2 > 0:
             self.ids.StudeerGoed.text = "Bestudeer goed de stof van:"
             for item in lijst_pw_red:
                 replace = str(item).replace("(", "").replace(")", "").replace("'", "").split(", ")
-                button = Button(text=str(replace[0] + "\n" + replace[3] + " - " + replace[1]), size_hint=(None, None), height=window_size, width=Window.size[0], on_press=lambda button: self.popupSW(button.text), background_normal="", background_color=(1,133/255,39/255,1))
+                button = Button(text=str(replace[0] + "\n" + replace[3] + " - " + replace[1]), size_hint=(None, None), height=window_size, width=Window.size[0],
+                    on_press=lambda button: self.popupSW(button.text), background_normal="", background_color=(1,133/255,39/255,1), font_size=int(int(Window.size[0])/20))
                 button.text_size = (button.width-(Window.size[0]/10), None)
                 button.bind(size=button.setter('text_size'))
                 self.ids.boxmains_pwRL.add_widget(button)
         else:
-            self.ids.StudeerGoed.text = "Geen middeltermijnproefwerken!"
+            # 3-8
+            self.ids.StudeerGoed.text = "Geen proefwerken over 3-8 dagen!"
         if c1 > 0:
             self.ids.LastigeStof.text = "Bestudeer de lastige stof van:"
             for item in lijst_pw_kort:
                 replace = str(item).replace("(", "").replace(")", "").replace("'", "").split(", ")
-                button = Button(text=str(replace[0] + "\n" + replace[3] + " - " + replace[1]), size_hint=(None, None), height=window_size, width=Window.size[0], on_press=lambda button: self.popupSW(button.text), background_normal="", background_color=(1,133/255,39/255,1))
+                button = Button(text=str(replace[0] + "\n" + replace[3] + " - " + replace[1]), size_hint=(None, None), height=window_size, width=Window.size[0],
+                    on_press=lambda button: self.popupSW(button.text), background_normal="", background_color=(1,133/255,39/255,1), font_size=int(int(Window.size[0])/20))
                 button.text_size = (button.width-(Window.size[0]/10), None)
                 button.bind(size=button.setter('text_size'))
                 self.ids.boxmains_pwK.add_widget(button)
         else:
-            self.ids.LastigeStof.text = "Geen kortetermijnproefwerken!"
+            # 0-3
+            self.ids.LastigeStof.text = "Geen proefwerken binnenkort!"
         if str(lijst_hw) != "[]":
             self.ids.GaVerderMet.text = "Ga verder met:"
             for item in lijst_hw:
                 replace = str(item).replace("(", "").replace(")", "").replace("'", "").split(", ")
-                button = Button(text=str(replace[0] + "\n" + replace[3] + " - " + replace[1]), size_hint=(None, None), height=window_size, width=Window.size[0], on_press=lambda button: self.popupSW(button.text), background_normal="", background_color=(0, 163/255, 130/255,))
+                button = Button(text=str(replace[0] + "\n" + replace[3] + " - " + replace[1]), size_hint=(None, None), height=window_size, width=Window.size[0],
+                    on_press=lambda button: self.popupSW(button.text), background_normal="", background_color=(0, 163/255, 130/255,), font_size=int(int(Window.size[0])/20))
                 button.text_size = (button.width-(Window.size[0]/10), None)
                 button.bind(size=button.setter('text_size'))
                 self.ids.boxmains_hw.add_widget(button)
@@ -344,7 +351,8 @@ class Schoolwerk(Screen):
         pw_lijst = Scorro.show_proefwerken(self)
         for item in pw_lijst:
             replace = str(item).replace("(", "").replace(")", "").replace("'", "").split(", ")
-            button = Button(text=str(replace[0] + "\n" + replace[3] + " - " + replace[1]), size_hint=(None, None), height=window_size, width=Window.size[0], on_press=lambda button: self.popupSW(button.text), background_normal="", background_color=(1,133/255,39/255,1))
+            button = Button(text=str(replace[0] + "\n" + replace[3] + " - " + replace[1]), size_hint=(None, None), height=window_size, width=Window.size[0],
+                on_press=lambda button: self.popupSW(button.text), background_normal="", background_color=(1,133/255,39/255,1), font_size=int(int(Window.size[0])/20))
             button.text_size = (button.width-(Window.size[0]/10), None)
             button.bind(size=button.setter('text_size'))
             self.ids.BoxHwPw.add_widget(button)
@@ -352,7 +360,8 @@ class Schoolwerk(Screen):
         hw_lijst = Scorro.show_huiswerk(self)
         for item in hw_lijst:
             replace = str(item).replace("(", "").replace(")", "").replace("'", "").split(", ")
-            button = Button(text=str(replace[0] + "\n" + replace[3] + " - " + replace[1]), size_hint=(None, None), height=window_size, width=Window.size[0], on_press=lambda button: self.popupSW(button.text), background_normal="", background_color=(0, 163/255, 130/255,))
+            button = Button(text=str(replace[0] + "\n" + replace[3] + " - " + replace[1]), size_hint=(None, None), height=window_size, width=Window.size[0],
+                on_press=lambda button: self.popupSW(button.text), background_normal="", background_color=(0, 163/255, 130/255,), font_size=int(int(Window.size[0])/20))
             button.text_size = (button.width-(Window.size[0]/10), None)
             button.bind(size=button.setter('text_size'))
             self.ids.BoxHwPw.add_widget(button)
@@ -746,18 +755,6 @@ class NieuwVak(Screen):
         self.ids.vrijdag.background_color = (1,0,0,1)
         self.ids.zaterdag.background_color = (1,0,0,1)
         self.ids.zondag.background_color = (1,0,0,1)
-        
-    def hide_message(self):
-        self.ids.BoxMessage.remove_widget(self.ids.BoxMessage.children[0])
-
-    def SavedVak(self):
-        text = self.ids.naam_vak.text
-        if lijst_dagen != []:
-            if text != "":
-                # message = Label(text="Vak opgeslagen!")
-                # self.ids.BoxMessage.add_widget(message)
-                # Clock.schedule_once(lambda x: self.hide_message(), 1.5)
-                pass
 
     def Savedag(self, dag):
         colour_selec = (0,1,0,1)
@@ -1082,7 +1079,7 @@ class Scorro(MDApp):
         conn.close()
         return records
 
-        
+#Window.size = (525, 900)   
 Window.size = (350, 600)
 #Window.size = (233, 400)
 

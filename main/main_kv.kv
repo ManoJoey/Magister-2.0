@@ -200,11 +200,11 @@ WindowManager:
                 center_y: self.parent.center_y / 0.8
                 allow_stretch: True
                 keep_ratio: True
-                size: (25, 25)
+                size: (root.width/12, root.width/12)
             Label:
                 text: "Dashboard"
                 color: (0,0,0,1)
-                font_size: 12
+                font_size: root.width/27
                 center_x: self.parent.center_x
                 center_y: self.parent.center_y / 2.1
 
@@ -218,11 +218,11 @@ WindowManager:
                 center_y: self.parent.center_y / 0.8
                 allow_stretch: True
                 keep_ratio: True
-                size: (25, 25)
+                size: (root.width/12, root.width/12)
             Label:
                 text: "Planning"
                 color: (0,0,0,1)
-                font_size: 12
+                font_size: root.width/27
                 center_x: self.parent.center_x
                 center_y: self.parent.center_y / 2.1
 
@@ -236,11 +236,11 @@ WindowManager:
                 center_y: self.parent.center_y / 0.8
                 allow_stretch: True
                 keep_ratio: True
-                size: (25, 25)
+                size: (root.width/12, root.width/12)
             Label:
                 text: "Schoolwerk"
                 color: (0,0,0,1)
-                font_size: 12
+                font_size: root.width/27
                 center_x: self.parent.center_x
                 center_y: self.parent.center_y / 2.1
 
@@ -254,11 +254,11 @@ WindowManager:
                 center_y: self.parent.center_y / 0.8
                 allow_stretch: True
                 keep_ratio: True
-                size: (25, 25)
+                size: (root.width/12, root.width/12)
             Label:
                 text: "Cijfers"
                 color: (0,0,0,1)
-                font_size: 12
+                font_size: root.width/27
                 center_x: self.parent.center_x
                 center_y: self.parent.center_y / 2.1
 
@@ -272,11 +272,11 @@ WindowManager:
                 center_y: self.parent.center_y / 0.8
                 allow_stretch: True
                 keep_ratio: True
-                size: (25, 25)
+                size: (root.width/12, root.width/12)
             Label:
                 text: "Vakken"
                 color: (0,0,0,1)
-                font_size: 12
+                font_size: root.width/27
                 center_x: self.parent.center_x
                 center_y: self.parent.center_y / 2.1
 
@@ -311,24 +311,26 @@ WindowManager:
                 padding: root.width / 25
                 RoundedButton:
                     text: "Planning"
+                    font_size: root.width/15
                     bold: "true"
                     on_release: app.root.current = "planning"
                     color: 0,0,0,1
                     Image:
                         source: "Images/planning.png"
-                        center_x: self.parent.center_x - (self.parent.center_x / 1.9)
+                        center_x: self.parent.center_x - (self.parent.center_x / 1.6)
                         center_y: self.parent.center_y / 1.01
                         allow_stretch: True
                         keep_ratio: True
                         size: (self.parent.center_x / 3.5, self.parent.center_y / 3.5)    
                 RoundedButton:
                     text: "Schoolwerk"
+                    font_size: root.width/15
                     on_release: app.root.current = "schoolwerk"
                     color: 0,0,0,1
                     bold: "true"
                     Image:
                         source: "Images/schoolwerk.png"
-                        center_x: self.parent.center_x - (self.parent.center_x / 1.9)
+                        center_x: self.parent.center_x - (self.parent.center_x / 1.6)
                         center_y: self.parent.center_y / 1.01
                         allow_stretch: True
                         keep_ratio: True
@@ -342,6 +344,7 @@ WindowManager:
                         size: (self.parent.center_x / 4, self.parent.center_y / 3.5)
                         bold: "true"
                         text: "Nieuw Huiswerk"
+                        font_size: root.width/20
                         on_release: app.root.current = "nieuw huiswerk"
                     RoundedButton2:
                         color: 0,0,0,1
@@ -349,6 +352,7 @@ WindowManager:
                         text: "Cijferoverzicht"
                         bold: "true"
                         on_release: app.root.current = "cijfers"
+                        font_size: root.width/20
             GridLayout:
                 size_hint: 1, .3
                 cols: 3
@@ -395,19 +399,31 @@ WindowManager:
                         id: boxmains_pwL_t
                         size_hint_y: None
                         height: self.minimum_height
-                        spacing: root.height/40
+                        spacing: root.height/70
                         Label:
                             text: "Bestudeer globaal de stof van:"
                             id: StudeerGlobaal
                             color: (0,0,0,1)
                             text_size: self.size
+                            font_size: root.width/20
                             halign: "left"
+                            size_hint_y: None
+                            height: root.height/30
                         GridLayout:
                             id: boxmains_pwL
                             cols: 1
                             size_hint_y: None
                             height: self.minimum_height
                             spacing: root.height/60
+                        Widget:
+                            size_hint_y: None
+                            height: root.height/500
+                            canvas:
+                                Color:
+                                    rgba: 0,0,0,1
+                                Line:
+                                    points: self.x, self.y, self.x + self.width, self.y
+                            
                     
                     # Middeltermijnproefwerken
                     GridLayout:
@@ -420,6 +436,7 @@ WindowManager:
                             text: "Bestudeer goed de stof van:"
                             id: StudeerGoed
                             color: (0,0,0,1)
+                            font_size: root.width/20
                             text_size: self.size
                             halign: "left"
                         GridLayout:
@@ -428,6 +445,14 @@ WindowManager:
                             size_hint_y: None
                             height: self.minimum_height
                             spacing: root.height/60
+                        Widget:
+                            size_hint_y: None
+                            height: root.height/500
+                            canvas:
+                                Color:
+                                    rgba: 0,0,0,1
+                                Line:
+                                    points: self.x, self.y, self.x + self.width, self.y
 
                     # Kortetermijnproefwerken
                     GridLayout:
@@ -438,6 +463,7 @@ WindowManager:
                         spacing: root.height/40
                         Label:
                             text: "Bestudeer de lastige stof van:"
+                            font_size: root.width/20
                             id: LastigeStof
                             color: (0,0,0,1)
                             text_size: self.size
@@ -448,6 +474,14 @@ WindowManager:
                             size_hint_y: None
                             height: self.minimum_height
                             spacing: root.height/60
+                        Widget:
+                            size_hint_y: None
+                            height: root.height/500
+                            canvas:
+                                Color:
+                                    rgba: 0,0,0,1
+                                Line:
+                                    points: self.x, self.y, self.x + self.width, self.y
 
                     # Huiswerk
                     GridLayout:
@@ -458,6 +492,7 @@ WindowManager:
                         spacing: root.height/40
                         Label:
                             text: "Ga verder met:"
+                            font_size: root.width/20
                             id: GaVerderMet
                             color: (0,0,0,1)
                             text_size: self.size
@@ -475,6 +510,7 @@ WindowManager:
             padding: root.width / 40
             RoundedButton:
                 text_size: self.size
+                font_size: root.width/20
                 bold: "true"
                 valign: "middle"
                 halign: "center"
@@ -483,6 +519,7 @@ WindowManager:
                 on_release: app.root.current = "nieuw huiswerk"
             RoundedButton:
                 text_size: self.size
+                font_size: root.width/20
                 valign: "middle"
                 halign: "center"
                 bold: "true"
@@ -529,6 +566,7 @@ WindowManager:
             padding: root.width / 40
             RoundedButton:
                 text_size: self.size
+                font_size: root.width/20
                 bold: "true"
                 valign: "middle"
                 halign: "center"
@@ -538,9 +576,9 @@ WindowManager:
             RoundedButton:
                 text_size: self.size
                 valign: "middle"
+                font_size: root.width/20
                 halign: "center"
                 bold: "true"
-                text_size: self.size
                 color: 0,0,0,1
                 text: "Proefwerk toevoegen"
                 on_release: app.root.current = "nieuw proefwerk"
@@ -669,72 +707,103 @@ WindowManager:
             text: "Cijfers"
             font_size: self.width/10
             bold: "true"
-            size_hint: 1, .05
+            size_hint: 1, .16
             canvas.before:
                 Color:
                     rgba: 0, 116/255, 255, 0.8
                 Rectangle:
                     pos: self.pos
                     size: self.size
-        BoxLayout:
-            orientation: "horizontal"
-            pos_hint: {"top": 1}
-            size_hint: 1, .05
-            Label:
-                text: "Cirkeldiagram"
-                canvas.before:
-                    Color:
-                        rgba: 0, 0, 1, 1
-                    Rectangle:
-                        pos: self.pos
-                        size: self.size
-            Label:
-                text: "In cijfers uitgedrukt"
-                canvas.before:
-                    Color:
-                        rgba: 0, 0, 1, 1
-                    Rectangle:
-                        pos: self.pos
-                        size: self.size
-        BoxLayout:
-            orientation: "vertical"
-            size_hint: 1, .2
-            Label:
-                text: "Staafdiagram met gem. per vak"
-                canvas.before:
-                    Color:
-                        rgba: 0, 1, 1, 1
-                    Rectangle:
-                        pos: self.pos
-                        size: self.size
-            Label:
-                size_hint: 1, .1
-                id: tot_gem
-                color: 0,0,0,1
-                bg_colour: (1,1,1,1)
-                canvas.before:
-                    Color:
-                        rgba: self.bg_colour
-                    Rectangle:
-                        pos: self.pos
-                        size: self.size
-            ScrollView:
-                do_scroll_x: False
-                do_scroll_y: True
-                size_hint: 1, .5
-                GridLayout:
-                    id: BoxCfVak
-                    cols: 1
+        ScrollView:
+            do_scroll_x: False
+            do_scroll_y: True
+            GridLayout:
+                cols: 1
+                size_hint_y: None
+                height: self.minimum_height
+                BoxLayout:
+                    orientation: "horizontal"
+                    #pos_hint: {"top": 1}
+                    # size_hint: 1, .05
                     size_hint_y: None
                     height: self.minimum_height
+                    
+                    Label:
+                        text: "Cirkeldiagram"
+                        size_hint_y: None
+                        height: root.height/5
+                        canvas.before:
+                            Color:
+                                rgba: 0, 0, 1, 1
+                            Rectangle:
+                                pos: self.pos
+                                size: self.size
+                    Label:
+                        text: "In cijfers uitgedrukt"
+                        size_hint_y: None
+                        height: root.height/5
+                        canvas.before:
+                            Color:
+                                rgba: 0, 0, 1, 1
+                            Rectangle:
+                                pos: self.pos
+                                size: self.size
+                BoxLayout:
+                    orientation: "vertical"
+                    # size_hint: 1, .2
+                    size_hint_y: None
+                    height: self.minimum_height
+                    Label:
+                        text: "Staafdiagram met gem. per vak"
+                        size_hint_y: None
+                        height: root.height/2
+                        canvas.before:
+                            Color:
+                                rgba: 0, 1, 1, 1
+                            Rectangle:
+                                pos: self.pos
+                                size: self.size
+                    Label:
+                        #size_hint: 1, .1
+                        id: tot_gem
+                        color: 0,0,0,1
+                        bg_colour: (1,1,1,1)
+                        size_hint_y: None
+                        height: root.height/15
+                        canvas.before:
+                            Color:
+                                rgba: self.bg_colour
+                            Rectangle:
+                                pos: self.pos
+                                size: self.size
+                    ScrollView:
+                        do_scroll_x: False
+                        do_scroll_y: True
+                        size_hint_y: None
+                        height: root.height/4
+                        GridLayout:
+                            id: BoxCfVak
+                            cols: 1
+                            size_hint_y: None
+                            height: self.minimum_height
         BoxLayout:
-            size_hint: 1, .05
+            size_hint: 1, .15
             orientation: "horizontal"
-            Button:
+            spacing: root.height/40
+            padding: root.width/80
+            RoundedButton:
+                height: root.height/20
+                bold: "true"
+                color: 0,0,0,1
+                font_size: root.width/20
                 text: "Nieuw Cijfer"
                 on_release: app.root.current = "nieuw cijfer"
-            Button:
+            RoundedButton:
                 text: "Cijfer Berekenen"
+                bold: "true"
+                font_size: root.width/20
+                color: 0,0,0,1
+                height: root.height/20
                 on_release: app.root.current = "cijfer berekenen"
     Navbar:
 
@@ -951,7 +1020,6 @@ WindowManager:
                 bold: "true"
                 text: "Opslaan"
                 on_release: app.submit_klas()
-                on_release: root.SavedVak()
     Navbar:
 
 <Vakken>:
@@ -964,7 +1032,7 @@ WindowManager:
             text: "Vakken"
             font_size: self.width/10
             bold: "true"
-            size_hint: 1, .2
+            size_hint: 1, .19
             canvas.before:
                 Color:
                     rgba: 0, 116/255, 255, 0.8
@@ -1023,6 +1091,3 @@ WindowManager:
             size: self.size
             pos: self.pos
             radius: [20]
-
-
-
