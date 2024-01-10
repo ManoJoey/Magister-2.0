@@ -36,4 +36,5 @@ Plan van aanpak voor nu:
 
 Bugs:
 Aanpassen van naam van vak past het niet aan in al gemaakte knoppen (cijfers, huiswerk, proefwerken)
+
 Totale gemiddelde verdwijnt niet na verwijderen alle cijfers
