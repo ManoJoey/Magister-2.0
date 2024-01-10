@@ -138,8 +138,6 @@ class PopupSW(Popup):
         date_dialog = MDDatePicker(year=year, month=month, day=day)
         date_dialog.bind(on_save=self.get_date)
         date_dialog.open()
-        Window.size = (1, 1)
-        Window.size = (350, 600)
     
     #functies bewerken
     def verwijderHw(self):
@@ -647,8 +645,6 @@ class NieuwHuiswerk(Screen):
         date_dialog = MDDatePicker(year=year, month=month, day=day)
         date_dialog.bind(on_save=self.get_date)
         date_dialog.open()
-        Window.size = (1, 1)
-        Window.size = (350, 600)
 
     def spinnerHW_clicked(self):
         data = Scorro.show_klassen(self)
@@ -700,8 +696,6 @@ class NieuwProefwerk(Screen):
         date_dialog = MDDatePicker(year=year, month=month, day=day)
         date_dialog.bind(on_save=self.get_date)
         date_dialog.open()
-        Window.size = (1, 1)
-        Window.size = (350, 600)
 
     def spinnerPW_clicked(self):
         data = Scorro.show_klassen(self)
