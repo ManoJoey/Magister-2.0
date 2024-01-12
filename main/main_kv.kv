@@ -15,9 +15,6 @@ WindowManager:
     NieuwVak:
     CijferBerekenen:
 
-<ScreenManager>:
-    transition: NoTransition()
-
 <BootScreen>:
 
 <Rounded@Button>
@@ -191,7 +188,9 @@ WindowManager:
         size_hint: 1, .1
         cols : 5
         Button:
-            on_release: app.root.current = "dashboard"
+            on_release:
+                app.root.transition = NoTransition()
+                app.root.current = "dashboard"
             background_normal: ""
             background_color: (1, 0.329, 0.341)
             Image:
@@ -209,7 +208,9 @@ WindowManager:
                 center_y: self.parent.center_y / 2.1
 
         Button:
-            on_release: app.root.current = "planning"
+            on_release:
+                app.root.transition = NoTransition()
+                app.root.current = "planning"
             background_normal: ""
             background_color: (1, 0.329, 0.341)
             Image:
@@ -227,7 +228,9 @@ WindowManager:
                 center_y: self.parent.center_y / 2.1
 
         Button:
-            on_release: app.root.current = "schoolwerk"
+            on_release:
+                app.root.transition = NoTransition()
+                app.root.current = "schoolwerk"
             background_normal: ""
             background_color: (1, 0.329, 0.341)
             Image:
@@ -245,7 +248,9 @@ WindowManager:
                 center_y: self.parent.center_y / 2.1
 
         Button:
-            on_release: app.root.current = "cijfers"
+            on_release:
+                app.root.transition = NoTransition()
+                app.root.current = "cijfers"
             background_normal: ""
             background_color: (1, 0.329, 0.341)
             Image:
@@ -263,7 +268,9 @@ WindowManager:
                 center_y: self.parent.center_y / 2.1
 
         Button:
-            on_release: app.root.current = "vakken"
+            on_release:
+                app.root.transition = NoTransition()
+                app.root.current = "vakken"
             background_normal: ""
             background_color: (1, 0.329, 0.341)
             Image:
@@ -374,7 +381,7 @@ WindowManager:
             size_hint: 1, .2
             canvas.before:
                 Color:
-                    rgba: 0, 116/255, 255, 0.8
+                    rgba: 0, 116/255, 1, 0.8
                 Rectangle:
                     pos: self.pos
                     size: self.size
@@ -542,7 +549,7 @@ WindowManager:
             size_hint: 1, .2
             canvas.before:
                 Color:
-                    rgba: 0, 116/255, 255, 0.8
+                    rgba: 0, 116/255, 1, 0.8
                 Rectangle:
                     pos: self.pos
                     size: self.size
@@ -598,7 +605,7 @@ WindowManager:
             size_hint: 1, .16
             canvas.before:
                 Color:
-                    rgba: 0, 116/255, 255, 0.8
+                    rgba: 0, 116/255, 1, 0.8
                 Rectangle:
                     pos: self.pos
                     size: self.size
@@ -654,7 +661,7 @@ WindowManager:
             size_hint: 1, .16
             canvas.before:
                 Color:
-                    rgba: 0, 116/255, 255, 0.8
+                    rgba: 0, 116/255, 1, 0.8
                 Rectangle:
                     pos: self.pos
                     size: self.size
@@ -710,7 +717,7 @@ WindowManager:
             size_hint: 1, .16
             canvas.before:
                 Color:
-                    rgba: 0, 116/255, 255, 0.8
+                    rgba: 0, 116/255, 1, 0.8
                 Rectangle:
                     pos: self.pos
                     size: self.size
@@ -723,8 +730,6 @@ WindowManager:
                 height: self.minimum_height
                 BoxLayout:
                     orientation: "horizontal"
-                    #pos_hint: {"top": 1}
-                    # size_hint: 1, .05
                     size_hint_y: None
                     height: self.minimum_height
                     
@@ -750,26 +755,39 @@ WindowManager:
                                 size: self.size
                 BoxLayout:
                     orientation: "vertical"
-                    # size_hint: 1, .2
                     size_hint_y: None
                     height: self.minimum_height
-                    Label:
-                        text: "Staafdiagram met gem. per vak"
+                    spacing: root.height / 90
+                    padding: root.width / 55
+                    ScrollView:
+                        do_scroll_x: True
+                        do_scroll_y: False
                         size_hint_y: None
-                        height: root.height/2
-                        canvas.before:
-                            Color:
-                                rgba: 0, 1, 1, 1
-                            Rectangle:
-                                pos: self.pos
-                                size: self.size
+                        height: root.height/2.5
+                        BoxLayout:
+                            id: chart
+                            size_hint: None, None
+                            width: root.width
+                            height: root.height / 2.5
+
                     Label:
-                        #size_hint: 1, .1
                         id: tot_gem
                         color: 0,0,0,1
                         bg_colour: (1,1,1,1)
                         size_hint_y: None
                         height: root.height/15
+                        canvas.before:
+                            Color:
+                                rgba: self.bg_colour
+                            Rectangle:
+                                pos: self.pos
+                                size: self.size
+                    Label:
+                        text: "Alle Cijfers"
+                        color: 0,0,0,1
+                        bg_colour: (1, 0.329, 0.341, 1)
+                        size_hint_y: None
+                        height: root.height/20
                         canvas.before:
                             Color:
                                 rgba: self.bg_colour
@@ -786,6 +804,8 @@ WindowManager:
                             cols: 1
                             size_hint_y: None
                             height: self.minimum_height
+                            spacing: root.height/95
+                            padding: root.width/60
         BoxLayout:
             size_hint: 1, .15
             orientation: "horizontal"
@@ -820,7 +840,7 @@ WindowManager:
             size_hint: 1, .165
             canvas.before:
                 Color:
-                    rgba: 0, 116/255, 255, 0.8
+                    rgba: 0, 116/255, 1, 0.8
                 Rectangle:
                     pos: self.pos
                     size: self.size
@@ -874,7 +894,7 @@ WindowManager:
             size_hint: 1, .165
             canvas.before:
                 Color:
-                    rgba: 0, 116/255, 255, 0.8
+                    rgba: 0, 116/255, 1, 0.8
                 Rectangle:
                     pos: self.pos
                     size: self.size
@@ -951,7 +971,7 @@ WindowManager:
             size_hint: 1, .2
             canvas.before:
                 Color:
-                    rgba: 0, 116/255, 255, 0.8
+                    rgba: 0, 116/255, 1, 0.8
                 Rectangle:
                     pos: self.pos
                     size: self.size
@@ -1035,7 +1055,7 @@ WindowManager:
             size_hint: 1, .19
             canvas.before:
                 Color:
-                    rgba: 0, 116/255, 255, 0.8
+                    rgba: 0, 116/255, 1, 0.8
                 Rectangle:
                     pos: self.pos
                     size: self.size

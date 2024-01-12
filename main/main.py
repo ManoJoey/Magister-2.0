@@ -9,8 +9,10 @@ from kivymd.uix.pickers import MDDatePicker
 from kivy.uix.widget import Widget 
 from kivy.core.window import Window
 from kivy.lang import Builder
-from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.screenmanager import ScreenManager, Screen, SlideTransition
 from kivy.uix.popup import Popup
+import matplotlib.pyplot as plt # matplotlib==3.6.3
+from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
 
 import sqlite3
 from datetime import datetime, timedelta, date
@@ -28,6 +30,18 @@ class BootScreen(Screen):
     pass
 
 class Dashboard(Screen):
+    def on_touch_move(self, touch):
+        threshold = float(Window.size[0] / 10)
+        diff = float(touch.ox) - float(touch.x)
+        
+        if touch.x < touch.ox:
+            if diff > threshold:
+                MDApp.get_running_app().swipe_right()
+        
+        if touch.x > touch.ox:
+            if diff < threshold * -1:
+                MDApp.get_running_app().swipe_left()
+
     def change(self):
         app = MDApp.get_running_app()
         app.call_cf()
@@ -228,6 +242,18 @@ class PopupSW(Popup):
         spinner.values = [str(item[0]) for item in data]
 
 class Planning(Screen):
+    def on_touch_move(self, touch):
+        threshold = float(Window.size[0] / 10)
+        diff = float(touch.ox) - float(touch.x)
+
+        if touch.x < touch.ox:
+            if diff > threshold:
+                MDApp.get_running_app().swipe_right()
+        
+        if touch.x > touch.ox:
+            if diff < threshold * -1:
+                MDApp.get_running_app().swipe_left()
+    
     def popupSW(self, text):
         naam = text.split("\n")[0]
         popup = PopupSW(title=f"{naam} - aanpassen")
@@ -336,6 +362,18 @@ class Planning(Screen):
 
 
 class Schoolwerk(Screen):
+    def on_touch_move(self, touch):
+        threshold = float(Window.size[0] / 10)
+        diff = float(touch.ox) - float(touch.x)
+
+        if touch.x < touch.ox:
+            if diff > threshold:
+                MDApp.get_running_app().swipe_right()
+        
+        if touch.x > touch.ox:
+            if diff < threshold * -1:
+                MDApp.get_running_app().swipe_left()
+    
     def popupSW(self, text):
         naam = text.split("\n")[0]
         popup = PopupSW(title=f"{naam} - aanpassen")
@@ -462,6 +500,18 @@ class PopupVak(Popup):
 
 
 class Vakken(Screen):
+    def on_touch_move(self, touch):
+        threshold = float(Window.size[0] / 10)
+        diff = float(touch.ox) - float(touch.x)
+
+        if touch.x < touch.ox:
+            if diff > threshold:
+                MDApp.get_running_app().swipe_right()
+        
+        if touch.x > touch.ox:
+            if diff < threshold * -1:
+                MDApp.get_running_app().swipe_left()
+    
     def popupVak(self, naam):
         popup = PopupVak(title=f"{naam} - Aanpassen")
         popup.ids.naam_vakAP.text = naam
@@ -584,6 +634,18 @@ class PopupCF(Popup):
 
 
 class Cijfers(Screen):
+    def on_touch_move(self, touch):
+        threshold = float(Window.size[0] / 2)
+        diff = float(touch.ox) - float(touch.x)
+
+        if touch.x < touch.ox:
+            if diff > threshold:
+                MDApp.get_running_app().swipe_right()
+        
+        if touch.x > touch.ox:
+            if diff < threshold * -1:
+                MDApp.get_running_app().swipe_left()
+
     def popupCF(self, naam):
         vak = naam.split(" - ")[1]
         cijfer = naam.split(" - ")[0]
@@ -614,11 +676,55 @@ class Cijfers(Screen):
         cijferlijst.sort(key=lambda x: x[3].lower())
 
         for item in cijferlijst:
-            button = Button(text=str(item[0] + " - " + item[3] + " - " + item[1] + "x"), size_hint_y=None, height=window_size)
+            button = Button(text=str(item[0] + " - " + item[3] + " - " + item[1] + "x"), size_hint_y=None, height=window_size,
+                background_normal="", background_color=(0, 163/255, 130/255,), font_size=int(int(Window.size[0])/20))
             button.bind(on_press=lambda button: self.popupCF(button.text))
             self.ids.BoxCfVak.add_widget(button)
         
         self.update_TotGem()
+
+        chart = self.ids.chart
+        chart.clear_widgets()
+        cijfers = Scorro.show_cijfers(self)
+        cijfers.sort(key=lambda x: x[3].lower())
+
+        vakken = []
+        gemiddelde = []
+        for item in cijfers:
+            if item[3] not in vakken:
+                vakken.append(item[3])
+        
+        for vak in vakken:
+            tot = 0
+            totweg = 0
+            for item in cijfers:
+                if item[3] == vak:
+                    cf = float(item[0].replace(",", "."))
+                    we = float(item[1])
+                    tot += cf * we
+                    totweg += we
+            gem = round(tot / totweg, 1)
+            gemiddelde.append(str(str(gem) + " | " + vak))
+
+        x = []
+        y = []
+        for item in gemiddelde:
+            item = item.split(" | ")
+            x.append(item[1])
+            y.append(float(item[0]))
+
+        chart_width = 0.3 + 0.25 * len(gemiddelde)
+        chart.size_hint_x = chart_width
+
+        plt.bar(x,y, width=0.4, color=(0, 116/255, 1, 1))
+        plt.ylim([0,10])
+        # plt.ylabel("Gemiddelde")
+        plt.title("Gemiddelde per vak")
+        
+        for i, value in enumerate(y):
+            plt.text(i, value, str(value), ha='center', va='bottom')
+
+        chart.add_widget(FigureCanvasKivyAgg(plt.gcf()))
 
 
 dutch_to_numeric = {'maandag': 0, 'dinsdag': 1, 'woensdag': 2, 'donderdag': 3, 'vrijdag': 4, 'zaterdag': 5, 'zondag': 6}
@@ -828,12 +934,39 @@ class CijferBerekenen(Screen):
 class WindowManager(ScreenManager):
     pass
 
+
+screen_order = ["dashboard", "planning", "schoolwerk", "cijfers", "vakken"]
+
 class Scorro(MDApp):
     def current_ScreenName(self):
         return self.root.current
 
     def call_cf(self):
         self.root.current = "cijfers"
+
+    def on_start(self):
+        self.root.current = "dashboard"
+
+    def swipe_right(self):
+        cur =  self.root.current
+        if cur != "vakken":
+            for screen in screen_order:
+                if screen == cur:
+                    next_scr = int(screen_order.index(screen))+1
+                    self.root.transition = SlideTransition()
+                    self.root.transition.direction = 'left'
+                    self.root.current = screen_order[next_scr]
+    
+    def swipe_left(self):
+        cur =  self.root.current
+        if cur != "dashboard":
+            for screen in screen_order:
+                if screen == cur:
+                    next_scr = int(screen_order.index(screen))-1
+                    self.root.transition = SlideTransition()
+                    self.root.transition.direction = 'right'
+                    self.root.current = screen_order[next_scr]
+
 
     def build(self):
         self.icon = "Images/Logo.png"
@@ -874,8 +1007,6 @@ class Scorro(MDApp):
         kv = Builder.load_file('main_kv.kv')
         return kv
 
-    def on_start(self):
-        self.root.current = "dashboard"
 
     #functies voor klassen
     def submit_klas(self):
