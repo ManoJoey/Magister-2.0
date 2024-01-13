@@ -26,7 +26,6 @@ WindowManager:
 
 <PopupVak>:
     name: "popup vak"
-    size_hint: (None, None)
     size_hint: (0.9, 0.9)
     BoxLayout:
         orientation: "vertical"
@@ -98,7 +97,6 @@ WindowManager:
 
 <PopupSW>:
     name: "popup schoolwerk"
-    size_hint: (None, None)
     size_hint: (0.9, 0.9)
     BoxLayout:
         orientation: "vertical"
@@ -139,7 +137,6 @@ WindowManager:
 
 <PopupCF>:
     name: "popup cijfer"
-    size_hint: (None, None)
     size_hint: (0.9, 0.9)
     BoxLayout:
         orientation: "vertical"
@@ -736,7 +733,7 @@ WindowManager:
                     Label:
                         text: "Cirkeldiagram"
                         size_hint_y: None
-                        height: root.height/5
+                        height: root.height/7
                         canvas.before:
                             Color:
                                 rgba: 0, 0, 1, 1
@@ -746,7 +743,7 @@ WindowManager:
                     Label:
                         text: "In cijfers uitgedrukt"
                         size_hint_y: None
-                        height: root.height/5
+                        height: root.height/7
                         canvas.before:
                             Color:
                                 rgba: 0, 0, 1, 1
@@ -765,15 +762,16 @@ WindowManager:
                         size_hint_y: None
                         height: root.height/2.5
                         BoxLayout:
-                            id: chart
-                            size_hint: None, None
+                            orientation: "horizontal"
+                            size_hint_x: None
                             width: root.width
-                            height: root.height / 2.5
+                            id: chart_parent
+                            BoxLayout:
+                                id: chart
 
                     Label:
                         id: tot_gem
-                        color: 0,0,0,1
-                        bg_colour: (1,1,1,1)
+                        bg_colour: (1, 0.329, 0.341, 1)
                         size_hint_y: None
                         height: root.height/15
                         canvas.before:
@@ -785,7 +783,7 @@ WindowManager:
                     Label:
                         text: "Alle Cijfers"
                         color: 0,0,0,1
-                        bg_colour: (1, 0.329, 0.341, 1)
+                        bg_colour: (0, 102/255, 153/255, 1)
                         size_hint_y: None
                         height: root.height/20
                         canvas.before:
@@ -909,10 +907,12 @@ WindowManager:
                 color: 0,0,0,1
                 on_press: root.spinnerCFB_clicked()
                 on_text: root.vak_gekozen()
+                font_size: root.width/20
             Label:
                 text:'Cijfers tot nu toe:'
                 size_hint: 1, .1
                 color: 0,0,0,1
+                font_size: root.width/20
             ScrollView:
                 do_scroll_x: False
                 do_scroll_y: True
@@ -927,34 +927,43 @@ WindowManager:
                 multiline: False
                 size_hint: 1, .2
                 hint_text: "Welk cijfer wil je staan?"
+                font_size: root.width/20
             TextInput:
                 id: welkWEW
                 multiline: False
                 size_hint: 1, .2
                 hint_text: "(Verwachte) weging volgende proefwerk?"
+                font_size: root.width/20
             RoundedButton:
                 text: "Bereken"
                 size_hint: 1, .2
                 bold: "true"
                 color: 0,0,0,1
                 on_release: root.bereken_cf()
+                font_size: root.width/20
             Label:
                 text: "Je moet halen:"
                 color: 0,0,0,1
                 size_hint: 1, .1
+                font_size: root.width/20
             Label:
                 id: CF_BH
                 color: 0,0,0,1
                 size_hint: 1, .3
+                font_size: root.width/20
             GridLayout:
                 cols: 2
                 size_hint: 1, .2
-                Button:
+                RoundedButton:
                     text: "Terug"
                     on_release: app.root.current = "cijfers"
-                Button:
+                    color: 0,0,0,1
+                    font_size: root.width/15
+                RoundedButton:
                     text: "Refresh"
                     on_release: root.refresh()
+                    color: 0,0,0,1
+                    font_size: root.width/15
     Navbar:
 
 
@@ -987,6 +996,7 @@ WindowManager:
                 multiline: False
                 size_hint: 1, .2
                 hint_text: "Naam vak"
+                font_size: root.width/20
         BoxLayout:
             id: BoxDagen
             orientation: "horizontal"
@@ -996,21 +1006,25 @@ WindowManager:
                 text: "Maandag"
                 background_color: (1,0,0,1)
                 on_release: root.Savedag("maandag")
+                font_size: root.width/25
             Button:
                 id: dinsdag
                 text: "Dinsdag"
                 background_color: (1,0,0,1)
                 on_release: root.Savedag("dinsdag")
+                font_size: root.width/25
             Button:
                 id: woensdag
                 text: "Woensdag"
                 background_color: (1,0,0,1)
                 on_release: root.Savedag("woensdag")
+                font_size: root.width/25
             Button:
                 id: donderdag
                 text: "Donderdag"
                 background_color: (1,0,0,1)
                 on_release: root.Savedag("donderdag")
+                font_size: root.width/25
         BoxLayout:
             orientation: "horizontal"
             size_hint: 1, .4
@@ -1019,16 +1033,19 @@ WindowManager:
                 text: "Vrijdag"
                 background_color: (1,0,0,1)
                 on_release: root.Savedag("vrijdag")
+                font_size: root.width/25
             Button:
                 id: zaterdag
                 text: "Zaterdag"
                 background_color: (1,0,0,1)
                 on_release: root.Savedag("zaterdag")
+                font_size: root.width/25
             Button:
                 id: zondag
                 text: "Zondag"
                 background_color: (1,0,0,1)
                 on_release: root.Savedag("zondag")
+                font_size: root.width/25
         BoxLayout:
             id: BoxMessage
             orientation: "vertical"
@@ -1040,6 +1057,7 @@ WindowManager:
                 bold: "true"
                 text: "Opslaan"
                 on_release: app.submit_klas()
+                font_size: root.width/20
     Navbar:
 
 <Vakken>:
@@ -1074,6 +1092,7 @@ WindowManager:
             size_hint: 1, .2
             RoundedButton: 
                 text: "Vak toevoegen"
+                font_size: root.width / 20
                 color: 0,0,0,1
                 bold: "true"
                 on_release: app.root.current = "nieuw vak"
@@ -1111,3 +1130,17 @@ WindowManager:
             size: self.size
             pos: self.pos
             radius: [20]
+
+
+<Notification>:
+    name: "notification"
+    size_hint: (0.7, 0.3)
+    pos_hint: {"top": 0.95}
+    Label:
+        id: LabelNoti
+        canvas.before:
+            Color: 
+                rgba: (1,1,1,0)
+            Rectangle:
+                size: self.size
+                pos: self.pos

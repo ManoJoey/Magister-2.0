@@ -11,6 +11,8 @@ from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen, SlideTransition
 from kivy.uix.popup import Popup
+from kivy.clock import Clock
+
 import matplotlib.pyplot as plt # matplotlib==3.6.3
 from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
 
@@ -31,7 +33,7 @@ class BootScreen(Screen):
 
 class Dashboard(Screen):
     def on_touch_move(self, touch):
-        threshold = float(Window.size[0] / 10)
+        threshold = float(Window.size[0] / 4)
         diff = float(touch.ox) - float(touch.x)
         
         if touch.x < touch.ox:
@@ -88,7 +90,7 @@ class Dashboard(Screen):
                 l3 = Button(background_color="white", background_normal="", color="gray")
                 lay.add_widget(l3)
             elif len(cijferlijst) == 1:
-                l1 = Button(markup=True, text="{}\n[size={}]{}[/size]".format(cijferlijst[0][0], vak_size, cijferlijst[0][0]),
+                l1 = Button(markup=True, text="[size={}]{}[/size]\n[size={}]{}[/size]".format(cf_size, cijferlijst[0][0], vak_size, cijferlijst[0][3]),
                 halign="center", valign="center", background_color="white", background_normal="", color="gray")
                 l1.bind(size=l1.setter('text_size'))
                 l1.bind(on_release=lambda x: self.change())
@@ -223,7 +225,6 @@ class PopupSW(Popup):
 
             conn.commit()
             conn.close()
-            print("Opgeslagen")
             
             # bouw scherm opnieuw op
             if str(MDApp.get_running_app().current_ScreenName()) == "planning":
@@ -233,7 +234,10 @@ class PopupSW(Popup):
 
             self.dismiss()
         else:
-            print("Je vergeet iets!")
+            popup = Notification(title="Fout")
+            popup.open()
+
+            popup.update_text("Je vergeet iets!")
     
     #functie spinner
     def spinnerHwP_clicked(self):
@@ -243,7 +247,7 @@ class PopupSW(Popup):
 
 class Planning(Screen):
     def on_touch_move(self, touch):
-        threshold = float(Window.size[0] / 10)
+        threshold = float(Window.size[0] / 4)
         diff = float(touch.ox) - float(touch.x)
 
         if touch.x < touch.ox:
@@ -363,7 +367,7 @@ class Planning(Screen):
 
 class Schoolwerk(Screen):
     def on_touch_move(self, touch):
-        threshold = float(Window.size[0] / 10)
+        threshold = float(Window.size[0] / 4)
         diff = float(touch.ox) - float(touch.x)
 
         if touch.x < touch.ox:
@@ -429,7 +433,10 @@ class PopupVak(Popup):
             for dag in dagen_popup:
                 self.ids[dag].background_color = colour_selec
         except:
-            print("Geen dagen gevonden")
+            popup = Notification(title="Fout")
+            popup.open()
+
+            popup.update_text("Geen dagen gevonden.")
 
     def Savedag(self, dag):
         colour_selec = (0,1,0,1)
@@ -463,7 +470,6 @@ class PopupVak(Popup):
 
                 conn.commit()
                 conn.close()
-                print("vak opgeslagen")
 
                 dagen_popup.clear()
                 
@@ -475,9 +481,15 @@ class PopupVak(Popup):
                 vakken_screen.children.sort(reverse=True, key=lambda x: x.text.lower())
                 self.dismiss()
             else:
-                print("Geen tekst")
+                popup = Notification(title="Fout")
+                popup.open()
+
+                popup.update_text("Geen naam.")
         else:
-            print("Geen dagen")
+            popup = Notification(title="Fout")
+            popup.open()
+
+            popup.update_text("Geen dagen.")
 
     def verwijderKlas(self):
         naam = self.title.split(" - ")[0]
@@ -501,7 +513,7 @@ class PopupVak(Popup):
 
 class Vakken(Screen):
     def on_touch_move(self, touch):
-        threshold = float(Window.size[0] / 10)
+        threshold = float(Window.size[0] / 4)
         diff = float(touch.ox) - float(touch.x)
 
         if touch.x < touch.ox:
@@ -523,7 +535,7 @@ class Vakken(Screen):
         self.ids.BoxVakken.clear_widgets()
 
         for vak in vakken_lijst:
-            button = Button(text=str(vak[0]), size_hint_y=None, height=window_size, background_color=(0.11, 0.792, 1, 1))
+            button = Button(text=str(vak[0]), size_hint_y=None, height=window_size, background_color=(0.11, 0.792, 1, 1), font_size=int(int(Window.size[0])/15))
             button.bind(on_press=lambda button: self.popupVak(button.text))
             self.ids.BoxVakken.add_widget(button)
         
@@ -587,7 +599,6 @@ class PopupCF(Popup):
 
             conn.commit()
             conn.close()
-            print("vak opgeslagen")
 
             
             cijfers_box = MDApp.get_running_app().root.get_screen("cijfers").ids.BoxCfVak
@@ -602,7 +613,10 @@ class PopupCF(Popup):
 
             self.dismiss()
         else:
-            print("Je vergeet iets!")
+            popup = Notification(title="Fout")
+            popup.open()
+
+            popup.update_text("Je vergeet iets!")
 
     def verwijdercf(self):
         vak = TotCF.split("|")[0]
@@ -665,10 +679,13 @@ class Cijfers(Screen):
             tot2 = tot / weg_t
             self.ids.tot_gem.text = "Totale gemiddelde: " + str(round(tot2, 1)).replace(".", ",")
             if tot2 >= 5.5:
-                self.ids.tot_gem.bg_colour = (0,1,0,1)
+                self.ids.tot_gem.bg_colour = (0, 163/255, 130/255,1)
             else:
-                self.ids.tot_gem.bg_colour = (1,0,0,1)
-
+                self.ids.tot_gem.bg_colour = (1, 0.329, 0.341, 1)
+        else:
+            self.ids.tot_gem.text = "Geen cijfers gevonden."
+            self.ids.tot_gem.bg_colour = (0, 163/255, 130/255,1)
+    
     def on_enter(self):
         self.ids.BoxCfVak.clear_widgets()
         window_size = int(Window.size[1]) / 20
@@ -677,7 +694,7 @@ class Cijfers(Screen):
 
         for item in cijferlijst:
             button = Button(text=str(item[0] + " - " + item[3] + " - " + item[1] + "x"), size_hint_y=None, height=window_size,
-                background_normal="", background_color=(0, 163/255, 130/255,), font_size=int(int(Window.size[0])/20))
+                background_normal="", background_color=(0, 163/255, 130/255,1), font_size=int(int(Window.size[0])/20))
             button.bind(on_press=lambda button: self.popupCF(button.text))
             self.ids.BoxCfVak.add_widget(button)
         
@@ -685,6 +702,8 @@ class Cijfers(Screen):
 
         chart = self.ids.chart
         chart.clear_widgets()
+        plt.cla()
+
         cijfers = Scorro.show_cijfers(self)
         cijfers.sort(key=lambda x: x[3].lower())
 
@@ -706,6 +725,8 @@ class Cijfers(Screen):
             gem = round(tot / totweg, 1)
             gemiddelde.append(str(str(gem) + " | " + vak))
 
+        gemiddelde.sort(reverse=True, key=lambda x: float(x.split(" | ")[0]))
+
         x = []
         y = []
         for item in gemiddelde:
@@ -713,16 +734,21 @@ class Cijfers(Screen):
             x.append(item[1])
             y.append(float(item[0]))
 
-        chart_width = 0.3 + 0.25 * len(gemiddelde)
-        chart.size_hint_x = chart_width
 
         plt.bar(x,y, width=0.4, color=(0, 116/255, 1, 1))
         plt.ylim([0,10])
-        # plt.ylabel("Gemiddelde")
-        plt.title("Gemiddelde per vak")
+        plt.ylabel("Gemiddelde")
+        plt.title("Gemiddelde per vak", loc='left')
         
+
+        
+        chart_width = 0.2 + 0.1 * len(gemiddelde)
+        chart.size_hint_x = chart_width
+        self.ids.chart_parent.width = Window.size[0] + (Window.size[0] / 8.75) * len(gemiddelde)
+
         for i, value in enumerate(y):
-            plt.text(i, value, str(value), ha='center', va='bottom')
+            plt.text(i, value, str(value).replace(".", ","), ha='center', va='bottom')
+
 
         chart.add_widget(FigureCanvasKivyAgg(plt.gcf()))
 
@@ -928,7 +954,18 @@ class CijferBerekenen(Screen):
 
             self.ids.CF_BH.text = str(round(grade_to_get, 1)).replace(".", ",")
         else:
-            print("Wat is de weging / het cijfer?")
+            popup = Notification(title="Fout")
+            popup.open()
+
+            popup.update_text("Wat is de weging / het cijfer?")
+
+
+class Notification(Popup):
+    def update_text(self, new_text):
+        self.ids.LabelNoti.text = new_text
+
+    def on_open(self):
+        Clock.schedule_once(lambda dt: self.dismiss(), 1)
 
 
 class WindowManager(ScreenManager):
@@ -1012,8 +1049,9 @@ class Scorro(MDApp):
     def submit_klas(self):
         global lijst_dagen
         text = self.root.get_screen('nieuw vak').ids.naam_vak.text
-        if lijst_dagen != []:
-            if text != "":
+        
+        if text != "":
+            if lijst_dagen != []:
                 #connect to database
                 conn = sqlite3.connect('ScorroDB.db')
                 c = conn.cursor()
@@ -1039,12 +1077,21 @@ class Scorro(MDApp):
                 origin.ids.zondag.background_color = (1,0,0,1)
 
                 self.root.get_screen('nieuw vak').ids.naam_vak.text = ''
-                print("vak opgeslagen")
+                
+                popup = Notification(title="Gelukt!")
+                popup.open()
 
+                popup.update_text("Vak opgeslagen!")
             else:
-                print("Geen tekst")
+                popup = Notification(title="Fout")
+                popup.open()
+
+                popup.update_text("Selecteer minstens 1 dag.")
         else:
-            print("Geen dagen")
+            popup = Notification(title="Fout")
+            popup.open()
+
+            popup.update_text("Geef je vak een naam.")
 
     def show_klassen(self):
         conn = sqlite3.connect('ScorroDB.db')
@@ -1064,35 +1111,47 @@ class Scorro(MDApp):
         weging = self.root.get_screen('nieuw cijfer').ids.wegingCF.text.replace("x", "").replace("X", "")
         vak = self.root.get_screen('nieuw cijfer').ids.kiesvakCF.text
         now = datetime.now()
-        if naam != "":
-            if weging != "":
-                if vak != "Selecteer een vak":
-                    conn = sqlite3.connect('ScorroDB.db')
-                    c = conn.cursor()
 
-                    c.execute("INSERT INTO cijfers VALUES (:cijfer, :weging, :beschrijving, :vak, :date)",
-                    {
-                        'cijfer': naam,
-                        'weging': weging,
-                        'beschrijving': self.root.get_screen('nieuw cijfer').ids.infoCF.text,
-                        'vak': vak,
-                        'date': now,
-                    })
+        try:
+            float(naam.replace(",", "."))
+            float(weging.replace(",", "."))
+
+            if vak != "Selecteer een vak":
+                conn = sqlite3.connect('ScorroDB.db')
+                c = conn.cursor()
+
+                c.execute("INSERT INTO cijfers VALUES (:cijfer, :weging, :beschrijving, :vak, :date)",
+                {
+                    'cijfer': naam,
+                    'weging': weging,
+                    'beschrijving': self.root.get_screen('nieuw cijfer').ids.infoCF.text,
+                    'vak': vak,
+                    'date': now,
+                })
+
+                conn.commit()
+                conn.close()
 
 
-                    self.root.get_screen('nieuw cijfer').ids.welkCF.text = ''
-                    self.root.get_screen('nieuw cijfer').ids.wegingCF.text = ''
-                    self.root.get_screen('nieuw cijfer').ids.infoCF.text = ''
-                    self.root.get_screen('nieuw cijfer').ids.kiesvakCF.text = 'Selecteer een vak'
+                self.root.get_screen('nieuw cijfer').ids.welkCF.text = ''
+                self.root.get_screen('nieuw cijfer').ids.wegingCF.text = ''
+                self.root.get_screen('nieuw cijfer').ids.infoCF.text = ''
+                self.root.get_screen('nieuw cijfer').ids.kiesvakCF.text = 'Selecteer een vak'
 
-                    conn.commit()
-                    conn.close()
-                else:
-                    print("Selecteer een vak")
+                popup = Notification(title="Gelukt!")
+                popup.open()
+
+                popup.update_text("Cijfer opgeslagen!")
             else:
-                print("Geef je cijfer een weging")
-        else:
-            print("Geef je cijfer")
+                popup = Notification(title="Fout")
+                popup.open()
+
+                popup.update_text("Selecteer een vak.")
+        except:
+            popup = Notification(title="Fout")
+            popup.open()
+
+            popup.update_text("Fout bij invoer.")
 
     def show_cijfers(self):
         conn = sqlite3.connect('ScorroDB.db')
@@ -1113,8 +1172,8 @@ class Scorro(MDApp):
         vak = self.root.get_screen('nieuw proefwerk').ids.kiesvakPW.text
         beschrijving = self.root.get_screen('nieuw proefwerk').ids.infoPW.text
         if naam != "":
-            if datum != "Kies Datum":
-                if vak != "Selecteer een vak":
+            if vak != "Selecteer een vak":
+                if datum != "Kies Datum":
                     conn = sqlite3.connect('ScorroDB.db')
                     c = conn.cursor()
 
@@ -1126,21 +1185,34 @@ class Scorro(MDApp):
                         'vak': vak,
                     })
 
+                    conn.commit()
+                    conn.close()
 
                     self.root.get_screen('nieuw proefwerk').ids.welkPW.text = ''
                     self.root.get_screen('nieuw proefwerk').ids.date_pickerPW.text = 'Kies Datum'
                     self.root.get_screen('nieuw proefwerk').ids.date_pickerPW.disabled = True
                     self.root.get_screen('nieuw proefwerk').ids.infoPW.text = ''
                     self.root.get_screen('nieuw proefwerk').ids.kiesvakPW.text = 'Selecteer een vak'
+                    
+                    popup = Notification(title="Gelukt!")
+                    popup.open()
 
-                    conn.commit()
-                    conn.close()
+                    popup.update_text("Proefwerk opgeslagen!")
                 else:
-                    print("Selecteer een vak")
+                    popup = Notification(title="Fout")
+                    popup.open()
+
+                    popup.update_text("Geef je proefwerk een datum.")
             else:
-                print("Geef je proefwerk een datum")
+                popup = Notification(title="Fout")
+                popup.open()
+
+                popup.update_text("Selecteer een vak.")
         else:
-            print("Geef je proefwerk een naam")
+            popup = Notification(title="Fout")
+            popup.open()
+
+            popup.update_text("Geef je proefwerk een naam.")
             
             
     def show_proefwerken(self):
@@ -1163,8 +1235,8 @@ class Scorro(MDApp):
         beschrijving = self.root.get_screen('nieuw huiswerk').ids.infoHW.text
 
         if naam != "":
-            if datum != "Kies Datum":
-                if vak != "Selecteer een vak":
+            if vak != "Selecteer een vak":
+                if datum != "Kies Datum":
                     conn = sqlite3.connect('ScorroDB.db')
                     c = conn.cursor()
 
@@ -1176,6 +1248,8 @@ class Scorro(MDApp):
                         'vak': vak,
                     })
 
+                    conn.commit()
+                    conn.close()
 
                     self.root.get_screen('nieuw huiswerk').ids.welkHW.text = ''
                     self.root.get_screen('nieuw huiswerk').ids.date_picker.text = 'Kies Datum'
@@ -1183,14 +1257,25 @@ class Scorro(MDApp):
                     self.root.get_screen('nieuw huiswerk').ids.infoHW.text = ''
                     self.root.get_screen('nieuw huiswerk').ids.kiesvakHW.text = 'Selecteer een vak'
 
-                    conn.commit()
-                    conn.close()
+                    popup = Notification(title="Gelukt!")
+                    popup.open()
+
+                    popup.update_text("Huiswerk opgeslagen!")
                 else:
-                    print("Selecteer een vak")
+                    popup = Notification(title="Fout")
+                    popup.open()
+
+                    popup.update_text("Geef je huiswerk een datum.")
             else:
-                print("Geef je toets een datum")
+                popup = Notification(title="Fout")
+                popup.open()
+
+                popup.update_text("Selecteer een vak.")
         else:
-            print("Geef je toets een naam")
+            popup = Notification(title="Fout")
+            popup.open()
+
+            popup.update_text("Geef je huiswerk een naam.")
 
     def show_huiswerk(self):
         conn = sqlite3.connect('ScorroDB.db')
