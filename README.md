@@ -6,3 +6,7 @@ Cijfer berekenen beveiligen
 Load plt on startup
 
 loading screen
+
+Cirkeldiagram
+
+Compileren voor IOS

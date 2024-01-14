@@ -736,7 +736,7 @@ class Cijfers(Screen):
 
 
         plt.bar(x,y, width=0.4, color=(0, 116/255, 1, 1))
-        plt.ylim([0,10])
+        plt.ylim([0,11])
         plt.ylabel("Gemiddelde")
         plt.title("Gemiddelde per vak", loc='left')
         
