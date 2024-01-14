@@ -609,7 +609,7 @@ class PopupCF(Popup):
             
             cijfers_box.children.sort(reverse=True, key=lambda x: x.text)
 
-            MDApp.get_running_app().root.get_screen("cijfers").update_TotGem()
+            MDApp.get_running_app().root.get_screen("cijfers").on_enter()
 
             self.dismiss()
         else:
@@ -637,7 +637,7 @@ class PopupCF(Popup):
             if cf.text.split(" - ")[0] == cijfer and cf.text.split(" - ")[1] == vak and cf.text.split(" - ")[2] == str(weging + "x"):
                 cijfers_box.remove_widget(cf)
 
-        MDApp.get_running_app().root.get_screen("cijfers").update_TotGem()
+        MDApp.get_running_app().root.get_screen("cijfers").on_enter()
 
         self.dismiss()
 
@@ -735,14 +735,13 @@ class Cijfers(Screen):
             y.append(float(item[0]))
 
 
-        plt.bar(x,y, width=0.4, color=(0, 116/255, 1, 1))
+        plt.bar(x,y, width=0.5, color=(0, 116/255, 1, 1))
         plt.ylim([0,11])
         plt.ylabel("Gemiddelde")
         plt.title("Gemiddelde per vak", loc='left')
-        
 
         
-        chart_width = 0.2 + 0.1 * len(gemiddelde)
+        chart_width = 0.4 * len(gemiddelde)
         chart.size_hint_x = chart_width
         self.ids.chart_parent.width = Window.size[0] + (Window.size[0] / 8.75) * len(gemiddelde)
 
@@ -907,6 +906,9 @@ class CijferBerekenen(Screen):
         self.ids.CF_BH.text = ""
         self.ids.welkCFW.text = ""
         self.ids.welkWEW.text = ""
+        self.ids.welkCFW.disabled = True
+        self.ids.welkWEW.disabled = True
+        self.ids.bereken.disabled = True
 
 
     def vak_gekozen(self):
@@ -929,35 +931,45 @@ class CijferBerekenen(Screen):
             self.ids.BoxCF_WE.add_widget(l)
             self.ids.BoxCF_WE.add_widget(e)
         
+        self.ids.welkCFW.disabled = False
+        self.ids.welkWEW.disabled = False
+        self.ids.bereken.disabled = False
+        
     def bereken_cf(self):
-        goal = float(self.ids.welkCFW.text.replace(",", "."))
-        weg = float(self.ids.welkWEW.text.replace(",", ".").replace("x", "").replace("X", ""))
-        if goal != "" and weg != "":
+        if self.ids.kiesvakCFB.text != "Selecteer een vak":
+            try:
+                goal = float(self.ids.welkCFW.text.replace(",", "."))
+                weg = float(self.ids.welkWEW.text.replace(",", ".").replace("x", "").replace("X", ""))
 
-            conn = sqlite3.connect('ScorroDB.db')
-            c = conn.cursor()
+                conn = sqlite3.connect('ScorroDB.db')
+                c = conn.cursor()
 
-            c.execute(f"SELECT * FROM cijfers WHERE vak = '{self.ids.kiesvakCFB.text}'")
-            records = c.fetchall()
+                c.execute(f"SELECT * FROM cijfers WHERE vak = '{self.ids.kiesvakCFB.text}'")
+                records = c.fetchall()
 
-            conn.commit()
-            conn.close()
+                conn.commit()
+                conn.close()
 
-            tot = 0
-            weg_t = 0
-            for item in records:
-                tot += float(item[1]) * float(item[0].replace(",", "."))
-                weg_t += float(item[1])
-            weg_t += weg
-            grade_weg = goal * weg_t - tot
-            grade_to_get = grade_weg / weg
+                tot = 0
+                weg_t = 0
+                for item in records:
+                    tot += float(item[1]) * float(item[0].replace(",", "."))
+                    weg_t += float(item[1])
+                weg_t += weg
+                grade_weg = goal * weg_t - tot
+                grade_to_get = grade_weg / weg
 
-            self.ids.CF_BH.text = str(round(grade_to_get, 1)).replace(".", ",")
+                self.ids.CF_BH.text = str(round(grade_to_get, 1)).replace(".", ",")
+            except:
+                popup = Notification(title="Fout")
+                popup.open()
+
+                popup.update_text("Fout bij invoer.")
         else:
-            popup = Notification(title="Fout")
-            popup.open()
+                popup = Notification(title="Fout")
+                popup.open()
 
-            popup.update_text("Wat is de weging / het cijfer?")
+                popup.update_text("Selecteer een vak.")
 
 
 class Notification(Popup):

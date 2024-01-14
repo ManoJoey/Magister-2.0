@@ -17,6 +17,9 @@ WindowManager:
 
 <BootScreen>:
 
+<ScreenManager>:
+    transition: NoTransition()
+
 <Rounded@Button>
     canvas.before:
         RoundedRectangle:
@@ -935,6 +938,7 @@ WindowManager:
                 hint_text: "(Verwachte) weging volgende proefwerk?"
                 font_size: root.width/20
             RoundedButton:
+                id: bereken
                 text: "Bereken"
                 size_hint: 1, .2
                 bold: "true"
