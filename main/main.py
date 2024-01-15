@@ -14,7 +14,7 @@ from kivy.uix.popup import Popup
 from kivy.clock import Clock
 
 import matplotlib.pyplot as plt # matplotlib==3.6.3
-from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
+from kivy_garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
 
 import sqlite3
 from datetime import datetime, timedelta, date
