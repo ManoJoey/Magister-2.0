@@ -1,36 +1,36 @@
-from kivy.lang import Builder
-from kivymd.app import MDApp
-from kivy.uix.floatlayout import FloatLayout
-from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
 import matplotlib.pyplot as plt
+from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
+from kivy.uix.boxlayout import BoxLayout
+from kivy.app import App
 
-#define what we want to graph
-x=[11,22,33,44,55,66,77,88,99,100]
-y=[12,6,9,15,23,67,11,90,34,91]
+class MultiGraphApp(App):
+    def build(self):
+        # Create a BoxLayout to hold the Matplotlib plots
+        layout = BoxLayout(orientation='vertical')
 
-plt.plot(x,y)
-plt.ylabel("Y axis")
-plt.xlabel("X axis")
+        # Create sample data
+        data1 = [10, 20, 15, 25]
+        data2 = [5, 15, 10, 20]
 
-#Build our app
+        # Create the first subplot
+        fig, ax1 = plt.subplots()
+        ax1.bar(range(len(data1)), data1, color='blue')
+        ax1.set_xlabel('Bars')
+        ax1.set_ylabel('Values')
+        ax1.set_title('Matplotlib Bar Chart 1')
+        canvas1 = FigureCanvasKivyAgg(fig)
+        layout.add_widget(canvas1)
 
-class Matty(FloatLayout):
-   def __init__(self,**kwargs):
-      super().__init__(**kwargs)
+        # Create the second subplot
+        fig, ax2 = plt.subplots()
+        ax2.bar(range(len(data2)), data2, color='green')
+        ax2.set_xlabel('Bars')
+        ax2.set_ylabel('Values')
+        ax2.set_title('Matplotlib Bar Chart 2')
+        canvas2 = FigureCanvasKivyAgg(fig)
+        layout.add_widget(canvas2)
 
-      box=self.ids.box
-      c = FigureCanvasKivyAgg(plt.gcf())
-      box.add_widget(c)
-   
+        return layout
 
-   def save_it(self):
-      pass
-
-class MainApp(MDApp):
-   def build(self):
-      self.theme_cls.theme_style = "Dark"
-      self.theme_cls.primary_palette="BlueGray"
-      Builder.load_file('testdl.kv')
-      return Matty()
-
-MainApp().run()
+if __name__ == '__main__':
+    MultiGraphApp().run()

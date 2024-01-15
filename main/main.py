@@ -647,6 +647,21 @@ class PopupCF(Popup):
         spinner.values = [str(item[0]) for item in data]
 
 
+""" class PopupCircle(Popup):
+    def on_open(self):
+        cijfers = Scorro.show_cijfers(self)
+        cijfers.sort(key=lambda x: x[3].lower())
+        window_size = int(Window.size[1]) / 20
+
+        for item in cijfers:
+            label = Label(text=str(item[0] + " - " + item[3] + " - " + item[1] + "x"), size_hint_y=None, height=window_size, font_size=int(int(Window.size[0])/20),
+                text_size=self.size, halign='left', valign='middle')
+            if float(item[0].replace(",", ".")) >= 5.5:
+                self.ids.BoxVold.add_widget(label)
+            else:
+                self.ids.BoxOnvold.add_widget(label) """
+
+
 class Cijfers(Screen):
     def on_touch_move(self, touch):
         threshold = float(Window.size[0] / 2)
@@ -685,6 +700,10 @@ class Cijfers(Screen):
         else:
             self.ids.tot_gem.text = "Geen cijfers gevonden."
             self.ids.tot_gem.bg_colour = (0, 163/255, 130/255,1)
+
+    # def OnTouch_Pie(self, instance, touch):
+    #     popup = PopupCircle(title="Cijfers")
+    #     popup.open()
     
     def on_enter(self):
         self.ids.BoxCfVak.clear_widgets()
@@ -702,6 +721,7 @@ class Cijfers(Screen):
 
         chart = self.ids.chart
         chart.clear_widgets()
+        self.ids.CircleBox.clear_widgets()
         plt.cla()
 
         cijfers = Scorro.show_cijfers(self)
@@ -709,10 +729,24 @@ class Cijfers(Screen):
 
         vakken = []
         gemiddelde = []
+        cf_only = []
+        vold_count = 0
+        onvold_count = 0
+
         for item in cijfers:
             if item[3] not in vakken:
                 vakken.append(item[3])
+            
+            cf_only.append(item[0])
         
+        for item in cf_only:
+            if float(item.replace(",",".")) >= 5.5:
+                vold_count += 1
+            else:
+                onvold_count += 1
+
+        self.ids.L_vov.text = f"[color=00a382]Voldoendes: {vold_count}[/color]\n\n[color=ff5457]Onvoldoendes: {onvold_count}[/color]"
+
         for vak in vakken:
             tot = 0
             totweg = 0
@@ -734,11 +768,28 @@ class Cijfers(Screen):
             x.append(item[1])
             y.append(float(item[0]))
 
+        cijf = [vold_count, onvold_count]
 
-        plt.bar(x,y, width=0.5, color=(0, 116/255, 1, 1))
-        plt.ylim([0,11])
-        plt.ylabel("Gemiddelde")
-        plt.title("Gemiddelde per vak", loc='left')
+        fig, ax1 = plt.subplots()
+        ax1.pie(cijf, colors=[(0, 163/255, 130/255,1), (1, 0.329, 0.341, 1)], shadow=True)
+        ax1.axis('equal')
+        
+        fig.patch.set_alpha(0)
+        canvas = FigureCanvasKivyAgg(fig)
+        self.ids.CircleBox.add_widget(canvas)
+        
+        
+        # canvas.bind(on_touch_down=self.OnTouch_Pie)
+        
+
+        plt.rcParams.update({'font.size': int(Window.size[0]/35)})
+
+        fig, ax2 = plt.subplots()
+        ax2.bar(x,y, width=0.5, color=(0, 116/255, 1, 1))
+        ax2.set_ylim([0,11])
+        ax2.set_ylabel("Gemiddelde")
+        ax2.set_title("Gemiddelde per vak", loc='left')
+        fig.patch.set_alpha(0)
 
         
         chart_width = 0.4 * len(gemiddelde)
@@ -746,11 +797,10 @@ class Cijfers(Screen):
         self.ids.chart_parent.width = Window.size[0] + (Window.size[0] / 8.75) * len(gemiddelde)
 
         for i, value in enumerate(y):
-            plt.text(i, value, str(value).replace(".", ","), ha='center', va='bottom')
+            ax2.text(i, value, str(value).replace(".", ","), ha='center', va='bottom')
 
 
-        chart.add_widget(FigureCanvasKivyAgg(plt.gcf()))
-
+        chart.add_widget(FigureCanvasKivyAgg(fig))
 
 dutch_to_numeric = {'maandag': 0, 'dinsdag': 1, 'woensdag': 2, 'donderdag': 3, 'vrijdag': 4, 'zaterdag': 5, 'zondag': 6}
 

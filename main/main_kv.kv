@@ -714,7 +714,7 @@ WindowManager:
             text: "Cijfers"
             font_size: self.width/10
             bold: "true"
-            size_hint: 1, .16
+            size_hint: 1, .185
             canvas.before:
                 Color:
                     rgba: 0, 116/255, 1, 0.8
@@ -731,25 +731,22 @@ WindowManager:
                 BoxLayout:
                     orientation: "horizontal"
                     size_hint_y: None
-                    height: self.minimum_height
-                    
+                    height: root.height/5
+                    BoxLayout:
+                        orientation: "horizontal"
+                        id: CircleBox
+                        size_hint_y: None
+                        height: root.height/3
+                        pos_hint: {'center_x': .5, 'center_y': .48}
                     Label:
-                        text: "Cirkeldiagram"
+                        id: L_vov
+                        markup: True
                         size_hint_y: None
                         height: root.height/7
+                        pos_hint: {'center_x': .5, 'center_y': .5}
                         canvas.before:
                             Color:
-                                rgba: 0, 0, 1, 1
-                            Rectangle:
-                                pos: self.pos
-                                size: self.size
-                    Label:
-                        text: "voldoendes:\nonvoldoendes:"
-                        size_hint_y: None
-                        height: root.height/7
-                        canvas.before:
-                            Color:
-                                rgba: 0, 0, 1, 1
+                                rgba: 0, 0, 0, 0
                             Rectangle:
                                 pos: self.pos
                                 size: self.size
@@ -1148,3 +1145,62 @@ WindowManager:
             Rectangle:
                 size: self.size
                 pos: self.pos
+
+# <PopupCircle>:
+#     name: "popup circle"
+#     size_hint: (0.9, 0.9)
+#     BoxLayout:
+#         orientation: "vertical" 
+#         Label:
+#             text: "Voldoendes:"
+#             font_size: root.width/20
+#             size_hint_y: None
+#             height: root.height/20
+#             text_size: self.size
+#             halign: 'left'
+#             valign: 'middle'
+#             padding: root.width/35
+#             canvas.before:
+#                 Color: 
+#                     rgba: (0, 163/255, 130/255,1)
+#                 Rectangle:
+#                     size: self.size
+#                     pos: self.pos
+
+#         GridLayout:
+#             cols: 1
+#             id: BoxVold
+#             canvas.before:
+#                 Color: 
+#                     rgba: (0, 163/255, 130/255,1)
+#                 Rectangle:
+#                     size: self.size
+#                     pos: self.pos
+
+#         Label:
+#             text: "Onvoldoendes:"
+#             font_size: root.width/20
+#             size_hint_y: None
+#             height: root.height/20
+#             text_size: self.size
+#             halign: 'left'
+#             valign: 'middle'
+#             padding: root.width/35
+#             canvas.before:
+#                 Color: 
+#                     rgba: (1, 0.329, 0.341, 1)
+#                 Rectangle:
+#                     size: self.size
+#                     pos: self.pos
+
+#         GridLayout:
+#             cols: 1
+#             id: BoxOnvold
+
+#         Button:
+#             text: "Terug"
+#             font_size: root.width/20
+#             on_release: self.dismiss()
+#             size_hint_y: None
+#             height: root.height/15
+            
