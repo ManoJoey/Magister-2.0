@@ -4,4 +4,4 @@ Aanpassen van naam van vak past het niet aan in al gemaakte knoppen (cijfers, hu
 Cirkeldiagram
 Compileren voor IOS
 Scaling issues
-LogoOnderkant aanpassen
+Cijfers label grootte
