@@ -3,6 +3,4 @@ Aanpassen van naam van vak past het niet aan in al gemaakte knoppen (cijfers, hu
 
 Compileren voor IOS
 
-PopupCircle needs scrollview
-
 Scaling issues
