@@ -647,21 +647,6 @@ class PopupCF(Popup):
         spinner.values = [str(item[0]) for item in data]
 
 
-""" class PopupCircle(Popup):
-    def on_open(self):
-        cijfers = Scorro.show_cijfers(self)
-        cijfers.sort(key=lambda x: x[3].lower())
-        window_size = int(Window.size[1]) / 20
-
-        for item in cijfers:
-            label = Label(text=str(item[0] + " - " + item[3] + " - " + item[1] + "x"), size_hint_y=None, height=window_size, font_size=int(int(Window.size[0])/20),
-                text_size=self.size, halign='left', valign='middle')
-            if float(item[0].replace(",", ".")) >= 5.5:
-                self.ids.BoxVold.add_widget(label)
-            else:
-                self.ids.BoxOnvold.add_widget(label) """
-
-
 class Cijfers(Screen):
     def on_touch_move(self, touch):
         threshold = float(Window.size[0] / 2)
@@ -700,10 +685,6 @@ class Cijfers(Screen):
         else:
             self.ids.tot_gem.text = "Geen cijfers gevonden."
             self.ids.tot_gem.bg_colour = (0, 163/255, 130/255,1)
-
-    # def OnTouch_Pie(self, instance, touch):
-    #     popup = PopupCircle(title="Cijfers")
-    #     popup.open()
     
     def on_enter(self):
         self.ids.BoxCfVak.clear_widgets()
@@ -777,9 +758,6 @@ class Cijfers(Screen):
         fig.patch.set_alpha(0)
         canvas = FigureCanvasKivyAgg(fig)
         self.ids.CircleBox.add_widget(canvas)
-        
-        
-        # canvas.bind(on_touch_down=self.OnTouch_Pie)
         
 
         plt.rcParams.update({'font.size': int(Window.size[0]/35)})
@@ -1351,7 +1329,7 @@ class Scorro(MDApp):
         return records
 
 #Window.size = (525, 900)   
-Window.size = (350, 600)
+#Window.size = (350, 600)
 #Window.size = (233, 400)
 
 if __name__ == "__main__":
