@@ -749,7 +749,10 @@ class Cijfers(Screen):
             x.append(item[1])
             y.append(float(item[0]))
 
-        cijf = [vold_count, onvold_count]
+        if vold_count != 0 or onvold_count != 0:
+            cijf = [vold_count, onvold_count]
+        else:
+            cijf = [1]
 
         fig, ax1 = plt.subplots()
         ax1.pie(cijf, colors=[(0, 163/255, 130/255,1), (1, 0.329, 0.341, 1)], shadow=True)
@@ -1329,7 +1332,7 @@ class Scorro(MDApp):
         return records
 
 #Window.size = (525, 900)   
-#Window.size = (350, 600)
+Window.size = (350, 600)
 #Window.size = (233, 400)
 
 if __name__ == "__main__":
