@@ -60,6 +60,7 @@ class Dashboard(Screen):
 
         if cijferlijst != []:
             if len(cijferlijst) >= 3:
+                lay.cols = 3
                 l1 = Button(markup=True, text="[size={}]{}[/size]\n[size={}]{}[/size]".format(cf_size, cijferlijst[0][0], vak_size, cijferlijst[0][3]),
                 halign="center", valign="center", background_color="white", background_normal="", color="gray")
                 l1.bind(on_release=lambda x: self.change())
@@ -88,6 +89,7 @@ class Dashboard(Screen):
                 l2.bind(on_release=lambda x: self.change())
                 lay.add_widget(l2)
             elif len(cijferlijst) == 1:
+                lay.cols = 3
                 l2 = Button(background_color="white", background_normal="", color="gray")
                 lay.add_widget(l2)
 
