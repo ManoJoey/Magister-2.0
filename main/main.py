@@ -75,6 +75,7 @@ class Dashboard(Screen):
                 l3.bind(on_release=lambda x: self.change())
                 lay.add_widget(l3)
             elif len(cijferlijst) == 2:
+                lay.cols = 2
                 l1 = Button(markup=True, text="[size={}]{}[/size]\n[size={}]{}[/size]".format(cf_size, cijferlijst[0][0], vak_size, cijferlijst[0][3]),
                 halign="center", valign="center", background_color="white", background_normal="", color="gray")
                 l1.bind(size=l1.setter('text_size'))
@@ -86,21 +87,24 @@ class Dashboard(Screen):
                 l2.bind(size=l2.setter('text_size'))
                 l2.bind(on_release=lambda x: self.change())
                 lay.add_widget(l2)
-
-                l3 = Button(background_color="white", background_normal="", color="gray")
-                lay.add_widget(l3)
             elif len(cijferlijst) == 1:
+                l2 = Button(background_color="white", background_normal="", color="gray")
+                lay.add_widget(l2)
+
                 l1 = Button(markup=True, text="[size={}]{}[/size]\n[size={}]{}[/size]".format(cf_size, cijferlijst[0][0], vak_size, cijferlijst[0][3]),
                 halign="center", valign="center", background_color="white", background_normal="", color="gray")
                 l1.bind(size=l1.setter('text_size'))
                 l1.bind(on_release=lambda x: self.change())
                 lay.add_widget(l1)
 
-                l2 = Button(background_color="white", background_normal="", color="gray")
-                lay.add_widget(l2)
-                
                 l3 = Button(background_color="white", background_normal="", color="gray")
                 lay.add_widget(l3)
+        else:
+            l1 = Button(markup=True, text="Nog geen cijfers",
+            halign="center", valign="center", background_color="white", background_normal="", color="gray", font_size=Window.size[0]/10)
+            l1.bind(size=l1.setter('text_size'))
+            l1.bind(on_release=lambda x: self.change())
+            lay.add_widget(l1)
 
 
 class PopupSW(Popup):
@@ -388,24 +392,32 @@ class Schoolwerk(Screen):
         self.ids.BoxHwPw.clear_widgets()
 
         pw_lijst = Scorro.show_proefwerken(self)
-        for item in pw_lijst:
-            replace = str(item).replace("(", "").replace(")", "").replace("'", "").split(", ")
-            button = Button(text=str(replace[0] + "\n" + replace[3] + " - " + replace[1]), size_hint=(None, None), height=window_size, width=Window.size[0],
-                on_press=lambda button: self.popupSW(button.text), background_normal="", background_color=(1,133/255,39/255,1), font_size=int(int(Window.size[0])/20))
-            button.text_size = (button.width-(Window.size[0]/10), None)
-            button.bind(size=button.setter('text_size'))
-            self.ids.BoxHwPw.add_widget(button)
-            
         hw_lijst = Scorro.show_huiswerk(self)
-        for item in hw_lijst:
-            replace = str(item).replace("(", "").replace(")", "").replace("'", "").split(", ")
-            button = Button(text=str(replace[0] + "\n" + replace[3] + " - " + replace[1]), size_hint=(None, None), height=window_size, width=Window.size[0],
-                on_press=lambda button: self.popupSW(button.text), background_normal="", background_color=(0, 163/255, 130/255,), font_size=int(int(Window.size[0])/20))
-            button.text_size = (button.width-(Window.size[0]/10), None)
-            button.bind(size=button.setter('text_size'))
-            self.ids.BoxHwPw.add_widget(button)
-        
-        self.ids.BoxHwPw.children.sort(reverse=True, key=lambda date: datetime.strptime(date.text.split("\n")[1].split(" - ")[1], "%d-%m-%Y"))
+        if str(pw_lijst) != "[]" or str(hw_lijst) != "[]":
+            for item in pw_lijst:
+                replace = str(item).replace("(", "").replace(")", "").replace("'", "").split(", ")
+                button = Button(text=str(replace[0] + "\n" + replace[3] + " - " + replace[1]), size_hint=(None, None), height=window_size, width=Window.size[0],
+                    on_press=lambda button: self.popupSW(button.text), background_normal="", background_color=(1,133/255,39/255,1), font_size=int(int(Window.size[0])/20))
+                button.text_size = (button.width-(Window.size[0]/10), None)
+                button.bind(size=button.setter('text_size'))
+                self.ids.BoxHwPw.add_widget(button)
+                
+            for item in hw_lijst:
+                replace = str(item).replace("(", "").replace(")", "").replace("'", "").split(", ")
+                button = Button(text=str(replace[0] + "\n" + replace[3] + " - " + replace[1]), size_hint=(None, None), height=window_size, width=Window.size[0],
+                    on_press=lambda button: self.popupSW(button.text), background_normal="", background_color=(0, 163/255, 130/255,), font_size=int(int(Window.size[0])/20))
+                button.text_size = (button.width-(Window.size[0]/10), None)
+                button.bind(size=button.setter('text_size'))
+                self.ids.BoxHwPw.add_widget(button)
+            
+            self.ids.BoxHwPw.children.sort(reverse=True, key=lambda date: datetime.strptime(date.text.split("\n")[1].split(" - ")[1], "%d-%m-%Y"))
+        else:
+            label = Label(text="Geen schoolwerk.\nDoe iets leuks met je dag!", size_hint=(None, None), width=Window.size[0], height=window_size,
+                font_size=int(int(Window.size[0])/15), color=(0,0,0,1), valign="middle", halign="left")
+            label.text_size = (label.width-(Window.size[0]/10), None)
+            label.bind(size=label.setter('text_size'))
+            
+            self.ids.BoxHwPw.add_widget(label)
 
 
 class PopupVak(Popup):
@@ -533,11 +545,14 @@ class Vakken(Screen):
         window_size = int(Window.size[1]) / 10
         vakken_lijst = Scorro.show_klassen(self)
         self.ids.BoxVakken.clear_widgets()
-
-        for vak in vakken_lijst:
-            button = Button(text=str(vak[0]), size_hint_y=None, height=window_size, background_color=(0.11, 0.792, 1, 1), font_size=int(int(Window.size[0])/15))
-            button.bind(on_press=lambda button: self.popupVak(button.text))
-            self.ids.BoxVakken.add_widget(button)
+        if str(vakken_lijst) != "[]":
+            for vak in vakken_lijst:
+                button = Button(text=str(vak[0]), size_hint_y=None, height=window_size, background_color=(0.11, 0.792, 1, 1), font_size=int(int(Window.size[0])/15))
+                button.bind(on_press=lambda button: self.popupVak(button.text))
+                self.ids.BoxVakken.add_widget(button)
+        else: 
+            label = Label(text="Geen vakken!", size_hint_y=None, height=window_size, font_size=int(int(Window.size[0])/10), color=(0,0,0,1))
+            self.ids.BoxVakken.add_widget(label)
         
         self.ids.BoxVakken.children.sort(reverse=True, key=lambda x: x.text.lower())
 
@@ -577,7 +592,10 @@ class PopupCF(Popup):
         info = self.ids.infoCF_p.text
         vak = self.ids.kiesvakCF_p.text
 
-        if cf != "" and weging != "" and vak != "":
+        try:
+            float(cf.replace(",", "."))
+            float(weging.replace(",", "."))
+
             conn = sqlite3.connect('ScorroDB.db')
             c = conn.cursor()
         
@@ -612,7 +630,7 @@ class PopupCF(Popup):
             MDApp.get_running_app().root.get_screen("cijfers").on_enter()
 
             self.dismiss()
-        else:
+        except:
             popup = Notification(title="Fout")
             popup.open()
 
@@ -693,10 +711,16 @@ class Cijfers(Screen):
         cijferlijst.sort(key=lambda x: x[3].lower())
 
         for item in cijferlijst:
-            button = Button(text=str(item[0] + " - " + item[3] + " - " + item[1] + "x"), size_hint_y=None, height=window_size,
-                background_normal="", background_color=(0, 163/255, 130/255,1), font_size=int(int(Window.size[0])/20))
-            button.bind(on_press=lambda button: self.popupCF(button.text))
-            self.ids.BoxCfVak.add_widget(button)
+            if float(item[0].replace(",", ".")) >= 5.5:
+                button = Button(text=str(item[0] + " - " + item[3] + " - " + item[1] + "x"), size_hint_y=None, height=window_size,
+                    background_normal="", background_color=(0, 163/255, 130/255,1), font_size=int(int(Window.size[0])/20))
+                button.bind(on_press=lambda button: self.popupCF(button.text))
+                self.ids.BoxCfVak.add_widget(button)
+            else: 
+                button = Button(text=str(item[0] + " - " + item[3] + " - " + item[1] + "x"), size_hint_y=None, height=window_size,
+                    background_normal="", background_color=(1, 0.329, 0.341, 1), font_size=int(int(Window.size[0])/20))
+                button.bind(on_press=lambda button: self.popupCF(button.text))
+                self.ids.BoxCfVak.add_widget(button)
         
         self.update_TotGem()
 
@@ -766,7 +790,7 @@ class Cijfers(Screen):
         plt.rcParams.update({'font.size': int(Window.size[0]/35)})
 
         fig, ax2 = plt.subplots()
-        ax2.bar(x,y, width=0.5, color=(0, 116/255, 1, 1))
+        ax2.bar(x,y, width=0.5, color=(0, 116/255, 1, 0.8))
         ax2.set_ylim([0,11])
         ax2.set_ylabel("Gemiddelde")
         ax2.set_title("Gemiddelde per vak", loc='left')
@@ -810,8 +834,14 @@ class NieuwHuiswerk(Screen):
 
     def spinnerHW_clicked(self):
         data = Scorro.show_klassen(self)
-        spinner = self.ids.kiesvakHW
-        spinner.values = [str(item[0]) for item in data]
+        if data != []:
+            spinner = self.ids.kiesvakHW
+            spinner.values = [str(item[0]) for item in data]
+        else: 
+            popup = Notification(title="Fout")
+            popup.open()
+
+            popup.update_text("Je hebt nog geen vakken.")
 
     def enable_date(self):
         vak = self.ids.kiesvakHW.text
@@ -861,8 +891,14 @@ class NieuwProefwerk(Screen):
 
     def spinnerPW_clicked(self):
         data = Scorro.show_klassen(self)
-        spinner = self.ids.kiesvakPW
-        spinner.values = [str(item[0]) for item in data]
+        if data != []:
+            spinner = self.ids.kiesvakPW
+            spinner.values = [str(item[0]) for item in data]
+        else: 
+            popup = Notification(title="Fout")
+            popup.open()
+
+            popup.update_text("Je hebt nog geen vakken.")
     
     def enable_date(self):
         vak = self.ids.kiesvakPW.text
@@ -895,9 +931,14 @@ class NieuwProefwerk(Screen):
 class NieuwCijfer(Screen):
     def spinnerCF_clicked(self):
         data = Scorro.show_klassen(self)
-        spinner = self.ids.kiesvakCF
-        spinner.values = [str(item[0]) for item in data]
+        if data != []:
+            spinner = self.ids.kiesvakCF
+            spinner.values = [str(item[0]) for item in data]
+        else: 
+            popup = Notification(title="Fout")
+            popup.open()
 
+            popup.update_text("Je hebt nog geen vakken.")
 
 class NieuwVak(Screen):
     def on_enter(self):
@@ -928,8 +969,14 @@ class CijferBerekenen(Screen):
 
     def spinnerCFB_clicked(self):
         data = Scorro.show_klassen(self)
-        spinner = self.ids.kiesvakCFB
-        spinner.values = [str(item[0]) for item in data]
+        if data != []:
+            spinner = self.ids.kiesvakCFB
+            spinner.values = [str(item[0]) for item in data]
+        else: 
+            popup = Notification(title="Fout")
+            popup.open()
+
+            popup.update_text("Je hebt nog geen vakken.")
     
     def refresh(self):
         self.ids.BoxCF_WE.clear_widgets()
@@ -1022,7 +1069,7 @@ class Scorro(MDApp):
         return self.root.current
 
     def call_cf(self):
-        self.root.current = "cijfers"
+        self.root.current = "nieuw cijfer"
 
     def on_start(self):
         self.root.current = "dashboard"
@@ -1160,31 +1207,37 @@ class Scorro(MDApp):
             float(weging.replace(",", "."))
 
             if vak != "Selecteer een vak":
-                conn = sqlite3.connect('ScorroDB.db')
-                c = conn.cursor()
+                if float(naam.replace(",", ".")) <= 10.0 and float(naam.replace(",", ".")) >= 0.0:
+                    conn = sqlite3.connect('ScorroDB.db')
+                    c = conn.cursor()
 
-                c.execute("INSERT INTO cijfers VALUES (:cijfer, :weging, :beschrijving, :vak, :date)",
-                {
-                    'cijfer': naam,
-                    'weging': weging,
-                    'beschrijving': self.root.get_screen('nieuw cijfer').ids.infoCF.text,
-                    'vak': vak,
-                    'date': now,
-                })
+                    c.execute("INSERT INTO cijfers VALUES (:cijfer, :weging, :beschrijving, :vak, :date)",
+                    {
+                        'cijfer': naam,
+                        'weging': weging,
+                        'beschrijving': self.root.get_screen('nieuw cijfer').ids.infoCF.text,
+                        'vak': vak,
+                        'date': now,
+                    })
 
-                conn.commit()
-                conn.close()
+                    conn.commit()
+                    conn.close()
 
 
-                self.root.get_screen('nieuw cijfer').ids.welkCF.text = ''
-                self.root.get_screen('nieuw cijfer').ids.wegingCF.text = ''
-                self.root.get_screen('nieuw cijfer').ids.infoCF.text = ''
-                self.root.get_screen('nieuw cijfer').ids.kiesvakCF.text = 'Selecteer een vak'
+                    self.root.get_screen('nieuw cijfer').ids.welkCF.text = ''
+                    self.root.get_screen('nieuw cijfer').ids.wegingCF.text = ''
+                    self.root.get_screen('nieuw cijfer').ids.infoCF.text = ''
+                    self.root.get_screen('nieuw cijfer').ids.kiesvakCF.text = 'Selecteer een vak'
 
-                popup = Notification(title="Gelukt!")
-                popup.open()
+                    popup = Notification(title="Gelukt!")
+                    popup.open()
 
-                popup.update_text("Cijfer opgeslagen!")
+                    popup.update_text("Cijfer opgeslagen!")
+                else:
+                    popup = Notification(title="Fout")
+                    popup.open()
+
+                    popup.update_text("Je cijfer zit niet tussen 0 en 10.")
             else:
                 popup = Notification(title="Fout")
                 popup.open()
