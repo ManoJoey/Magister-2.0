@@ -711,18 +711,24 @@ class Cijfers(Screen):
         window_size = int(Window.size[1]) / 20
         cijferlijst = Scorro.show_cijfers(self)
         cijferlijst.sort(key=lambda x: x[3].lower())
-
-        for item in cijferlijst:
-            if float(item[0].replace(",", ".")) >= 5.5:
-                button = Button(text=str(item[0] + " - " + item[3] + " - " + item[1] + "x"), size_hint_y=None, height=window_size,
-                    background_normal="", background_color=(0, 163/255, 130/255,1), font_size=int(int(Window.size[0])/20))
-                button.bind(on_press=lambda button: self.popupCF(button.text))
-                self.ids.BoxCfVak.add_widget(button)
-            else: 
-                button = Button(text=str(item[0] + " - " + item[3] + " - " + item[1] + "x"), size_hint_y=None, height=window_size,
-                    background_normal="", background_color=(1, 0.329, 0.341, 1), font_size=int(int(Window.size[0])/20))
-                button.bind(on_press=lambda button: self.popupCF(button.text))
-                self.ids.BoxCfVak.add_widget(button)
+        
+        if str(cijferlijst) != "[]":
+            self.ids.alle_cf.height = Window.size[1] / 20
+            self.ids.alle_cf.font_size = Window.size[0] / 15
+            for item in cijferlijst:
+                if float(item[0].replace(",", ".")) >= 5.5:
+                    button = Button(text=str(item[0] + " - " + item[3] + " - " + item[1] + "x"), size_hint_y=None, height=window_size,
+                        background_normal="", background_color=(0, 163/255, 130/255,1), font_size=int(int(Window.size[0])/20))
+                    button.bind(on_press=lambda button: self.popupCF(button.text))
+                    self.ids.BoxCfVak.add_widget(button)
+                else: 
+                    button = Button(text=str(item[0] + " - " + item[3] + " - " + item[1] + "x"), size_hint_y=None, height=window_size,
+                        background_normal="", background_color=(1, 0.329, 0.341, 1), font_size=int(int(Window.size[0])/20))
+                    button.bind(on_press=lambda button: self.popupCF(button.text))
+                    self.ids.BoxCfVak.add_widget(button)
+        else:
+            self.ids.alle_cf.height = 0
+            self.ids.alle_cf.font_size = 0
         
         self.update_TotGem()
 
