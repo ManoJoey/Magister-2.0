@@ -14,6 +14,8 @@ from kivy.uix.popup import Popup
 from kivy.clock import Clock
 
 import matplotlib.pyplot as plt # matplotlib==3.6.3
+import logging
+logging.getLogger('matplotlib.font_manager').disabled = True
 from kivy_garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
 
 import sqlite3
@@ -61,29 +63,29 @@ class Dashboard(Screen):
         if cijferlijst != []:
             if len(cijferlijst) >= 3:
                 lay.cols = 3
-                l1 = Button(markup=True, text="[size={}]{}[/size]\n[size={}]{}[/size]".format(cf_size, cijferlijst[0][0], vak_size, cijferlijst[0][3]),
+                l1 = Button(markup=True, text="[size={}]{}[/size]\n[size={}]{}[/size]".format(cf_size, cijferlijst[0][0].replace(".", ","), vak_size, cijferlijst[0][3]),
                 halign="center", valign="center", background_color="white", background_normal="", color="gray")
                 l1.bind(on_release=lambda x: self.change())
                 lay.add_widget(l1)
 
-                l2 = Button(markup=True, text="[size={}]{}[/size]\n[size={}]{}[/size]".format(cf_size, cijferlijst[1][0], vak_size, cijferlijst[1][3]),
+                l2 = Button(markup=True, text="[size={}]{}[/size]\n[size={}]{}[/size]".format(cf_size, cijferlijst[1][0].replace(".", ","), vak_size, cijferlijst[1][3]),
                 halign="center", valign="center", background_color="white", background_normal="", color="gray")
                 l2.bind(on_release=lambda x: self.change())
                 lay.add_widget(l2)
 
-                l3 = Button(markup=True, text="[size={}]{}[/size]\n[size={}]{}[/size]".format(cf_size, cijferlijst[2][0], vak_size, cijferlijst[2][3]),
+                l3 = Button(markup=True, text="[size={}]{}[/size]\n[size={}]{}[/size]".format(cf_size, cijferlijst[2][0].replace(".", ","), vak_size, cijferlijst[2][3]),
                 halign="center", valign="center", background_color="white", background_normal="", color="gray")
                 l3.bind(on_release=lambda x: self.change())
                 lay.add_widget(l3)
             elif len(cijferlijst) == 2:
                 lay.cols = 2
-                l1 = Button(markup=True, text="[size={}]{}[/size]\n[size={}]{}[/size]".format(cf_size, cijferlijst[0][0], vak_size, cijferlijst[0][3]),
+                l1 = Button(markup=True, text="[size={}]{}[/size]\n[size={}]{}[/size]".format(cf_size, cijferlijst[0][0].replace(".", ","), vak_size, cijferlijst[0][3]),
                 halign="center", valign="center", background_color="white", background_normal="", color="gray")
                 l1.bind(size=l1.setter('text_size'))
                 l1.bind(on_release=lambda x: self.change())
                 lay.add_widget(l1)
 
-                l2 = Button(markup=True, text="[size={}]{}[/size]\n[size={}]{}[/size]".format(cf_size, cijferlijst[1][0], vak_size, cijferlijst[1][3]),
+                l2 = Button(markup=True, text="[size={}]{}[/size]\n[size={}]{}[/size]".format(cf_size, cijferlijst[1][0].replace(".", ","), vak_size, cijferlijst[1][3]),
                 halign="center", valign="center", background_color="white", background_normal="", color="gray")
                 l2.bind(size=l2.setter('text_size'))
                 l2.bind(on_release=lambda x: self.change())
@@ -93,7 +95,7 @@ class Dashboard(Screen):
                 l2 = Button(background_color="white", background_normal="", color="gray")
                 lay.add_widget(l2)
 
-                l1 = Button(markup=True, text="[size={}]{}[/size]\n[size={}]{}[/size]".format(cf_size, cijferlijst[0][0], vak_size, cijferlijst[0][3]),
+                l1 = Button(markup=True, text="[size={}]{}[/size]\n[size={}]{}[/size]".format(cf_size, cijferlijst[0][0].replace(".", ","), vak_size, cijferlijst[0][3]),
                 halign="center", valign="center", background_color="white", background_normal="", color="gray")
                 l1.bind(size=l1.setter('text_size'))
                 l1.bind(on_release=lambda x: self.change())
@@ -579,7 +581,7 @@ class PopupCF(Popup):
         conn.close()
 
         records = str(records).replace("(", "").replace(")", "").replace("[", "").replace("]", "").replace("'", "").split(", ")
-        self.ids.welkCF_p.text = records[0]
+        self.ids.welkCF_p.text = records[0].replace(".", ",")
         self.ids.wegingCF_p.text = records[1] + "x"
         self.ids.infoCF_p.text = records[2]
         self.ids.kiesvakCF_p.text = records[3]
@@ -590,48 +592,46 @@ class PopupCF(Popup):
         Oweging = TotCF.split("|")[2]
 
         cf = self.ids.welkCF_p.text
-        weging = self.ids.wegingCF_p.text.replace("x", "")
+        weging = self.ids.wegingCF_p.text.replace("x", "").replace("X", "")
         info = self.ids.infoCF_p.text
         vak = self.ids.kiesvakCF_p.text
 
         try:
             float(cf.replace(",", "."))
-            float(weging.replace(",", "."))
+            float(weging)
+            if float(cf.replace(",", ".")) <= 10.0 and float(cf.replace(",", ".")) >= 0.0:
+                cf = str(round(float(cf.replace(",", ".")), 1))
 
-            conn = sqlite3.connect('ScorroDB.db')
-            c = conn.cursor()
-        
-            c.execute("""UPDATE cijfers SET
-                cijfer = :cijfer,
-                weging = :weging,
-                beschrijving = :info,
-                vak = :vak
-                WHERE cijfer = :Ocijfer AND vak = :Ovak AND weging = :Oweging""",
-                {
-                'cijfer': cf,
-                'weging': weging,
-                'info': info,
-                'vak': vak,
-                'Ocijfer': Ocijfer,
-                'Oweging': Oweging,
-                'Ovak': Ovak,
-            })
-
-            conn.commit()
-            conn.close()
-
+                conn = sqlite3.connect('ScorroDB.db')
+                c = conn.cursor()
             
-            cijfers_box = MDApp.get_running_app().root.get_screen("cijfers").ids.BoxCfVak
-        
-            for bu in cijfers_box.children:
-                if bu.text.split(" - ")[0] == Ocijfer and bu.text.split(" - ")[1] == Ovak and bu.text.split(" - ")[2] == str(Oweging + "x"):
-                    bu.text = cf + " - " + vak + " - " + weging + "x"
-            
-            cijfers_box.children.sort(reverse=True, key=lambda x: x.text)
+                c.execute("""UPDATE cijfers SET
+                    cijfer = :cijfer,
+                    weging = :weging,
+                    beschrijving = :info,
+                    vak = :vak
+                    WHERE cijfer = :Ocijfer AND vak = :Ovak AND weging = :Oweging""",
+                    {
+                    'cijfer': cf,
+                    'weging': weging,
+                    'info': info,
+                    'vak': vak,
+                    'Ocijfer': Ocijfer,
+                    'Oweging': Oweging,
+                    'Ovak': Ovak,
+                })
 
-            MDApp.get_running_app().root.get_screen("cijfers").on_enter()
+                conn.commit()
+                conn.close()
 
-            self.dismiss()
+                MDApp.get_running_app().root.get_screen("cijfers").on_enter()
+
+                self.dismiss()
+            else:
+                popup = Notification(title="Fout")
+                popup.open()
+
+                popup.update_text("Je cijfer zit niet tussen 0 en 10.")
         except:
             popup = Notification(title="Fout")
             popup.open()
@@ -682,7 +682,7 @@ class Cijfers(Screen):
 
     def popupCF(self, naam):
         vak = naam.split(" - ")[1]
-        cijfer = naam.split(" - ")[0]
+        cijfer = naam.split(" - ")[0].replace(",", ".")
         weging = naam.split(" - ")[2]
         popup = PopupCF(title=f"{vak} | {cijfer} | {weging} - cijfer aanpassen")
         popup.open()
@@ -716,13 +716,15 @@ class Cijfers(Screen):
             self.ids.alle_cf.height = Window.size[1] / 20
             self.ids.alle_cf.font_size = Window.size[0] / 15
             for item in cijferlijst:
-                if float(item[0].replace(",", ".")) >= 5.5:
-                    button = Button(text=str(item[0] + " - " + item[3] + " - " + item[1] + "x"), size_hint_y=None, height=window_size,
+                if float(str(item[0].replace(",", "."))) >= 5.5:
+                    i = str(round(float(item[0].replace(",", ".")), 1))
+                    button = Button(text=str(i.replace(".", ",") + " - " + item[3] + " - " + item[1] + "x"), size_hint_y=None, height=window_size,
                         background_normal="", background_color=(0, 163/255, 130/255,1), font_size=int(int(Window.size[0])/20))
                     button.bind(on_press=lambda button: self.popupCF(button.text))
                     self.ids.BoxCfVak.add_widget(button)
                 else: 
-                    button = Button(text=str(item[0] + " - " + item[3] + " - " + item[1] + "x"), size_hint_y=None, height=window_size,
+                    i = str(round(float(str(item[0].replace(",", "."))), 1))
+                    button = Button(text=str(i.replace(".", ",") + " - " + item[3] + " - " + item[1] + "x"), size_hint_y=None, height=window_size,
                         background_normal="", background_color=(1, 0.329, 0.341, 1), font_size=int(int(Window.size[0])/20))
                     button.bind(on_press=lambda button: self.popupCF(button.text))
                     self.ids.BoxCfVak.add_widget(button)
@@ -1216,6 +1218,8 @@ class Scorro(MDApp):
 
             if vak != "Selecteer een vak":
                 if float(naam.replace(",", ".")) <= 10.0 and float(naam.replace(",", ".")) >= 0.0:
+                    naam = str(round(float(naam.replace(",", ".")), 1))
+
                     conn = sqlite3.connect('ScorroDB.db')
                     c = conn.cursor()
 
