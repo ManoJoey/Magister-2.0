@@ -471,7 +471,6 @@ class PopupVak(Popup):
                 conn = sqlite3.connect('ScorroDB.db')
                 c = conn.cursor()
             
-                dagen = str(dagen_popup)
                 c.execute("""UPDATE vakken SET
                     naam = :naam,
                     dag = :dag
@@ -483,34 +482,33 @@ class PopupVak(Popup):
                 })
 
                 c.execute("""UPDATE cijfers SET
-                    vak = :naam,
+                    vak = :naam
                     WHERE vak = :old_name""",
                     {
                     'naam': text,
                     'old_name': old_name,
                 })
-                c.execute("""UPDATE vakken SET
-                    naam = :naam,
-                    dag = :dag
-                    WHERE naam = :old_name""",
+
+                c.execute("""UPDATE proefwerken SET
+                    vak = :naam
+                    WHERE vak = :old_name""",
                     {
                     'naam': text,
-                    'dag': str(dagen_popup),
                     'old_name': old_name,
                 })
-                c.execute("""UPDATE vakken SET
-                    naam = :naam,
-                    dag = :dag
-                    WHERE naam = :old_name""",
+                
+                c.execute("""UPDATE huiswerk SET
+                    vak = :naam
+                    WHERE vak = :old_name""",
                     {
                     'naam': text,
-                    'dag': str(dagen_popup),
                     'old_name': old_name,
                 })
 
                 conn.commit()
                 conn.close()
 
+                print(Scorro.show_huiswerk(self))
                 dagen_popup.clear()
                 
                 vakken_screen = MDApp.get_running_app().root.get_screen("vakken").ids.BoxVakken
@@ -1439,10 +1437,6 @@ class Scorro(MDApp):
         conn.commit()
         conn.close()
         return records
-
-#Window.size = (525, 900)   
-Window.size = (350, 600)
-#Window.size = (233, 400)
 
 if __name__ == "__main__":
     Scorro().run()
