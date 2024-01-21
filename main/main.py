@@ -14,8 +14,6 @@ from kivy.uix.popup import Popup
 from kivy.clock import Clock
 
 import matplotlib.pyplot as plt # matplotlib==3.6.3
-import logging
-logging.getLogger('matplotlib.font_manager').disabled = True
 from kivy_garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
 
 import sqlite3
@@ -484,6 +482,32 @@ class PopupVak(Popup):
                     'old_name': old_name,
                 })
 
+                c.execute("""UPDATE cijfers SET
+                    vak = :naam,
+                    WHERE vak = :old_name""",
+                    {
+                    'naam': text,
+                    'old_name': old_name,
+                })
+                c.execute("""UPDATE vakken SET
+                    naam = :naam,
+                    dag = :dag
+                    WHERE naam = :old_name""",
+                    {
+                    'naam': text,
+                    'dag': str(dagen_popup),
+                    'old_name': old_name,
+                })
+                c.execute("""UPDATE vakken SET
+                    naam = :naam,
+                    dag = :dag
+                    WHERE naam = :old_name""",
+                    {
+                    'naam': text,
+                    'dag': str(dagen_popup),
+                    'old_name': old_name,
+                })
+
                 conn.commit()
                 conn.close()
 
@@ -524,6 +548,26 @@ class PopupVak(Popup):
             if vak.text == naam:
                 vakken_screen.remove_widget(vak)
         
+        popup = Confirm(title="Verwijder - " + naam)
+        popup.open()
+        
+        self.dismiss()
+
+
+class Confirm(Popup):
+    def verwijder_rest(self):
+        naam = self.title.split(" - ")[1]
+
+        conn = sqlite3.connect('ScorroDB.db')
+        c = conn.cursor()
+
+        c.execute(f"DELETE FROM cijfers WHERE vak = '{naam}'")
+        c.execute(f"DELETE FROM proefwerken WHERE vak = '{naam}'")
+        c.execute(f"DELETE FROM huiswerk WHERE vak = '{naam}'")
+
+        conn.commit()
+        conn.close()
+
         self.dismiss()
 
 
@@ -1014,7 +1058,7 @@ class CijferBerekenen(Screen):
         
         window_size = int(Window.size[1]) / 20
         for item in records:
-            l = Label(text=item[0], color=(0,0,0,1), size_hint_y=None, height=window_size)
+            l = Label(text=item[0].replace(".", ","), color=(0,0,0,1), size_hint_y=None, height=window_size)
             e = Label(text=str(item[1] + "x"), color=(0,0,0,1), size_hint_y=None, height=window_size)
             self.ids.BoxCF_WE.add_widget(l)
             self.ids.BoxCF_WE.add_widget(e)

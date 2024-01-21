@@ -1182,3 +1182,26 @@ WindowManager:
             Rectangle:
                 size: self.size
                 pos: self.pos
+
+<Confirm>:
+    name: "confirm"
+    size_hint: (0.7, 0.5)
+    BoxLayout:
+        orientation: "vertical"
+        Label:
+            text: "Wil je ook\ngerelateerd huiswerk,\nproefwerk en cijfers\nverwijderen?"
+            font_size: root.width/15
+            canvas.before:
+                Color: 
+                    rgba: (1,1,1,0)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+        GridLayout:
+            cols: 2
+            Button:
+                text: "Ja"
+                on_release: root.verwijder_rest()
+            Button:
+                text: "Nee"
+                on_release: root.dismiss()
